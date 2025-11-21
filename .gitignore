@@ -1,0 +1,6 @@
+# Dependencies
+node_modules/
+package-lock.json
+dist/
+public/**/*.js
+public/**/*.js.map

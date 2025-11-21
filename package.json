@@ -1,0 +1,23 @@
+{
+  "name": "sword-card-creator",
+  "version": "1.0.0",
+  "description": "A tool for creating cards for untitled Sword Card Game ",
+  "author": "Wesley Ho",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node ./build/build.js",
+    "serve": "node ./build/serve.js",
+    "convert": "node ./build/build.js",
+    "schema": "node ./build/build.js"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "esbuild": "^0.25.11",
+    "esbuild-plugin-tsc": "^0.5.0",
+    "typescript": "^5.9.3"
+  }
+}
