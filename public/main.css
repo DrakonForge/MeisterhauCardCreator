@@ -1,0 +1,135 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+:root {
+    --card-text-horizontal-margin: 32px;
+    --card-stat-horizontal-margin: 10px;
+    --color-carbon: #130e0a;
+    --color-chalk: #f6f4f1
+}
+.card-view {
+    display: flex;
+    transform: scale(0.5);
+    transform-origin: top left;
+}
+
+.card {
+    width: 744px;
+    height: 1038px;
+    background-image: url("img/CardFrame.svg");
+}
+
+.card-overlay {
+    font-family: Arial, Helvetica, sans-serif;
+    position: relative;
+    font-size: 36px;
+    color: var(--color-carbon);
+    overflow: hidden;
+    height: 100%;
+}
+
+.card-overlay > div {
+    position: absolute;
+}
+
+.stat-speed, .stat-structure {
+    color: var(--color-chalk);
+    font-size: 75px;
+    top: 18px;
+    text-align: center;
+    width: 75px;
+    height: 85px;
+}
+
+.stat-speed {
+    left: var(--card-stat-horizontal-margin);
+}
+
+.stat-structure {
+    right: var(--card-stat-horizontal-margin);
+}
+
+.action-type-icon, .parry-height-icon {
+    top: 136px;
+}
+
+.action-type-icon {
+    left: 6px;
+}
+
+.parry-height-icon {
+    right: 6px;
+}
+
+.header-icon {
+    width: 75px;
+    height: 75px;
+}
+
+
+.header {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 60px;
+}
+
+.card-subtitle {
+    text-align: center;
+    font-size: 32px;
+    font-style: italic;
+}
+
+.divider {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    top: 418px;
+    padding-left: var(--card-text-horizontal-margin);
+    padding-right: var(--card-text-horizontal-margin);
+}
+
+.card-range {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.card-text-container {
+    top: 495px;
+    width: 100%;
+    padding-left: var(--card-text-horizontal-margin);
+    padding-right: var(--card-text-horizontal-margin);
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 20px;
+    height: auto;
+}
+
+.card-overlay p > * {
+    /* Helps w/icon centering */
+    /* To get this to work, everything must be in a span. No loose text */
+    vertical-align: middle;
+}
+
+img.icon {
+    display: inline;
+    width: 36px;
+    height: 36px;
+}

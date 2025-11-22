@@ -14,7 +14,6 @@ export function createBuildSettings(options) {
             'src/createSchema.ts',
             'src/validate.ts',
             'src/convertCsv.ts',
-            // TODO: Figure out how we want to generate the web app later
         ],
         outdir: OUT_DIR,
         splitting: true,

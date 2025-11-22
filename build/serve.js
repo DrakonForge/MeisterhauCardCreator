@@ -1,15 +1,21 @@
 import esbuild from 'esbuild';
-import { createBuildSettings, OUT_DIR } from './settings.js';
+import { createBuildSettings } from './settings.js';
+
+const OUT_DIR = "public";
 
 const settings = createBuildSettings({
+    outdir: OUT_DIR,
+    entryPoints: [
+        'src/site/app.ts'
+    ],
     sourcemap: true,
     banner: {
         js: `new EventSource('/esbuild').addEventListener('change', () => location.reload());`,
     }
 });
 
+await esbuild.build(settings);
 const ctx = await esbuild.context(settings);
-
 await ctx.watch();
 
 const { host, port } = await ctx.serve({
