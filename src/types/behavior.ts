@@ -1,5 +1,5 @@
 import z, { ZodType } from "zod";
-import { ActionTypesSchema, GuardArchetypeSchema, GuardIdSchema, KeywordsSchema, PlayerSchema, StatSchema, StrikeSchema, TargetSchema } from "./common";
+import { ActionTypesSchema, DirectionSchema, GuardArchetypeSchema, GuardIdSchema, KeywordsSchema, PlayerSchema, StatSchema, StrikeSchema, TargetSchema } from "./common";
 import { ConditionsSchema } from "./condition";
 
 const DefendSchema = z.object({
@@ -63,6 +63,22 @@ const PlayDefendActionSchema = z.object({
     Action: z.literal("PlayDefendAction")
 });
 
+const MoveSchema = z.object({
+    Action: z.literal("Move"),
+    Direction: DirectionSchema,
+    Distance: z.int().positive(),
+});
+
+const DrawSchema = z.object({
+    Action: z.literal("Draw"),
+    Amount: z.int().positive(),
+});
+
+// Assumed to be the opponent
+const RevealChamberSchema = z.object({
+    Action: z.literal("RevealChamber"),
+});
+
 const BehaviorActionSchema = z.discriminatedUnion("Action", [
     DefendSchema,
     GainKeywordsSchema,
@@ -74,6 +90,9 @@ const BehaviorActionSchema = z.discriminatedUnion("Action", [
     ChangeNextStatSchema,
     PlayNormalActionSchema,
     PlayDefendActionSchema,
+    MoveSchema,
+    DrawSchema,
+    RevealChamberSchema,
 ]);
 
 export const BehaviorSchema = z.union([BehaviorActionSchema, z.array(BehaviorActionSchema)]);

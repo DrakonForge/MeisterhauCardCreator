@@ -1,0 +1,49 @@
+{
+    "Name": "Push Step",
+    "ActionType": "Leg",
+    "Category": [
+        "Footwork",
+        "Linear"
+    ],
+    "Tier": 0,
+    "Speed": 3,
+    "Action": {
+        "Text": "Move 1 unit forward OR backward.",
+        "Behavior": {
+            "Action": "Move",
+            "Direction": "Any",
+            "Distance": 1
+        }
+    },
+    "ChamberAction": {
+        "Title": "Follow the Leader",
+        "Text": "If the opponent moves forward or backward, move in the opposite direction with this card.",
+        "Behavior": [
+            {
+                "Action": "CheckCondition",
+                "Conditions": {
+                    "Condition": "MoveCondition",
+                    "Direction": "Forward"
+                },
+                "Behavior": {
+                    "Action": "Move",
+                    "Direction": "Backward",
+                    "Distance": 1
+                },
+                "EndsBranch": true
+            },
+            {
+                "Action": "CheckCondition",
+                "Conditions": {
+                    "Condition": "MoveCondition",
+                    "Direction": "Backward"
+                },
+                "Behavior": {
+                    "Action": "Move",
+                    "Direction": "Forward",
+                    "Distance": 1
+                }
+            }
+        ]
+    }
+}

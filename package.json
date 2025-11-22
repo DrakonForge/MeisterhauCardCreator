@@ -8,7 +8,7 @@
   "scripts": {
     "build": "node ./build/build.js",
     "serve": "node ./build/serve.js",
-    "validate": "node ./dist/main.js",
+    "validate": "node ./dist/validate.js",
     "convert": "node ./dist/main.js",
     "schema": "node ./dist/createSchema.js"
   },

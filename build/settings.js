@@ -13,6 +13,7 @@ export function createBuildSettings(options) {
         entryPoints: [
             'src/main.ts',
             'src/createSchema.ts',
+            'src/validate.ts'
             // TODO: Figure out how we want to generate the web app later
         ],
         outdir: OUT_DIR,

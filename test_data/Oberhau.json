@@ -1,0 +1,55 @@
+{
+    "Name": "Oberhau",
+    "SecondaryName": "Cut From Above",
+    "ActionType": "Arm",
+    "Category": ["Cut", "Oberhau"],
+    "Tier": 0,
+    "Speed": 4,
+    "Structure": 1,
+    "ParryHeight": "High",
+    "Range": [1, 2],
+    "Action": {
+        "Text": "<<Strike Oberhau>> to the upper opening.",
+        "Behavior": {
+            "Action": "Attack",
+            "Strike": "Oberhau",
+            "Target": "High"
+        }
+    },
+    "DefendAction": {
+        "Title": "Counter-Cut",
+        "Text": "<<Range 2>>. Defend any Thrust or Cut. Gain <<Structure 2>>>.",
+        "Conditions": [
+            {
+                "Condition": "RangeCondition",
+                "Range": 2
+            },
+            {
+                "Condition": "ThreatCondition",
+                "Strike": ["Thrust", "Cut"]
+            }
+        ],
+        "Behavior": [
+            {
+                "Action": "Defend"
+            },
+            {
+                "Action": "ChangeStat",
+                "Target": "Self",
+                "Stat": "Structure",
+                "Value": 2
+            }
+        ]
+    },
+    "ChamberAction": {
+        "Title": "Unrelenting Assault",
+        "Text": "If the opponent parries <<Definition wide>>, attack with this card.",
+        "Conditions": {
+            "Condition": "ParryCondition",
+            "Wide": true
+        },
+        "Behavior": {
+            "Action": "PlayNormalAction"
+        }
+    }
+}

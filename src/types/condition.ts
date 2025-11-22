@@ -29,6 +29,7 @@ const MoveConditionSchema = z.object({
 
 const GuardConditionSchema = z.object({
     Condition: z.literal("GuardCondition"),
+    Target: PlayerSchema,
     GuardArchetype: GuardArchetypeSchema.optional(),
     HasGuard: z.boolean().optional()
 });

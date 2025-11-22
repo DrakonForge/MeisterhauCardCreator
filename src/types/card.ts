@@ -1,7 +1,7 @@
 import z from "zod";
 import { ConditionsSchema } from "./condition";
 import { BehaviorSchema } from "./behavior";
-import { ActionTypeSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
+import { ActionTypeSchema, KeywordsSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
@@ -27,26 +27,30 @@ const BaseCardSchema = z.object({
     Action: CardActionSchema,
 });
 
+const ArmLegActionCardSchema = BaseCardSchema.extend({
+    Speed: z.int().nonnegative(),
+    ChamberAction: CardActionSchema.optional(),
+});
+
 // TODO: Guards should be JSON-driven but stored separately.
 
-const ArmActionCardSchema = BaseCardSchema.extend({
+const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Arm"),
-    Speed: z.int().nonnegative(),
     Structure: z.int().nonnegative(),
     ParryHeight: ParryHeightSchema,
     Range: ValueRangeSchema,
-    DefendAction: CardActionSchema,
-    ChamberAction: CardActionSchema,
-});
+    // Right now, only arm actions have keywords
+    Keywords: KeywordsSchema.optional(),
+    DefendAction: CardActionSchema.optional(),
+}).strict();
 
-const LegActionCardSchema = BaseCardSchema.extend({
+const LegActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Leg"),
-    Speed: z.int().nonnegative(),
-});
+}).strict();
 
 const SpecialActionCardSchema = BaseCardSchema.extend({
     ActionType: z.literal("Special"),
-});
+}).strict();
 
 export const CardSchema = z.discriminatedUnion("ActionType", [
     ArmActionCardSchema,

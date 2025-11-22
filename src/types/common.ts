@@ -9,35 +9,35 @@ export const ValueRangeSchema = z.union([
     })
 ]);
 
-const AttackKeywordTypeSchema = z.enum([
+// TODO: Validator should handle keywords that have no effect
+const SimpleKeywordTypeSchema = z.enum([
+    // Attack
     "Overbind",
-    "Sterck",
-    "Swech",
-    "Offline",
     "Interrupt",
     "Disengage",
+    // Guard
+    "Volatile",
+    "ProtectsHands"
 ]);
 
-const GuardKeywordTypeSchema = z.enum([
-    "PointForward",
-    "ProtectsHands",
-    "Volatile"
+const NumericKeywordTypeSchema = z.enum([
+    // Attack
+    "Swech",
+    "Offline",
+    // Guard
+    "PointForward"
 ]);
 
-const GeneralKeywordTypeSchema = z.enum([
-    "Swiftness"
-]);
+// Swiftness + Sterck are more shorthand effects than keywords
 
-export const KeywordTypeSchema = z.union([AttackKeywordTypeSchema, GuardKeywordTypeSchema, GeneralKeywordTypeSchema]);
 export const KeywordSchema = z.union([
     z.object({
-        Keyword: KeywordTypeSchema,
+        Keyword: NumericKeywordTypeSchema,
         Value: z.int().nonnegative()
     }),
-    KeywordTypeSchema
+    SimpleKeywordTypeSchema,
 ]);
-
-export const KeywordsSchema = z.union([KeywordSchema, z.array(KeywordSchema).nonempty()]);
+export const KeywordsSchema = z.array(KeywordSchema).nonempty();
 
 export const CategoriesSchema = z.union([z.string().nonempty(), z.array(z.string().nonempty()).nonempty()])
 
