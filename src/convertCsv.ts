@@ -1,9 +1,10 @@
-import { CardSchema, type ArmActionCard, type BaseCard, type Card, type LegActionCard, type SpecialActionCard } from "./types/card";
+import { type ArmActionCard, type BaseCard, type Card, type LegActionCard } from "./types/card";
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
 import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "./types/common";
 import stringify from "json-stringify-pretty-compact";
+import { validateCardFromJson } from './validation/validation';
 
 const INPUT_PATH = "./test_data/data.csv";
 const OUTPUT_DIR = "./generated/card_data";
@@ -225,7 +226,7 @@ const convertCsvToJson = (data: RowData): Card => {
     }
 
     // Validate it actually fits
-    const cardData = CardSchema.parse(baseCard);
+    const cardData = validateCardFromJson(baseCard);
     return cardData;
 }
 

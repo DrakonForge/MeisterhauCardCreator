@@ -1,7 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CardSchema } from './types/card';
+import { validateCardFromJson } from './validation/validation';
 
 const TEST_FOLDER = "./test_data";
 
@@ -9,7 +9,7 @@ const TEST_FOLDER = "./test_data";
 const recursive = true;
 const inputDir = TEST_FOLDER;
 
-// TODO: Support validation for guard JSON as well
+
 const validate = async () => {
     let inputFiles: string[];
     try {
@@ -42,20 +42,17 @@ const validate = async () => {
 
         // console.debug(JSON.stringify(rawData));
 
-        const result = CardSchema.safeParse(rawData);
-        if (!result.success) {
-            console.warn(`Zod validation error for ${file}: ${result.error}`);
+        try {
+            validateCardFromJson(rawData);
+        } catch(e) {
+            console.warn(`Zod validation error for ${file}: ${e}`);
             numValidationFailed++;
             continue;
         }
 
-        // TODO: Also validate the text rendering and other properties
-
         numSuccess++;
     }
 
-    // TODO: Also test for missing keys, missing behaviors, using keywords incorrectly, overlapping names, etc. as warnings
-    // TODO: Grammar, missing periods, etc.
     console.log(`${(numError || numValidationFailed) ? "FAILED" : "SUCCESS"} - Validation Failed: ${numValidationFailed}, Error: ${numError}, Success: ${numSuccess}, Total: ${numSuccess + numError + numValidationFailed}`);
 }
 
