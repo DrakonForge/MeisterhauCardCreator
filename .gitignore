@@ -2,5 +2,8 @@
 node_modules/
 package-lock.json
 dist/
+generated/
+
+# Stuff for website maybe
 public/**/*.js
 public/**/*.js.map

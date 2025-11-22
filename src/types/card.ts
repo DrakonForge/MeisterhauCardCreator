@@ -1,13 +1,13 @@
 import z from "zod";
 import { ConditionsSchema } from "./condition";
 import { BehaviorSchema } from "./behavior";
-import { ActionTypeSchema, ParryHeightSchema, RangeSchema } from "./common";
+import { ActionTypeSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
     Text: z.union([
         z.string().nonempty(),
-        z.array(z.string().nonempty()).min(1)
+        z.array(z.string().nonempty()).nonempty()
     ]),
     // Optional for now, since we do not need the logic yet
     Conditions: ConditionsSchema.optional(),
@@ -27,13 +27,14 @@ const BaseCardSchema = z.object({
     Action: CardActionSchema,
 });
 
-// TODO: Guard changes
+// TODO: Guards should be JSON-driven but stored separately.
+
 const ArmActionCardSchema = BaseCardSchema.extend({
     ActionType: z.literal("Arm"),
     Speed: z.int().nonnegative(),
     Structure: z.int().nonnegative(),
     ParryHeight: ParryHeightSchema,
-    Range: RangeSchema,
+    Range: ValueRangeSchema,
     DefendAction: CardActionSchema,
     ChamberAction: CardActionSchema,
 });

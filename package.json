@@ -8,8 +8,9 @@
   "scripts": {
     "build": "node ./build/build.js",
     "serve": "node ./build/serve.js",
-    "convert": "node ./build/build.js",
-    "schema": "node ./build/build.js"
+    "validate": "node ./dist/main.js",
+    "convert": "node ./dist/main.js",
+    "schema": "node ./dist/createSchema.js"
   },
   "dependencies": {
     "zod": "^4.1.12"

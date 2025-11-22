@@ -1,5 +1,5 @@
 import z from "zod";
-import { DirectionSchema, RangeSchema, StrikeSchema, TargetSchema } from "./common";
+import { DirectionSchema, GuardArchetypeSchema, ValueRangeSchema, StrikeSchema, TargetSchema, PlayerSchema } from "./common";
 
 const ParryConditionSchema = z.object({
     Condition: z.literal("ParryCondition"),
@@ -8,12 +8,12 @@ const ParryConditionSchema = z.object({
 
 const RangeConditionSchema = z.object({
     Condition: z.literal("RangeCondition"),
-    Range: RangeSchema
+    Range: ValueRangeSchema
 });
 
 const ThreatConditionSchema = z.object({
     Condition: z.literal("ThreatCondition"),
-    Strike: StrikeSchema.optional(),
+    Strike: z.union([StrikeSchema, z.array(StrikeSchema).nonempty()]).optional(),
     Target: TargetSchema.optional()
 });
 
@@ -27,12 +27,26 @@ const MoveConditionSchema = z.object({
     Direction: DirectionSchema.optional()
 });
 
+const GuardConditionSchema = z.object({
+    Condition: z.literal("GuardCondition"),
+    GuardArchetype: GuardArchetypeSchema.optional(),
+    HasGuard: z.boolean().optional()
+});
+
+const PressureCondition = z.object({
+    Condition: z.literal("PressureCondition"),
+    Target: PlayerSchema,
+    Range: ValueRangeSchema
+})
+
 const ConditionSchema = z.discriminatedUnion("Condition", [
     ParryConditionSchema,
     RangeConditionSchema,
     ThreatConditionSchema,
     SterckConditionSchema,
-    MoveConditionSchema
+    MoveConditionSchema,
+    GuardConditionSchema,
+    PressureCondition
 ]);
 
-export const ConditionsSchema = z.union([ConditionSchema, z.array(ConditionSchema).min(1)]);
+export const ConditionsSchema = z.union([ConditionSchema, z.array(ConditionSchema).nonempty()]);
