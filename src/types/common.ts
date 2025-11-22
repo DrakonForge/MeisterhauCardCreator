@@ -89,3 +89,6 @@ export const GuardIdSchema = z.string().nonempty().describe("The ID of the guard
 export const ArmActionTypeSchema = z.enum(["Normal", "Parry", "Defend", "Chamber"]).meta({
     "id": "ArmActionType"
 });
+
+export type Keyword = z.infer<typeof KeywordSchema>;
+export type ValueRange = z.infer<typeof ValueRangeSchema>;

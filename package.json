@@ -9,10 +9,12 @@
     "build": "node ./build/build.js",
     "serve": "node ./build/serve.js",
     "validate": "npm run build && node ./dist/validate.js",
-    "convert": "npm run build && node ./dist/main.js",
-    "schema": "npm run build && node ./dist/createSchema.js"
+    "schema": "npm run build && node ./dist/createSchema.js",
+    "csv": "npm run build && node ./dist/convertCsv.js"
   },
   "dependencies": {
+    "csv-parse": "^6.1.0",
+    "json-stringify-pretty-compact": "^4.0.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

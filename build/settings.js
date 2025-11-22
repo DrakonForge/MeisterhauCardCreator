@@ -11,9 +11,9 @@ export const OUT_DIR = "dist";
 export function createBuildSettings(options) {
     return {
         entryPoints: [
-            'src/main.ts',
             'src/createSchema.ts',
-            'src/validate.ts'
+            'src/validate.ts',
+            'src/convertCsv.ts',
             // TODO: Figure out how we want to generate the web app later
         ],
         outdir: OUT_DIR,

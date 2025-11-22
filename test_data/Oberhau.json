@@ -18,7 +18,7 @@
     },
     "DefendAction": {
         "Title": "Counter-Cut",
-        "Text": "<<Range 2>>. Defend any Thrust or Cut. Gain <<Structure 2>>>.",
+        "Text": "<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.",
         "Conditions": [
             {
                 "Condition": "RangeCondition",

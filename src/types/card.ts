@@ -65,3 +65,9 @@ export const CardSchema = z.discriminatedUnion("ActionType", [
 ]).meta({
     id: "Card"
 });
+
+export type Card = z.infer<typeof CardSchema>;
+export type BaseCard = z.infer<typeof BaseCardSchema>;
+export type ArmActionCard = z.infer<typeof ArmActionCardSchema>;
+export type LegActionCard = z.infer<typeof LegActionCardSchema>;
+export type SpecialActionCard = z.infer<typeof SpecialActionCardSchema>;

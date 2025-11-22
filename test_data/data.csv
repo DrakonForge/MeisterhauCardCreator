@@ -1,0 +1,4 @@
+Id,Name,Secondary Name,Action Type,Category 1,Category 2,Tier,Speed,Structure,Parry Height,Range,Keywords,Action Text,Defend Action Title,Defend Action Text,Chamber Action Title,Chamber Action Text,Action Behavior,Defend Action Behavior,Chamber Action Behavior,Notes
+Oberhau,Oberhau,Cut from Above,Arm,Cut,Oberhau,0,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+FlashOfInsight,Flash of Insight,,Special,Special,,0,,,,,,"View the opponent's chambered card, then draw 1",,,,,,,,
+PushStep,Push Step,,Leg,Footwork,Linear,0,3,,,,,Move 1 unit forward OR backward.,,,Follow the Leader,"If the opponent moves forward or backward, move in the opposite direction with this card.",,,,
