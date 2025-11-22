@@ -16,7 +16,7 @@ const CardActionSchema = z.object({
 
 
 const BaseCardSchema = z.object({
-    Name: z.string().nonempty(),
+    Name: z.string().nonempty().describe("The name of the card."),
     SecondaryName: z.string().optional(),
     ActionType: ActionTypeSchema,
     Category: z.union([
@@ -42,18 +42,26 @@ const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     // Right now, only arm actions have keywords
     Keywords: KeywordsSchema.optional(),
     DefendAction: CardActionSchema.optional(),
-}).strict();
+}).strict().meta({
+    id: "ArmActionCard"
+});
 
 const LegActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Leg"),
-}).strict();
+}).strict().meta({
+    id: "LegActionCard"
+});
 
 const SpecialActionCardSchema = BaseCardSchema.extend({
     ActionType: z.literal("Special"),
-}).strict();
+}).strict().meta({
+    id: "SpecialActionCard"
+});
 
 export const CardSchema = z.discriminatedUnion("ActionType", [
     ArmActionCardSchema,
     LegActionCardSchema,
     SpecialActionCardSchema
-]);
+]).meta({
+    id: "Card"
+});

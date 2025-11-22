@@ -18,7 +18,11 @@ const SimpleKeywordTypeSchema = z.enum([
     // Guard
     "Volatile",
     "ProtectsHands"
-]);
+]).meta({
+    "id": "SimpleKeyword",
+    "title": "Simple Keyword",
+    "description": "Keywords that have no associated value."
+});
 
 const NumericKeywordTypeSchema = z.enum([
     // Attack
@@ -26,31 +30,62 @@ const NumericKeywordTypeSchema = z.enum([
     "Offline",
     // Guard
     "PointForward"
-]);
+]).meta({
+    "id": "NumericKeyword",
+    "title": "Numeric Keyword",
+    "description": "Keywords that must specify a value."
+});
 
 // Swiftness + Sterck are more shorthand effects than keywords
 
-export const KeywordSchema = z.union([
+const KeywordSchema = z.union([
     z.object({
         Keyword: NumericKeywordTypeSchema,
         Value: z.int().nonnegative()
     }),
     SimpleKeywordTypeSchema,
 ]);
-export const KeywordsSchema = z.array(KeywordSchema).nonempty();
+export const KeywordsSchema = z.array(KeywordSchema).nonempty().meta({
+    "id": "Keywords"
+});
 
-export const CategoriesSchema = z.union([z.string().nonempty(), z.array(z.string().nonempty()).nonempty()])
+export const CategoriesSchema = z.union([z.string().nonempty(), z.array(z.string().nonempty()).nonempty()]).meta({
+    "id": "Categories"
+});
 
-export const DirectionSchema = z.enum(["Forward", "Backward", "Any"]);
-export const StrikeSchema = z.enum(["Thrust", "Cut", "Oberhau", "Unterhau", "Mittlehau"]);
-export const ActionTypeSchema = z.enum(["Arm", "Leg", "Special"]);
+export const DirectionSchema = z.enum(["Forward", "Backward", "Any"]).meta({
+    "id": "Direction"
+});
+export const StrikeSchema = z.enum(["Thrust", "Cut", "Oberhau", "Unterhau", "Mittlehau"]).meta({
+    "id": "Strike"
+});
+export const ActionTypeSchema = z.enum(["Arm", "Leg", "Special"]).meta({
+    "id": "ActionType"
+});
 export const ActionTypesSchema = z.union([ActionTypeSchema, z.array(ActionTypeSchema).nonempty()]);
-export const TargetSchema = z.enum(["High", "Low"]);
-export const ParryHeightSchema = z.enum(["High", "Low", "Both", "None"]);
-// Guard Classification Theory: All guards can be categorized into one of these four
-export const GuardArchetypeSchema = z.enum(["Ochs", "Plow", "VomTag", "Alber"]);
-export const PlayerSchema = z.enum(["Self", "Opponent"]);
-export const StatSchema = z.enum(["Speed", "Structure"]);
-export const CardIdSchema = z.string().nonempty();
-export const GuardIdSchema = z.string().nonempty();
-export const ArmActionTypeSchema = z.enum(["Normal", "Parry", "Defend", "Chamber"]);
+export const TargetSchema = z.enum(["High", "Low"]).meta({
+    "id": "Target"
+});
+export const ParryHeightSchema = z.enum(["High", "Low", "Both", "None"]).meta({
+    "id": "ParryHeight"
+});
+export const GuardArchetypeSchema = z.enum(["Ochs", "Plow", "VomTag", "Alber"]).meta({
+    "id": "GuardArchetype",
+    "title": "Guard Archetype",
+    "description": "Which of the Vier Leger (core guards) this position would be classified as."
+});
+export const PlayerSchema = z.enum(["Self", "Opponent"]).meta({
+    "id": "Player",
+    "title": "Player",
+    "description": "Self or Opponent"
+});
+export const StatSchema = z.enum(["Speed", "Structure"]).meta({
+    "id": "Stat",
+    "title": "Stat",
+    "description": "Core stat of the card. Speed or Structure"
+});
+export const CardIdSchema = z.string().nonempty().describe("The ID of the card.");
+export const GuardIdSchema = z.string().nonempty().describe("The ID of the guard.");
+export const ArmActionTypeSchema = z.enum(["Normal", "Parry", "Defend", "Chamber"]).meta({
+    "id": "ArmActionType"
+});
