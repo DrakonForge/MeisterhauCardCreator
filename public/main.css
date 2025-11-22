@@ -12,12 +12,21 @@
     --card-text-horizontal-margin: 32px;
     --card-stat-horizontal-margin: 10px;
     --color-carbon: #130e0a;
-    --color-chalk: #f6f4f1
+    --color-chalk: #f6f4f1;
+    --color-carmine: #960018;
+    --color-ultramarine: #3f00ff;
+    --color-ochre: #cc7722;
+    --color-rust: #985717;
 }
+
+body {
+    background-color: #ccc;
+}
+
 .card-view {
     display: flex;
-    transform: scale(0.5);
-    transform-origin: top left;
+    /* transform: scale(0.5); */
+    /* transform-origin: top left; */
 }
 
 .card {
@@ -132,4 +141,32 @@ img.icon {
     display: inline;
     width: 36px;
     height: 36px;
+}
+
+/* Card Text */
+span.action-title {
+    font-style: italic;
+}
+
+span.range {
+    font-weight: bold;
+}
+
+span.structure {
+    font-weight: bold;
+    color: var(--color-carmine);
+}
+
+span.speed {
+    font-weight: bold;
+    color: var(--color-ultramarine);
+}
+
+span.definition {
+    font-weight: bold;
+}
+
+span.strike {
+    font-weight: bold;
+    color: var(--color-rust);
 }
