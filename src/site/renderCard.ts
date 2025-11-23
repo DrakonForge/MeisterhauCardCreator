@@ -153,7 +153,6 @@ const applyText = (action: CardAction, parent: HTMLElement) => {
 };
 
 export const clearCardView = () => {
-    // TODO: Clear icons: range
     setText(".card-title", "");
     setText(".card-subtitle", "");
     setText(".card-category", "");
@@ -171,10 +170,9 @@ export const clearCardView = () => {
 
 export const setCardView = (card: Card) => {
     clearCardView();
-    // TODO: Set action type icon
     setText(".card-title", card.Name);
     if (card.SecondaryName) {
-        setText(".card-subtitle", card.SecondaryName);
+        setText(".card-subtitle", `“${card.SecondaryName}”`);
     }
 
     if (card.Category) {
@@ -190,8 +188,6 @@ export const setCardView = (card: Card) => {
         throw new Error("Unable to find text container");
     }
     applyText(card.Action, textContainer);
-
-
 
     if (card.ActionType === "Arm") {
         setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);

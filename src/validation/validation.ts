@@ -37,10 +37,4 @@ const validateCardText = (cardText: CardText | undefined, canBeOptional = true):
 
 const validateJson = (jsonText: TextComponent[]) => {
     // Make sure it actually looks right
-}
-
-// TODO: Also test for missing keys, missing behaviors, using keywords incorrectly, overlapping names, etc. as warnings
-// TODO: Grammar, missing periods, etc.
-// Difference between single file + group validation
-
-// TODO: Also validate the text rendering and other properties
+};

@@ -10,54 +10,63 @@
 </head>
 
 <body>
-    <div class="controls">
-        <textarea class="json-entry"></textarea>
-        <button class="apply-button">Apply JSON</button>
-        <button class="clear-button">Clear JSON</button>
-        <button class="submit-button">Download Image</button>
+
+    <div class="card-display-output">
+        <img class="hidden" src=""/>
     </div>
-    <div class="card-view">
-        <div class="card">
-            <div class="card-overlay">
-                <div class="stat-speed">
-                    4
-                </div>
-                <div class="stat-structure">
-                    1
-                </div>
-                <div class="action-type-container">
-                    <img class="action-type-icon header-icon" src="img/ParryIcon_Both.svg" />
-                </div>
-                <div class="parry-height-container">
-                    <img class="parry-height-icon header-icon" src="img/ParryIcon_High.svg" />
-                </div>
-                <!-- TODO: Parry height and action type -->
-                <div class="header">
-                    <div class="card-title">Oberhau</div>
-                    <div class="card-subtitle">“Cut From Above”</div>
-                </div>
-                <div class="divider">
-                    <div class="card-category">Cut - Oberhau</div>
-                    <div class="card-range">
-                        <img class="range-icon icon" src="img/ParryIcon_Both.svg" />
-                        <div class="card-range-text">1-2</div>
+    <div class="content-wrapper">
+        <div class="controls">
+            <textarea spellcheck="false" class="json-entry"></textarea>
+            <div class="buttons">
+                <button class="update-button">Update</button>
+                <button class="clear-button">Clear</button>
+                <button class="download-button">Download Image</button>
+            </div>
+        </div>
+        <div class="card-view">
+            <div class="card">
+                <div class="card-overlay">
+                    <div class="stat-speed">
+                        4
                     </div>
-                </div>
-                <div class="card-text-container">
-                    <p><span class="strike">Oberhau</span><span> to the upper opening.</span></p>
-                    <p>
-                        <img class="icon" src="img/ParryIcon_Both.svg" />
-                        <span class="action-title">Counter Cut.</span><span> </span><span class="range">Range 2</span><span>. Defend any Thrust or Cut. Gain </span><span class="structure">+2 Structure</span><span>.</span>
-                    </p>
-                    <p>
-                        <img class="icon" src="img/ParryIcon_Both.svg" />
-                        <span class="action-title">Unrelenting Assault.</span><span> If the opponent parries </span><span class="definition">wide</span><span>, attack with this card.</span>
-                    </p>
+                    <div class="stat-structure">
+                        1
+                    </div>
+                    <div class="action-type-container">
+                        <img class="action-type-icon header-icon" src="img/ParryIcon_Both.svg" />
+                    </div>
+                    <div class="parry-height-container">
+                        <img class="parry-height-icon header-icon" src="img/ParryIcon_High.svg" />
+                    </div>
+                    <div class="header">
+                        <div class="card-title">Oberhau</div>
+                        <div class="card-subtitle">“Cut From Above”</div>
+                    </div>
+                    <div class="divider">
+                        <div class="card-category">Cut - Oberhau</div>
+                        <div class="card-range">
+                            <img class="range-icon icon" src="img/ParryIcon_Both.svg" />
+                            <div class="card-range-text">1-2</div>
+                        </div>
+                    </div>
+                    <div class="card-text-container">
+                        <p><span class="strike">Oberhau</span><span> to the upper opening.</span></p>
+                        <p>
+                            <img class="icon" src="img/ParryIcon_Both.svg" />
+                            <span class="action-title">Counter Cut.</span><span> </span><span class="range">Range
+                                2</span><span>. Defend any Thrust or Cut. Gain </span><span class="structure">+2
+                                Structure</span><span>.</span>
+                        </p>
+                        <p>
+                            <img class="icon" src="img/ParryIcon_Both.svg" />
+                            <span class="action-title">Unrelenting Assault.</span><span> If the opponent parries </span><span
+                                class="definition">wide</span><span>, attack with this card.</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <script type="module" src="./app.js"></script>
 </body>

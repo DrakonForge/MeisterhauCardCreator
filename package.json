@@ -10,6 +10,7 @@
     "serve": "node ./build/serve.js",
     "validate": "npm run build && node ./dist/validate.js",
     "schema": "npm run build && node ./dist/createSchema.js",
+    "image": "npm run build && node ./dist/generateImages.js",
     "csv": "npm run build && node ./dist/convertCsv.js"
   },
   "dependencies": {

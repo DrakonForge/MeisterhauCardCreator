@@ -13,10 +13,12 @@ export function createBuildSettings(options) {
         entryPoints: [
             'src/createSchema.ts',
             'src/validate.ts',
+            'src/generateImages.ts',
             'src/convertCsv.ts',
         ],
         outdir: OUT_DIR,
-        splitting: true,
+        external: ["puppeteer"], // Creates a build error if we try to bundle it
+        // splitting: true,
         bundle: true,
         format: "esm",
         plugins: [
