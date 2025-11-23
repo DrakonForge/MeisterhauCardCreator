@@ -279,4 +279,6 @@ const convertCsv = () => {
     console.log(`${numFail} rows failed to validate out of ${records.length} total`);
 };
 
-convertCsv();
+if (import.meta.main) {
+    convertCsv();
+}

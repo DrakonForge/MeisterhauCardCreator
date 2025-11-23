@@ -49,4 +49,7 @@ const generateImages = async () => {
 
     await browser.close();
 }
-await generateImages();
+
+if (import.meta.main) {
+    await generateImages();
+}
