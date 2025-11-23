@@ -5,7 +5,8 @@ import * as path from "path";
 import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "./types/common";
 import stringify from "json-stringify-pretty-compact";
 import { validateCardFromJson } from './validation/validation';
-import { ensureDirExists, main } from "./util/cliUtil";
+import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
+import { consola } from "consola";
 
 interface RowData {
     Id: string;
@@ -233,7 +234,7 @@ const convertCsvToJson = (data: RowData): Card => {
 
 const handleRecord = (record: RowData): boolean => {
     const id = record.Id;
-    // console.debug(`Processing ${id}`);
+    consola.debug(`Processing ${id}`);
     try {
         const jsonData = convertCsvToJson(record);
         const filePath = path.join("./generated/card_data", id + ".json");
@@ -241,20 +242,16 @@ const handleRecord = (record: RowData): boolean => {
             indent: 4,
             maxLength: 50,
         }));
-        console.debug(`Generated ${id}.json`);
+        consola.debug(`Generated ${id}.json`);
         return true;
     } catch (e) {
-        console.warn(`Failed to validate card ${id}`, e);
+        consola.warn(`Failed to validate card ${id}`, e);
         return false;
     }
 };
 
-
 const convertCsv = (inputPath: string, outputDir: string) => {
-    if (!fs.existsSync(inputPath)) {
-        console.error("Unable to find file");
-        return;
-    }
+    checkInputPathExists(inputPath);
 
     const fileData = fs.readFileSync(inputPath, { encoding: 'utf-8' });
 
@@ -264,9 +261,9 @@ const convertCsv = (inputPath: string, outputDir: string) => {
         from_line: 2, // Skip initial header
     });
 
-    console.log(`Found ${records.length} records`);
+    consola.log(`Found ${records.length} records`);
 
-    ensureDirExists(outputDir);
+    ensureOutputDirExists(outputDir);
     let numFail = 0;
     for (const record of records) {
         const success = handleRecord(record);
@@ -274,11 +271,16 @@ const convertCsv = (inputPath: string, outputDir: string) => {
             numFail++;
         }
     }
-    console.log(`${numFail} rows failed to validate out of ${records.length} total`);
+
+    if (numFail) {
+        consola.fail(`Failed to convert ${numFail} rows out of ${records.length} total`);
+    } else {
+        consola.success(`Successfully converted ${records.length} rows to JSON`);
+    }
 };
 
 await main(async args => {
-    const inputPath = args['input'] ?? "./test-data";
+    const inputPath = args['input'] ?? "./test_data/data.csv";
     const outputDir = args['output'] ?? "./generated/card_data";
     convertCsv(inputPath, outputDir);
 });

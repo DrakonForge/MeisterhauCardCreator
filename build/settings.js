@@ -18,7 +18,6 @@ export function createBuildSettings(options) {
         ],
         outdir: OUT_DIR,
         external: ["puppeteer"], // Creates a build error if we try to bundle it
-        // splitting: true,
         bundle: true,
         format: "esm",
         plugins: [

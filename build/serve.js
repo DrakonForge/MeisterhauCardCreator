@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
 import { createBuildSettings } from './settings.js';
+import consola from 'consola';
 
 const OUT_DIR = "public";
 
@@ -24,4 +25,4 @@ const { host, port } = await ctx.serve({
     fallback: OUT_DIR + "/index.html"
 });
 
-console.log(`Serving app at http://${host ?? "localhost"}:${port}.`);
+consola.log(`Serving app at http://${host ?? "localhost"}:${port}.`);

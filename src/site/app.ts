@@ -1,7 +1,6 @@
 import { toPng } from 'html-to-image';
 import { onClick, query } from './dom';
 import { clearCardView, setCardView } from './renderCard';
-import { CardSchema } from '../types/card';
 import { validateCardFromJson } from '../validation/validation';
 
 const generateCardImage = (id: string) => {

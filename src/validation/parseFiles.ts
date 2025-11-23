@@ -3,14 +3,18 @@ import { readdir } from "fs/promises";
 import * as path from "path";
 import type { Card } from "../types/card";
 import { validateCardFromJson } from "./validation";
+import { consola } from "consola";
+import { checkInputPathExists } from "../util/cliUtil";
 
 
 export const readAndValidateFiles = async (inputDir: string, recursive = false): Promise<Record<string, Card>> => {
+    checkInputPathExists(inputDir);
+
     let inputFiles: string[];
     try {
         inputFiles = await readdir(inputDir, { recursive });
     } catch (e) {
-        console.error("Error encountered while reading files", e);
+        consola.error("Error encountered while reading files", e);
         return {};
     }
 
@@ -24,7 +28,7 @@ export const readAndValidateFiles = async (inputDir: string, recursive = false):
         }
         const cardId = file.substring(0, file.length - ".json".length);
         const filePath = path.join(inputDir, file);
-        console.debug(`Processing ${cardId}`);
+        consola.debug(`Processing ${cardId}`);
 
         // Read data
         let rawData;
@@ -32,17 +36,17 @@ export const readAndValidateFiles = async (inputDir: string, recursive = false):
             const fileData = fs.readFileSync(filePath);
             rawData = JSON.parse(fileData.toString());
         } catch (e) {
-            console.error(`Failed to read file ${filePath}`, e);
+            consola.error(`Failed to read file ${filePath}`, e);
             numError++;
             continue;
         }
 
-        // console.debug(JSON.stringify(rawData));
+        consola.debug(JSON.stringify(rawData));
         try {
             const card = validateCardFromJson(rawData);
             cardMap[cardId] = card;
         } catch (e) {
-            console.warn(`Zod validation error for ${cardId}: ${e}`);
+            consola.warn(`Zod validation error for ${cardId}: ${e}`);
             numValidationFailed++;
             continue;
         }
@@ -50,6 +54,11 @@ export const readAndValidateFiles = async (inputDir: string, recursive = false):
         numSuccess++;
     }
 
-    console.log(`${(numError || numValidationFailed) ? "FAILED" : "SUCCESS"} - Validation Failed: ${numValidationFailed}, Error: ${numError}, Success: ${numSuccess}, Total: ${numSuccess + numError + numValidationFailed}`);
+    const numTotal = numSuccess + numError + numValidationFailed;
+    if (numError || numValidationFailed) {
+        consola.fail(`Failed to validate ${numValidationFailed} files, with ${numError} other unspecified errors. Processed ${numTotal} files total.`);
+    } else {
+        consola.success(`Validated ${numTotal} files successfully`);
+    }
     return cardMap;
 };
