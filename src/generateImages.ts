@@ -2,29 +2,17 @@ import puppeteer from "puppeteer";
 import { readAndValidateFiles } from "./validation/parseFiles";
 import * as path from "path";
 import * as fs from "fs";
+import { delay, ensureDirExists, main } from "./util/cliUtil";
 
-// TODO: Make these parameters
-const LOCAL_URL = "http://localhost:3000/";
-const INPUT_PATH = "test_data";
-const OUTPUT_PATH = "generated/card_images";
+const generateImages = async (inputDir: string, outputDir: string, siteUrl: string, recursive: boolean) => {
+    ensureDirExists(outputDir);
 
-const delay = (time: number) => {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, time)
-    });
-}
-
-const generateImages = async () => {
-    if (!fs.existsSync(OUTPUT_PATH)) {
-        fs.mkdirSync(OUTPUT_PATH);
-    }
-
-    const cardList = await readAndValidateFiles(INPUT_PATH, false);
+    const cardList = await readAndValidateFiles(inputDir, recursive);
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const response = await page.goto(LOCAL_URL);
+    const response = await page.goto(siteUrl);
 
-    console.log(`Connected to ${LOCAL_URL}. Request status: ${response?.status()}`);
+    console.log(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
 
     const textarea = await page.$("textarea.json-entry");
     const updateButton = await page.$('button.update-button');
@@ -38,7 +26,7 @@ const generateImages = async () => {
         if (url) {
             const imgPage = await browser.newPage();
             const viewSource = await imgPage.goto(url);
-            const filePath = path.join(OUTPUT_PATH, key + ".png");
+            const filePath = path.join(outputDir, key + ".png");
             console.debug("Writing image to", filePath);
             fs.writeFileSync(filePath, await viewSource?.buffer()!);
             await imgPage.close();
@@ -50,6 +38,10 @@ const generateImages = async () => {
     await browser.close();
 }
 
-if (import.meta.main) {
-    await generateImages();
-}
+await main(async args => {
+    const inputDir = args['input'] ?? "./test_data";
+    const outputDir = args['output'] ?? "./generated/card_images";
+    const siteUrl = args['site'] ?? "http://localhost:3000/";
+    const recursive = args['r'] ?? true;
+    await generateImages(inputDir, outputDir, siteUrl, recursive);
+});

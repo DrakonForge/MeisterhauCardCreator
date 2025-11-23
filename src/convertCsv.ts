@@ -5,9 +5,7 @@ import * as path from "path";
 import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "./types/common";
 import stringify from "json-stringify-pretty-compact";
 import { validateCardFromJson } from './validation/validation';
-
-const INPUT_PATH = "./test_data/data.csv";
-const OUTPUT_DIR = "./generated/card_data";
+import { ensureDirExists, main } from "./util/cliUtil";
 
 interface RowData {
     Id: string;
@@ -55,26 +53,6 @@ const HEADERS: (keyof RowData)[] = [
     "DefendActionBehavior",
     "ChamberActionBehavior",
     "Notes",
-];
-
-const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
-    "Id",
-    "Name",
-    "Category1",
-    "ActionType",
-    "Tier",
-    "ActionText",
-];
-
-const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
-    "Speed",
-    "Structure",
-    "ParryHeight",
-    "Range"
-];
-
-const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
-    "Speed",
 ];
 
 const checkRequiredFields = (data: RowData, requiredFields: (keyof RowData)[]) => {
@@ -151,7 +129,68 @@ const parseText = (textStr: string): string | string[] => {
     return textLines;
 }
 
+const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
+    "Speed",
+    "Structure",
+    "ParryHeight",
+    "Range"
+];
+const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
+    if (!checkRequiredFields(data, REQUIRED_ARM_FIELDS)) {
+        throw new Error("Missing required arm fields");
+    }
+    card.Speed = parseInt(data.Speed);
+    card.Structure = parseInt(data.Structure);
+    card.ParryHeight = ParryHeightSchema.parse(data.ParryHeight);
+    card.Range = parseRange(data.Range);
+    if (data.Keywords) {
+        card.Keywords = parseKeywords(data.Keywords);
+    }
+    if (data.DefendActionText) {
+        card.DefendAction = {
+            Text: parseText(data.DefendActionText),
+        }
+        if (data.DefendActionTitle) {
+            card.DefendAction.Title = data.DefendActionTitle;
+        }
+    }
+    if (data.ChamberActionText) {
+        card.ChamberAction = {
+            Text: parseText(data.ChamberActionText),
+        }
+        if (data.ChamberActionTitle) {
+            card.ChamberAction.Title = data.ChamberActionTitle;
+        }
+    }
+};
+
+const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
+    "Speed",
+];
+const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
+    if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
+        throw new Error("Missing required leg fields");
+    }
+    card.Speed = parseInt(data.Speed);
+    if (data.ChamberActionText) {
+        card.ChamberAction = {
+            Text: parseText(data.ChamberActionText),
+        }
+        if (data.ChamberActionTitle) {
+            card.ChamberAction.Title = data.ChamberActionTitle;
+        }
+    }
+}
+
 // TODO: Behaviors
+const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
+    "Id",
+    "Name",
+    "Category1",
+    "ActionType",
+    "Tier",
+    "ActionText",
+];
 const convertCsvToJson = (data: RowData): Card => {
     if (!checkRequiredFields(data, REQUIRED_BASE_FIELDS)) {
         throw new Error("Missing base fields");
@@ -177,47 +216,9 @@ const convertCsvToJson = (data: RowData): Card => {
     }
 
     if (data.ActionType === "Arm") {
-        if (!checkRequiredFields(data, REQUIRED_ARM_FIELDS)) {
-            throw new Error("Missing required arm fields");
-        }
-        const armActionCard = baseCard as Partial<ArmActionCard>;
-        armActionCard.Speed = parseInt(data.Speed);
-        armActionCard.Structure = parseInt(data.Structure);
-        armActionCard.ParryHeight = ParryHeightSchema.parse(data.ParryHeight);
-        armActionCard.Range = parseRange(data.Range);
-        if (data.Keywords) {
-            armActionCard.Keywords = parseKeywords(data.Keywords);
-        }
-        if (data.DefendActionText) {
-            armActionCard.DefendAction = {
-                Text: parseText(data.DefendActionText),
-            }
-            if (data.DefendActionTitle) {
-                armActionCard.DefendAction.Title = data.DefendActionTitle;
-            }
-        }
-        if (data.ChamberActionText) {
-            armActionCard.ChamberAction = {
-                Text: parseText(data.ChamberActionText),
-            }
-            if (data.ChamberActionTitle) {
-                armActionCard.ChamberAction.Title = data.ChamberActionTitle;
-            }
-        }
+        addArmActionData(baseCard as Partial<ArmActionCard>, data);
     } else if (data.ActionType === "Leg") {
-        if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
-            throw new Error("Missing required leg fields");
-        }
-        const legActionCard = baseCard as Partial<LegActionCard>;
-        legActionCard.Speed = parseInt(data.Speed);
-        if (data.ChamberActionText) {
-            legActionCard.ChamberAction = {
-                Text: parseText(data.ChamberActionText),
-            }
-            if (data.ChamberActionTitle) {
-                legActionCard.ChamberAction.Title = data.ChamberActionTitle;
-            }
-        }
+        addLegActionData(baseCard as Partial<LegActionCard>, data);
     } else if (data.ActionType === "Special") {
         // All good, no extra fields currently
         // const specialActionCard = baseCard as Partial<SpecialActionCard>;
@@ -235,7 +236,7 @@ const handleRecord = (record: RowData): boolean => {
     // console.debug(`Processing ${id}`);
     try {
         const jsonData = convertCsvToJson(record);
-        const filePath = path.join(OUTPUT_DIR, id + ".json");
+        const filePath = path.join("./generated/card_data", id + ".json");
         fs.writeFileSync(filePath, stringify(jsonData, {
             indent: 4,
             maxLength: 50,
@@ -249,13 +250,13 @@ const handleRecord = (record: RowData): boolean => {
 };
 
 
-const convertCsv = () => {
-    if (!fs.existsSync(INPUT_PATH)) {
+const convertCsv = (inputPath: string, outputDir: string) => {
+    if (!fs.existsSync(inputPath)) {
         console.error("Unable to find file");
         return;
     }
 
-    const fileData = fs.readFileSync(INPUT_PATH, { encoding: 'utf-8' });
+    const fileData = fs.readFileSync(inputPath, { encoding: 'utf-8' });
 
     const records: RowData[] = parse(fileData, {
         columns: HEADERS,
@@ -265,10 +266,7 @@ const convertCsv = () => {
 
     console.log(`Found ${records.length} records`);
 
-    if (!fs.existsSync(OUTPUT_DIR)) {
-        fs.mkdirSync(OUTPUT_DIR);
-    }
-
+    ensureDirExists(outputDir);
     let numFail = 0;
     for (const record of records) {
         const success = handleRecord(record);
@@ -279,6 +277,8 @@ const convertCsv = () => {
     console.log(`${numFail} rows failed to validate out of ${records.length} total`);
 };
 
-if (import.meta.main) {
-    convertCsv();
-}
+await main(async args => {
+    const inputPath = args['input'] ?? "./test-data";
+    const outputDir = args['output'] ?? "./generated/card_data";
+    convertCsv(inputPath, outputDir);
+});

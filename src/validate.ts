@@ -1,9 +1,8 @@
 import { readAndValidateFiles } from "./validation/parseFiles";
+import { main } from "./util/cliUtil";
 
-export const TEST_FOLDER = "./test_data";
-
-// TODO: Make these CLI args
-
-if (import.meta.main) {
-    await readAndValidateFiles(TEST_FOLDER, true);
-}
+await main(async args => {
+    const inputDir = args['input'] ?? "./test_data";
+    const recursive = args['r'] ?? true;
+    await readAndValidateFiles(inputDir, recursive);
+});

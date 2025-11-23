@@ -36,6 +36,8 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "moduleResolution": "node",
+
+    "allowSyntheticDefaultImports": true,
   },
   "include": ["src", "typings"]
 }
