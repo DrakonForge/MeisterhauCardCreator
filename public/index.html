@@ -10,6 +10,12 @@
 </head>
 
 <body>
+    <div class="controls">
+        <textarea class="json-entry"></textarea>
+        <button class="apply-button">Apply JSON</button>
+        <button class="clear-button">Clear JSON</button>
+        <button class="submit-button">Download Image</button>
+    </div>
     <div class="card-view">
         <div class="card">
             <div class="card-overlay">
@@ -19,11 +25,11 @@
                 <div class="stat-structure">
                     1
                 </div>
-                <div class="action-type-icon">
-                    <img class="header-icon" src="img/ParryIcon_Both.svg" />
+                <div class="action-type-container">
+                    <img class="action-type-icon header-icon" src="img/ParryIcon_Both.svg" />
                 </div>
-                <div class="parry-height-icon">
-                    <img class="header-icon" src="img/ParryIcon_High.svg" />
+                <div class="parry-height-container">
+                    <img class="parry-height-icon header-icon" src="img/ParryIcon_High.svg" />
                 </div>
                 <!-- TODO: Parry height and action type -->
                 <div class="header">
@@ -33,7 +39,7 @@
                 <div class="divider">
                     <div class="card-category">Cut - Oberhau</div>
                     <div class="card-range">
-                        <img class="icon" src="img/ParryIcon_Both.svg" />
+                        <img class="range-icon icon" src="img/ParryIcon_Both.svg" />
                         <div class="card-range-text">1-2</div>
                     </div>
                 </div>
@@ -51,9 +57,7 @@
             </div>
         </div>
     </div>
-    <div class="controls">
-        <button class="submit-button">Download Image</button>
-    </div>
+
 
     <script type="module" src="./app.js"></script>
 </body>

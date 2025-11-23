@@ -9,6 +9,11 @@ export const ValueRangeSchema = z.union([
     })
 ]);
 
+export const CardTextSchema = z.union([
+    z.string().nonempty(),
+    z.array(z.string().nonempty()).nonempty()
+]);
+
 // TODO: Validator should handle keywords that have no effect
 const SimpleKeywordTypeSchema = z.enum([
     // Attack
@@ -92,3 +97,5 @@ export const ArmActionTypeSchema = z.enum(["Normal", "Parry", "Defend", "Chamber
 
 export type Keyword = z.infer<typeof KeywordSchema>;
 export type ValueRange = z.infer<typeof ValueRangeSchema>;
+export type CardText = z.infer<typeof CardTextSchema>;
+export type ActionType = z.infer<typeof ActionTypeSchema>;

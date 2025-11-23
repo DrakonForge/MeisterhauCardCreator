@@ -1,14 +1,11 @@
 import z from "zod";
 import { ConditionsSchema } from "./condition";
 import { BehaviorSchema } from "./behavior";
-import { ActionTypeSchema, KeywordsSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
+import { ActionTypeSchema, CardTextSchema, KeywordsSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
-    Text: z.union([
-        z.string().nonempty(),
-        z.array(z.string().nonempty()).nonempty()
-    ]),
+    Text: CardTextSchema,
     // Optional for now, since we do not need the logic yet
     Conditions: ConditionsSchema.optional(),
     Behavior: BehaviorSchema.optional(),
@@ -71,3 +68,4 @@ export type BaseCard = z.infer<typeof BaseCardSchema>;
 export type ArmActionCard = z.infer<typeof ArmActionCardSchema>;
 export type LegActionCard = z.infer<typeof LegActionCardSchema>;
 export type SpecialActionCard = z.infer<typeof SpecialActionCardSchema>;
+export type CardAction = z.infer<typeof CardActionSchema>;

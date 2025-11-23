@@ -1,4 +1,6 @@
 import { toPng } from 'html-to-image';
+import { onClick, query } from './dom';
+import { clearCardView, setCardView } from './renderCard';
 
 const generateCardImage = (id: string) => {
     const element = document.querySelector<HTMLElement>(".card");
@@ -22,6 +24,16 @@ const generateCardImage = (id: string) => {
         });
 }
 
-document.querySelector<HTMLElement>(".submit-button")?.addEventListener("click", () => {
+onClick(".apply-button", () => {
+    const textarea = query<HTMLInputElement>(".json-entry");
+    if (textarea) {
+        const rawData = JSON.parse(textarea.value);
+        setCardView(rawData);
+    }
+});
+onClick(".clear-button", () => {
+    clearCardView();
+});
+onClick(".submit-button", () => {
     generateCardImage("MyCard");
 });

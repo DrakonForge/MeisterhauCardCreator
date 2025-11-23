@@ -65,15 +65,15 @@ body {
     right: var(--card-stat-horizontal-margin);
 }
 
-.action-type-icon, .parry-height-icon {
+.action-type-container, .parry-height-container {
     top: 136px;
 }
 
-.action-type-icon {
+.action-type-container {
     left: 6px;
 }
 
-.parry-height-icon {
+.parry-height-container {
     right: 6px;
 }
 
@@ -93,7 +93,8 @@ body {
 
 .card-title {
     text-align: center;
-    font-size: 60px;
+    font-size: 60px; /* TODO: Font scaling */
+    width: 450px;
 }
 
 .card-subtitle {
@@ -141,6 +142,10 @@ img.icon {
     display: inline;
     width: 36px;
     height: 36px;
+}
+
+img.icon.hidden {
+    display: none;
 }
 
 /* Card Text */
