@@ -245,7 +245,7 @@ const handleRecord = (record: RowData): boolean => {
         consola.debug(`Generated ${id}.json`);
         return true;
     } catch (e) {
-        consola.warn(`Failed to validate card ${id}`, e);
+        consola.error(`Failed to validate card ${id}:`, e);
         return false;
     }
 };
