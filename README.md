@@ -36,11 +36,12 @@ Converts CSV to JSON. Takes in a path to a CSV file and outputs multiple card JS
 
 ### `npm run image`
 
-> Usage: `npm run image -- [--input <json_directory>] [--output <output_directory>] [--siteUrl <url>] [-r]`
+> Usage: `npm run image -- [--input <json_directory>] [--output <output_directory>] [--siteUrl <url>] [-r] [--sync]`
 
 Converts JSON to PNG files. Takes in a path to a folder of JSON files, validates them, then converts them into PNGs.
 
 * Add `-r` to make it recursive, so it will look through subfolders.
+* Add `--sync` to run the synchronous implementation. Defaults to the parallelized version because it tends to be twice as fast, but synchronous can help guarantee nothing goes wrong.
 * Generally, you should not specify `--siteUrl` so the local site created with `npm run serve` is used.
 
 ### `npm run serve`
