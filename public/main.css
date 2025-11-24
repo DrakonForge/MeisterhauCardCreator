@@ -17,6 +17,7 @@
     --color-ultramarine: #3f00ff;
     --color-ochre: #cc7722;
     --color-rust: #985717;
+    --color-gold: #f0bf56;
 }
 
 body {
@@ -169,10 +170,19 @@ img.hidden.hidden {
     vertical-align: middle;
 }
 
+.card-overlay p > img.icon {
+    margin-right: 5px;
+}
+
 img.icon {
     display: inline;
     width: 36px;
     height: 36px;
+}
+
+img.icon.range-icon {
+    width: 45px;
+    height: 45px;
 }
 
 /* Card Text */

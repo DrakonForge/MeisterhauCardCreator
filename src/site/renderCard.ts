@@ -11,11 +11,16 @@ const IconAssets = {
     PARRY_HIGH: "img/ParryIcon_High.svg",
     PARRY_LOW: "img/ParryIcon_Low.svg",
     PARRY_NONE: "img/ParryIcon_None.svg",
-    // TODO: Temp values
-    RANGE_ICON: "img/ParryIcon_None.svg",
-    CHAMBER_ICON: "img/ParryIcon_None.svg",
-    DEFEND_ICON: "img/ParryIcon_None.svg",
+    RANGE_ICON: "img/RangeIcon.svg",
+    CHAMBER_ICON: "img/ChamberIcon.svg",
+    DEFEND_ICON: "img/DefendIcon.svg",
 };
+
+enum PlayActionType {
+    NORMAL = "Normal",
+    CHAMBER = "Chamber",
+    DEFEND = "Defend",
+}
 
 const rangeToStr = (range: ValueRange): string => {
     let min: number | undefined;
@@ -111,6 +116,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = `Speed ${speed}`;
                 break;
             case "Definition":
+                span.classList.add("definition");
                 span.textContent = component.Content!;
                 break;
             default:
@@ -123,8 +129,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
     }
 };
 
-const applyText = (action: CardAction, parent: HTMLElement) => {
-    // TODO: Add icon to first <p> element
+const applyText = (action: CardAction, parent: HTMLElement, type: PlayActionType) => {
     let textLines: string[];
     if (typeof action.Text === "string") {
         textLines = [action.Text];
@@ -138,7 +143,17 @@ const applyText = (action: CardAction, parent: HTMLElement) => {
         const p = document.createElement("p");
         const jsonText = convertTextToJson(textLine);
         if (isFirst) {
-            // TODO: Append icon (and a space after)
+            if (type === PlayActionType.CHAMBER) {
+                const icon = document.createElement("img");
+                icon.classList.add("icon");
+                icon.src = IconAssets.CHAMBER_ICON;
+                p.appendChild(icon);
+            } else if (type === PlayActionType.DEFEND) {
+                const icon = document.createElement("img");
+                icon.classList.add("icon");
+                icon.src = IconAssets.DEFEND_ICON;
+                p.appendChild(icon);
+            }
             if (action.Title) {
                 const title = document.createElement("span");
                 title.classList.add("action-title");
@@ -187,7 +202,7 @@ export const setCardView = (card: Card) => {
     if (!textContainer) {
         throw new Error("Unable to find text container");
     }
-    applyText(card.Action, textContainer);
+    applyText(card.Action, textContainer, PlayActionType.NORMAL);
 
     if (card.ActionType === "Arm") {
         setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
@@ -203,20 +218,20 @@ export const setCardView = (card: Card) => {
         setText(".stat-speed", card.Speed.toString());
         setText(".stat-structure", card.Structure.toString());
         if (card.DefendAction) {
-            applyText(card.DefendAction, textContainer);
+            applyText(card.DefendAction, textContainer, PlayActionType.DEFEND);
         }
         if (card.ChamberAction) {
-            applyText(card.ChamberAction, textContainer);
+            applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
         }
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
     } else if (card.ActionType === "Leg") {
-        setImageUrl(".action-type-icon > .header-icon", IconAssets.LEG_ACTION);
+        setImageUrl(".action-type-icon", IconAssets.LEG_ACTION);
         setText(".stat-speed", card.Speed.toString());
         if (card.ChamberAction) {
-            applyText(card.ChamberAction, textContainer);
+            applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
         }
     } else if (card.ActionType === "Special") {
-        setImageUrl(".action-type-icon > .header-icon", IconAssets.SPECIAL_ACTION);
+        setImageUrl(".action-type-icon", IconAssets.SPECIAL_ACTION);
     }
 };

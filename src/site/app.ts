@@ -40,7 +40,7 @@ onClick(".update-button", () => {
             const card = validateCardFromJson(rawData);
             setCardView(card);
         } catch(e) {
-            console.error("ERROR:",e);
+            console.error("ERROR:", e);
             return;
         }
     }
@@ -50,5 +50,6 @@ onClick(".clear-button", () => {
     clearCardView();
 });
 onClick(".download-button", () => {
+    displayImage();
     generateCardImage("MyCard");
 });
