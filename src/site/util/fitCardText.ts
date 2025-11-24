@@ -6,6 +6,7 @@ const MAX_GAP = 30;
 const MAX_FONT_SIZE = 36;
 const MIN_FONT_SIZE = 24;
 const FONT_SIZE_STEP = 2;
+const ICON_SIZE_OFFSET = 16; // Works together w/CSS to make icons look bigger
 
 export const fitCardText = () => {
     const container = query(".card-text-container");
@@ -56,14 +57,15 @@ export const fitCardText = () => {
     for (fontSize = MAX_FONT_SIZE; fontSize >= MIN_FONT_SIZE; fontSize -= FONT_SIZE_STEP) {
         // Set font size
         const sizeText = `${fontSize}px`;
+        const iconSizeText = `${fontSize + ICON_SIZE_OFFSET}px`;
         text.style.fontSize = sizeText;
 
         // Set icon size
         for (let i = 0; i < icons.length; ++i) {
             const icon = icons[i];
             if (icon) {
-                icon.style.width = sizeText;
-                icon.style.height = sizeText;
+                icon.style.width = iconSizeText;
+                icon.style.height = iconSizeText;
             }
         }
 

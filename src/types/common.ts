@@ -74,7 +74,7 @@ export const TargetSchema = z.enum(["High", "Low"]).meta({
 export const ParryHeightSchema = z.enum(["High", "Low", "Both", "None"]).meta({
     "id": "ParryHeight"
 });
-export const GuardArchetypeSchema = z.enum(["Ochs", "Plow", "VomTag", "Alber"]).meta({
+export const GuardArchetypeSchema = z.enum(["Ochs", "Pflug", "VomTag", "Alber"]).meta({
     "id": "GuardArchetype",
     "title": "Guard Archetype",
     "description": "Which of the Vier Leger (core guards) this position would be classified as."

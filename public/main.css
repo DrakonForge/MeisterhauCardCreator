@@ -208,13 +208,16 @@ img.hidden.hidden {
 
 img.icon {
     display: inline;
-    width: 36px;
-    height: 36px;
+    /* Adjust icons to always be 16px bigger than text, but not break up line height */
+    width: 48px;
+    height: 48px;
+    margin-top: -8px;
+    margin-bottom: -8px;
 }
 
 img.icon.range-icon {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
 }
 
 /* Card Text */

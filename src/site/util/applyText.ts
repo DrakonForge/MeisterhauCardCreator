@@ -50,6 +50,14 @@ const TextKeywordMap = {
     }
 };
 
+const TextGuardMap = {
+    "VomTag": "Vom Tag",
+    "Pflug": "Pflug",
+    "Ochs": "Ochs",
+    "Alber": "Alber",
+    "Langort": "Longpoint"
+}
+
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
     for (const component of components) {
         const span = document.createElement("span");
@@ -117,6 +125,17 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Definition":
                 span.classList.add("definition");
                 span.textContent = component.Content!;
+                break;
+            case "Guard":
+                span.classList.add("definition");
+                const guard = component.Content!;
+                const guardEntry = TextGuardMap[guard as keyof typeof TextGuardMap];
+                if (guardEntry) {
+                    span.textContent = guardEntry;
+                } else {
+                    consola.warn(`Unknown guard ${guard}`);
+                    span.textContent = guard;
+                }
                 break;
             case "Keyword":
                 const text = component.Content!;

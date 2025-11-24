@@ -65,7 +65,7 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
 ## Workflow 2: Visual Card Editor
 
 1) Run `npm run serve` in a terminal window. You should be able to access [http://localhost:3000](http://localhost:3000/).
-1) Input JSON data in the text area.
+1) Input JSON data in the text area. You can copy-paste values from the output of `npm run csv` (see above) or write your own.
 1) Click **Update** to see the card visual.
    * If there are validation errors, they will appear in the browser console.
 1) Click **Download Image** to download the image.
