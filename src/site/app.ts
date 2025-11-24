@@ -29,7 +29,8 @@ const displayImage = async () => {
     displayImg.src = dataUrl;
 }
 
-onClick(".update-button", () => {
+onClick(".update-button", async () => {
+    (window as any).status = "processing";
     const textarea = query<HTMLInputElement>(".json-entry");
     if (textarea) {
         try {
@@ -41,7 +42,8 @@ onClick(".update-button", () => {
             return;
         }
     }
-    displayImage();
+    await displayImage();
+    (window as any).status = "ready";
 });
 onClick(".clear-button", () => {
     clearCardView();

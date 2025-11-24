@@ -21,6 +21,7 @@ const generateImages = async (inputDir: string, outputDir: string, siteUrl: stri
     const displayImg = await page.$('.card-display-output > img');
     let numProcessed = 0;
     let numFails = 0;
+    // TODO: Explore whether it is possible to parallelize this
     for (const [key, card] of cardEntries) {
         numProcessed++;
         consola.log(`Progress: ${createProgressBar(numProcessed / cardEntries.length, 10)} (${numProcessed}/${cardEntries.length})`);
@@ -28,9 +29,17 @@ const generateImages = async (inputDir: string, outputDir: string, siteUrl: stri
         await textarea?.evaluate(element => element.value = '');
         await textarea?.type(JSON.stringify(card));
         await updateButton?.click();
-        await delay(10); // Wait for things to render
+
+        // Wait for process to finish
+        await page.waitForFunction('window.status === "ready"', {
+            polling: 100,
+            timeout: 5000,
+        });
+        // await delay(1000); // Wait for things to render
+
         const url = await displayImg?.evaluate(img => img.src);
         if (url) {
+            console.log(`${key} - ${url.length}`);
             const imgPage = await browser.newPage();
             const viewSource = await imgPage.goto(url);
             const filePath = path.join(outputDir, key + ".png");

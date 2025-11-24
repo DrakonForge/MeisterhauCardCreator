@@ -55,8 +55,8 @@ const TextGuardMap = {
     "Pflug": "Pflug",
     "Ochs": "Ochs",
     "Alber": "Alber",
-    "Langort": "Longpoint"
-}
+    "Langort": "Langort"
+};
 
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
     for (const component of components) {

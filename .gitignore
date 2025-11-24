@@ -7,3 +7,5 @@ generated/
 # Stuff for website maybe
 public/**/*.js
 public/**/*.js.map
+
+test_data/personal/*
