@@ -1,3 +1,6 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Cabin:ital,wght@0,400..700;1,400..700&family=Cormorant+Unicase:wght@300;400;500;600;700&family=Eagle+Lake&display=swap');
+
 *,
 *::before,
 *::after {
@@ -11,13 +14,13 @@
 :root {
     --card-text-horizontal-margin: 32px;
     --card-stat-horizontal-margin: 10px;
-    --color-carbon: #130e0a;
-    --color-chalk: #f6f4f1;
-    --color-carmine: #960018;
-    --color-ultramarine: #3f00ff;
-    --color-ochre: #cc7722;
-    --color-rust: #985717;
-    --color-gold: #f0bf56;
+    /* Loosely based on https: //www.reddit.com/r/RPGdesign/comments/5fyv24/medieval_manuscript_colors/ */
+    --color-dark: #130e0a;
+    --color-light: #f6f4f1;
+    --color-structure: #960018; /* More washed out: #89213e */
+    --color-speed: #3f00ff; /* More washed out: #3950a3 */
+    --color-range: #924609;
+    --color-strike: #924609;
 }
 
 body {
@@ -68,10 +71,12 @@ img.hidden.hidden {
 }
 
 .card-overlay {
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: "Cabin",
+        sans-serif;
     position: relative;
     font-size: 36px;
-    color: var(--color-carbon);
+    color: var(--color-dark);
     overflow: hidden;
     height: 100%;
 }
@@ -81,7 +86,9 @@ img.hidden.hidden {
 }
 
 .stat-speed, .stat-structure {
-    color: var(--color-chalk);
+    font-family: "Archivo", serif;
+    font-weight: bold;
+    color: var(--color-light);
     font-size: 75px;
     top: 18px;
     text-align: center;
@@ -133,14 +140,19 @@ img.hidden.hidden {
 }
 
 .card-title {
+    font-family: "Cormorant Unicase", serif;
+    font-weight: bold;
     text-align: center;
     font-size: 60px;
 }
 
 .card-subtitle {
+    font-family: "Eagle Lake", serif;
     text-align: center;
     font-size: 32px;
+    /* Optional letter spacing changes */
     font-style: italic;
+    letter-spacing: -2px;
 }
 
 .divider {
@@ -159,6 +171,11 @@ img.hidden.hidden {
     flex-flow: row nowrap;
     align-items: center;
     gap: 5px;
+}
+
+.card-range-text {
+    color: var(--color-range);
+    font-weight: bold;
 }
 
 .card-text-container {
@@ -201,22 +218,24 @@ img.icon.range-icon {
 }
 
 /* Card Text */
+
 span.action-title {
     font-style: italic;
 }
 
 span.range {
+    color: var(--color-range);
     font-weight: bold;
 }
 
 span.structure {
     font-weight: bold;
-    color: var(--color-carmine);
+    color: var(--color-structure);
 }
 
 span.speed {
     font-weight: bold;
-    color: var(--color-ultramarine);
+    color: var(--color-speed);
 }
 
 span.definition {
@@ -225,7 +244,7 @@ span.definition {
 
 span.strike {
     font-weight: bold;
-    color: var(--color-rust);
+    color: var(--color-strike);
 }
 
 span.generic-highlight {

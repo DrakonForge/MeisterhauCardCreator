@@ -1,7 +1,7 @@
 import { consola } from "consola";
 import { query, queryAll } from "../dom";
 
-const MIN_GAP = 0;
+const MIN_GAP = 5;
 const MAX_GAP = 30;
 const MAX_FONT_SIZE = 36;
 const MIN_FONT_SIZE = 24;
@@ -14,6 +14,11 @@ export const fitCardText = () => {
     if (!container || !text) {
         throw new Error("Unable to find text or text container");
     }
+
+    // Reset to max
+    text.style.gap = `${MAX_GAP}px`;
+    text.style.fontSize = `${MAX_FONT_SIZE}px`;
+    // Icons shouldn't need to be reset, they are regenerated every time
 
     if (text.clientHeight <= container.clientHeight) {
         // No need to do anything
@@ -64,7 +69,7 @@ export const fitCardText = () => {
 
         // Check content height again to see if it fits
         const newContentHeight = getTextContentHeight(text);
-        if (newContentHeight < container.clientHeight) {
+        if (newContentHeight + MIN_GAP * numGaps < container.clientHeight) {
             consola.debug(`Found valid font size ${fontSize}`);
             break;
         }

@@ -3,6 +3,52 @@ import { type TextComponent, convertTextToJson } from "../../text/converters";
 import type { CardAction } from "../../types/card";
 import { PlayActionType, IconAssets } from "../renderCard";
 
+const TextKeywordMap = {
+    "Swiftness": {
+        Content: "Swiftness",
+        Decorator: "speed",
+    },
+    "PointForward": {
+        Content: "Point Forward",
+        Decorator: "generic-highlight",
+    },
+    "ProtectsHands": {
+        Content: "Protects Hands",
+        Decorator: "generic-highlight",
+    },
+    "Volatile": {
+        Content: "Volatile",
+        Decorator: "generic-highlight",
+    },
+    "Overbind": {
+        Content: "Overbind",
+        Decorator: "structure",
+    },
+    "Sterck": {
+        Content: "Sterck",
+        Decorator: "structure"
+    },
+    "Swech": {
+        Content: "Swech",
+        Decorator: "speed"
+    },
+    "HandSnipe": {
+        Content: "Hand Snipe",
+        Decorator: "generic-highlight",
+    },
+    "Offline": {
+        Content: "Offline",
+        Decorator: "generic-highlight"
+    },
+    "Interrupt": {
+        Content: "Interrupt",
+        Decorator: "structure",
+    },
+    "Disengage": {
+        Content: "Disengage",
+        Decorator: "speed",
+    }
+};
 
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
     for (const component of components) {
@@ -71,6 +117,19 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Definition":
                 span.classList.add("definition");
                 span.textContent = component.Content!;
+                break;
+            case "Keyword":
+                const text = component.Content!;
+                const keyword = text!.split(' ')[0] || '';
+                const keywordEntry = TextKeywordMap[keyword as keyof typeof TextKeywordMap];
+                if (keywordEntry) {
+                    span.textContent = text.replace(keyword, keywordEntry.Content);
+                    span.classList.add(keywordEntry.Decorator);
+                } else {
+                    consola.warn(`Unknown keyword ${keyword}`);
+                    span.classList.add("generic-highlight");
+                    span.textContent = text;
+                }
                 break;
             default:
                 consola.warn(`Unknown text component type ${component.Type}`);

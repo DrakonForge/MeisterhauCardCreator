@@ -26,5 +26,5 @@ export const rangeToStr = (range: ValueRange): string => {
     if (min === max) {
         return `${min}`;
     }
-    return `${min}-${max}`;
+    return `${min}–${max}`;
 };

@@ -13,6 +13,9 @@ export const fitCardTitle = () => {
         throw new Error("Unable to find text or text container");
     }
 
+    // Reset to max
+    text.style.fontSize = `${MAX_FONT_SIZE}px`;
+
     if (text.clientWidth <= container.clientWidth) {
         // No need to do anything
         return;

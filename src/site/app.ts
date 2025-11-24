@@ -1,4 +1,5 @@
-import { toPng } from 'html-to-image';
+/* Using a custom version of html-to-image to receive this fix: https://github.com/bubkoo/html-to-image/pull/547 */
+import { toPng } from '@jpinsonneau/html-to-image';
 import { onClick, query } from './dom';
 import { clearCardView, setCardView } from './renderCard';
 import { validateCardFromJson } from '../validation/validation';
@@ -18,19 +19,14 @@ const generateCardImage = (id: string) => {
     }
 }
 
-const displayImage = () => {
+const displayImage = async () => {
     const element = query(".card");
-    if (!element) {
-        throw new Error("Could not find card element.");
+    const displayImg = query<HTMLImageElement>(".card-display-output > img");
+    if (!element || !displayImg) {
+        throw new Error("Could not find card or card image element.");
     }
-    toPng(element).then((dataUrl) => {
-        // Display the image
-        const displayImg = query<HTMLImageElement>(".card-display-output > img");
-        if (!displayImg) {
-            return;
-        }
-        displayImg.src = dataUrl;
-    });
+    const dataUrl = await toPng(element);
+    displayImg.src = dataUrl;
 }
 
 onClick(".update-button", () => {
@@ -50,7 +46,7 @@ onClick(".update-button", () => {
 onClick(".clear-button", () => {
     clearCardView();
 });
-onClick(".download-button", () => {
-    displayImage();
+onClick(".download-button", async () => {
+    await displayImage();
     generateCardImage("MyCard");
 });

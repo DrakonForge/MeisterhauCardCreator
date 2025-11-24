@@ -14,9 +14,9 @@
     "csv": "npm run build && node ./dist/convertCsv.js"
   },
   "dependencies": {
+    "@jpinsonneau/html-to-image": "^1.11.13",
     "consola": "^3.4.2",
     "csv-parse": "^6.1.0",
-    "html-to-image": "^1.11.13",
     "json-stringify-pretty-compact": "^4.0.0",
     "minimist": "^1.2.8",
     "puppeteer": "^24.31.0",
