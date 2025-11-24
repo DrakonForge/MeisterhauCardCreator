@@ -1,7 +1,10 @@
+import { consola } from "consola";
 import { type TextComponent, convertTextToJson } from "../text/converters";
 import type { CardAction, Card } from "../types/card";
 import type { ValueRange } from "../types/common";
 import { setText, query, setImageUrl, getClassList } from "./dom";
+import { fitCardText } from "./fit/fitCardText";
+import { fitCardTitle } from "./fit/fitCardTitle";
 
 const IconAssets = {
     ARM_ACTION: "img/ArmActionIcon.svg",
@@ -120,7 +123,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = component.Content!;
                 break;
             default:
-                console.warn(`Unknown text component type ${component.Type}`);
+                consola.warn(`Unknown text component type ${component.Type}`);
                 span.classList.add("generic-highlight");
                 span.textContent = component.Content!;
                 break;
@@ -167,6 +170,16 @@ const applyText = (action: CardAction, parent: HTMLElement, type: PlayActionType
     }
 };
 
+// Get height of all the elements, NOT including gaps
+export const getTextContentHeight = (parent: HTMLElement): number => {
+    let contentHeight = 0;
+    for (let i = 0; i < parent.children.length; ++i) {
+        const childElement = parent.children[i];
+        contentHeight += childElement?.clientHeight ?? 0;
+    }
+    return contentHeight;
+}
+
 export const clearCardView = () => {
     setText(".card-title", "");
     setText(".card-subtitle", "");
@@ -176,7 +189,7 @@ export const clearCardView = () => {
     setText(".stat-structure", "");
     setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
     setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
-    const textContainer = query(".card-text-container");
+    const textContainer = query(".card-text");
     if (textContainer) {
         textContainer.innerHTML = "";
     }
@@ -198,7 +211,7 @@ export const setCardView = (card: Card) => {
         }
     }
 
-    const textContainer = query(".card-text-container");
+    const textContainer = query(".card-text");
     if (!textContainer) {
         throw new Error("Unable to find text container");
     }
@@ -234,4 +247,7 @@ export const setCardView = (card: Card) => {
     } else if (card.ActionType === "Special") {
         setImageUrl(".action-type-icon", IconAssets.SPECIAL_ACTION);
     }
+
+    fitCardText();
+    fitCardTitle();
 };

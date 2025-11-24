@@ -123,10 +123,18 @@ img.hidden.hidden {
     flex-flow: column nowrap;
 }
 
+
+.card-title-container {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 450px;
+    justify-content: center;
+    white-space: nowrap; /* Force it to render on one line */
+}
+
 .card-title {
     text-align: center;
-    font-size: 60px; /* TODO: Font scaling */
-    width: 450px;
+    font-size: 60px;
 }
 
 .card-subtitle {
@@ -160,8 +168,15 @@ img.hidden.hidden {
     padding-right: var(--card-text-horizontal-margin);
     display: flex;
     flex-flow: column nowrap;
-    gap: 20px;
-    height: auto;
+    height: 485px; /* Hardcoded to the end of the text */
+}
+
+.card-text {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    gap: 30px;
 }
 
 .card-overlay p > * {
@@ -211,4 +226,8 @@ span.definition {
 span.strike {
     font-weight: bold;
     color: var(--color-rust);
+}
+
+span.generic-highlight {
+    font-weight: bold;
 }

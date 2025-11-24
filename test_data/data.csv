@@ -1,4 +1,9 @@
 Id,Name,Secondary Name,Action Type,Category 1,Category 2,Tier,Speed,Structure,Parry Height,Range,Keywords,Action Text,Defend Action Title,Defend Action Text,Chamber Action Title,Chamber Action Text,Action Behavior,Defend Action Behavior,Chamber Action Behavior,Notes
-Oberhau,Oberhau,Cut from Above,Arm,Cut,Oberhau,0,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+Oberhau,Oberhau,Cut From Above,Arm,Cut,Oberhau,0,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+Unterhau,Unterhau,Cut From Below,Arm,Cut,Unterhau,0,3,1,Low,1-2,,<<Strike Unterhau>> to the lower opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
 FlashOfInsight,Flash of Insight,,Special,Special,,0,,,,,,"View the opponent's chambered card, then draw 1",,,,,,,,
 PushStep,Push Step,,Leg,Footwork,Linear,0,3,,,,,Move 1 unit forward OR backward.,,,Follow the Leader,"If the opponent moves forward or backward, move in the opposite direction with this card.",,,,
+Schielhau3,Scheilhau III,Squinting Strike,Arm,Meisterhau,Schielhau,3,4,3,High,1-2,,"Break any guard with <<Keyword PointForward>>.
+<<Range 2>>: <<Keyword Interrupt>>. <<Strike Thrust>> to the upper opening.
+Otherwise, <<Strike Oberhau>> to the upper opening.
+<<Keyword Sterck>>: The opponent's arm actions have <<LoseSpeed 2>> on their next turn.",Single-Time Counter,Defend any Oberhau or Thrust to the upper opening. <<Keyword Sterck>>: Attack with this card.,Masterstrike,"If the opponent threatens you with an Oberhau or Thrust to the upper opening, defend with this card. You have <<GainStructure 1>>.",,,,

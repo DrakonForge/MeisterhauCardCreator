@@ -2,6 +2,7 @@ import { toPng } from 'html-to-image';
 import { onClick, query } from './dom';
 import { clearCardView, setCardView } from './renderCard';
 import { validateCardFromJson } from '../validation/validation';
+import { consola } from 'consola';
 
 const generateCardImage = (id: string) => {
     const element = document.querySelector<HTMLElement>(".card");
@@ -40,7 +41,7 @@ onClick(".update-button", () => {
             const card = validateCardFromJson(rawData);
             setCardView(card);
         } catch(e) {
-            console.error("ERROR:", e);
+            consola.error(e);
             return;
         }
     }

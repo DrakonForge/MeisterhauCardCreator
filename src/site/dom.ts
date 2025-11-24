@@ -1,8 +1,9 @@
+import { consola } from "consola";
 
 export const query = <T extends Element = HTMLElement>(selector: string): T | null => {
     const element = document.querySelector(selector) as T;
     if (!element) {
-        console.warn(`Unable to find selector ${selector}`);
+        consola.warn(`Unable to find selector ${selector}`);
         return null;
     }
     return element;
@@ -11,7 +12,7 @@ export const query = <T extends Element = HTMLElement>(selector: string): T | nu
 export const queryAll = <T extends Element = HTMLElement>(selector: string): NodeListOf<T> | null => {
     const element = document.querySelectorAll<T>(selector);
     if (!element) {
-        console.warn(`Unable to find selector ${selector}`);
+        consola.warn(`Unable to find selector ${selector}`);
         return null;
     }
     return element;
