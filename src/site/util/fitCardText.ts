@@ -1,6 +1,5 @@
 import { consola } from "consola";
 import { query, queryAll } from "../dom";
-import { getTextContentHeight } from "../renderCard";
 
 const MIN_GAP = 0;
 const MAX_GAP = 30;
@@ -87,3 +86,14 @@ export const fitCardText = () => {
     consola.log(`Also setting gap to ${idealGap}`);
     text.style.gap = `${idealGap}px`;
 };
+
+// Get height of all the elements, NOT including gaps
+const getTextContentHeight = (parent: HTMLElement): number => {
+    let contentHeight = 0;
+    for (let i = 0; i < parent.children.length; ++i) {
+        const childElement = parent.children[i];
+        contentHeight += childElement?.clientHeight ?? 0;
+    }
+    return contentHeight;
+};
+
