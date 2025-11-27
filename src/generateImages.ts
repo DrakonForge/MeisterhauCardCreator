@@ -138,7 +138,7 @@ const generateImages = async (inputDir: string, outputDir: string, siteUrl: stri
 };
 
 await main(async args => {
-    const inputDir = args['input'] ?? "./test_data";
+    const inputDir = args['input'] ?? "./generated/card_data";
     const outputDir = args['output'] ?? "./generated/card_images";
     const siteUrl = args['site'] ?? "http://localhost:3000/";
     const recursive = args['r'] ?? true;
