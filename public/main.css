@@ -12,8 +12,8 @@
 }
 
 :root {
-    --card-text-horizontal-margin: 32px;
-    --card-stat-horizontal-margin: 10px;
+    --card-text-horizontal-margin: 59px;
+    --card-stat-horizontal-margin: 37px;
     /* Loosely based on https: //www.reddit.com/r/RPGdesign/comments/5fyv24/medieval_manuscript_colors/ */
     --color-dark: #130e0a;
     --color-light: #f6f4f1;
@@ -90,7 +90,7 @@ img.hidden.hidden {
     font-weight: bold;
     color: var(--color-light);
     font-size: 75px;
-    top: 18px;
+    top: 45px;
     text-align: center;
     width: 75px;
     height: 85px;
@@ -105,15 +105,15 @@ img.hidden.hidden {
 }
 
 .action-type-container, .parry-height-container {
-    top: 136px;
+    top: 165px;
 }
 
 .action-type-container {
-    left: 6px;
+    left: 33px;
 }
 
 .parry-height-container {
-    right: 6px;
+    right: 33px;
 }
 
 .header-icon {
@@ -123,7 +123,7 @@ img.hidden.hidden {
 
 
 .header {
-    top: 20px;
+    top: 47px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -134,7 +134,7 @@ img.hidden.hidden {
 .card-title-container {
     display: flex;
     flex-flow: row nowrap;
-    width: 450px;
+    width: 423px;
     justify-content: center;
     white-space: nowrap; /* Force it to render on one line */
 }
@@ -179,7 +179,7 @@ img.hidden.hidden {
 }
 
 .card-text-container {
-    top: 495px;
+    top: 477px;
     width: 100%;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
