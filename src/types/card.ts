@@ -69,3 +69,4 @@ export type ArmActionCard = z.infer<typeof ArmActionCardSchema>;
 export type LegActionCard = z.infer<typeof LegActionCardSchema>;
 export type SpecialActionCard = z.infer<typeof SpecialActionCardSchema>;
 export type CardAction = z.infer<typeof CardActionSchema>;
+export type Keywords = z.infer<typeof KeywordsSchema>;

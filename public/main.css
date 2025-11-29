@@ -206,6 +206,10 @@ img.hidden.hidden {
     margin-right: 5px;
 }
 
+.card-overlay p.keyword-list {
+    text-align: center;
+}
+
 img.icon {
     display: inline;
     /* Adjust icons to always be 16px bigger than text, but not break up line height */

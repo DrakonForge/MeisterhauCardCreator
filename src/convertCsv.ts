@@ -96,7 +96,7 @@ const parseRange = (rangeStr: string): ValueRange => {
 };
 
 const parseKeywords = (keywordsStr: string): Keyword[] => {
-    const keywordList = keywordsStr.split(',').map(str => str.trim()).filter(str => str);
+    const keywordList = keywordsStr.split(',').map(str => parseString(str)).filter(str => str);
     if (!keywordList.length) {
         throw new Error("Keywords cannot be empty");
     }
@@ -120,7 +120,7 @@ const parseKeywords = (keywordsStr: string): Keyword[] => {
 }
 
 const parseText = (textStr: string): string | string[] => {
-    const textLines = textStr.trim().split('\n').map(str => str.trim()).filter(str => str);
+    const textLines = parseString(textStr).split('\n').map(str => parseString(str)).filter(str => str);
     if (!textLines.length) {
         throw new Error("Text cannot be empty");
     }
@@ -129,6 +129,14 @@ const parseText = (textStr: string): string | string[] => {
     }
     return textLines;
 }
+
+const parseString = (str: string): string => {
+    str = str.trim();
+    if (str.toLowerCase() === "x") {
+        return '';
+    }
+    return str;
+};
 
 const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
     "Speed",
@@ -144,23 +152,23 @@ const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
     card.Structure = parseInt(data.Structure);
     card.ParryHeight = ParryHeightSchema.parse(data.ParryHeight);
     card.Range = parseRange(data.Range);
-    if (data.Keywords) {
+    if (parseString(data.Keywords)) {
         card.Keywords = parseKeywords(data.Keywords);
     }
-    if (data.DefendActionText) {
+    if (parseString(data.DefendActionText)) {
         card.DefendAction = {
             Text: parseText(data.DefendActionText),
         }
-        if (data.DefendActionTitle) {
-            card.DefendAction.Title = data.DefendActionTitle;
+        if (parseString(data.DefendActionTitle)) {
+            card.DefendAction.Title = parseString(data.DefendActionTitle);
         }
     }
-    if (data.ChamberActionText) {
+    if (parseString(data.ChamberActionText)) {
         card.ChamberAction = {
             Text: parseText(data.ChamberActionText),
         }
-        if (data.ChamberActionTitle) {
-            card.ChamberAction.Title = data.ChamberActionTitle;
+        if (parseString(data.ChamberActionTitle)) {
+            card.ChamberAction.Title = parseString(data.ChamberActionTitle);
         }
     }
 };
@@ -173,12 +181,12 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
         throw new Error("Missing required leg fields");
     }
     card.Speed = parseInt(data.Speed);
-    if (data.ChamberActionText) {
+    if (parseString(data.ChamberActionText)) {
         card.ChamberAction = {
             Text: parseText(data.ChamberActionText),
         }
-        if (data.ChamberActionTitle) {
-            card.ChamberAction.Title = data.ChamberActionTitle;
+        if (parseString(data.ChamberActionTitle)) {
+            card.ChamberAction.Title = parseString(data.ChamberActionTitle);
         }
     }
 }
@@ -198,8 +206,8 @@ const convertCsvToJson = (data: RowData): Card => {
     }
     // Required stuff first
     const baseCard: Partial<BaseCard> = {
-        Name: data.Name,
-        ActionType: ActionTypeSchema.parse(data.ActionType),
+        Name: parseString(data.Name),
+        ActionType: ActionTypeSchema.parse(parseString(data.ActionType)),
         Tier: parseInt(data.Tier),
         Action: {
             Text: parseText(data.ActionText)
@@ -207,13 +215,13 @@ const convertCsvToJson = (data: RowData): Card => {
     };
 
     // Optional
-    if (data.SecondaryName) {
-        baseCard.SecondaryName = data.SecondaryName;
+    if (parseString(data.SecondaryName)) {
+        baseCard.SecondaryName = parseString(data.SecondaryName);
     }
-    if (data.Category2) {
-        baseCard.Category = [data.Category1, data.Category2];
+    if (parseString(data.Category2)) {
+        baseCard.Category = [parseString(data.Category1), parseString(data.Category2)];
     } else {
-        baseCard.Category = data.Category1;
+        baseCard.Category = parseString(data.Category1);
     }
 
     if (data.ActionType === "Arm") {
@@ -233,7 +241,7 @@ const convertCsvToJson = (data: RowData): Card => {
 }
 
 const handleRecord = (record: RowData): boolean => {
-    const id = record.Id;
+    const id = parseString(record.Id);
     consola.debug(`Processing ${id}`);
     try {
         const jsonData = convertCsvToJson(record);
@@ -253,6 +261,8 @@ const handleRecord = (record: RowData): boolean => {
 const convertCsv = (inputPath: string, outputDir: string) => {
     checkInputPathExists(inputPath);
 
+    consola.log(`Converting CSV at ${inputPath}`);
+
     const fileData = fs.readFileSync(inputPath, { encoding: 'utf-8' });
 
     const records: RowData[] = parse(fileData, {
@@ -271,6 +281,8 @@ const convertCsv = (inputPath: string, outputDir: string) => {
             numFail++;
         }
     }
+
+    consola.info(`Results exported to ${outputDir}`);
 
     if (numFail) {
         consola.fail(`Failed to convert ${numFail} rows out of ${records.length} total`);

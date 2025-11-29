@@ -1,6 +1,6 @@
 import { consola } from "consola";
-import { type TextComponent, convertTextToJson } from "../../text/converters";
-import type { CardAction } from "../../types/card";
+import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "../../text/converters";
+import type { CardAction, Keywords } from "../../types/card";
 import { PlayActionType, IconAssets } from "../renderCard";
 
 const TextKeywordMap = {
@@ -47,6 +47,10 @@ const TextKeywordMap = {
     "Disengage": {
         Content: "Disengage",
         Decorator: "speed",
+    },
+    "Winden": {
+        Content: "Winden",
+        Decorator: "structure",
     }
 };
 
@@ -64,19 +68,19 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
         // TODO: Add better type checking later
         switch (component.Type) {
             case "Plain":
-                span.textContent = component.Content!;
+                span.textContent = component.Content;
                 break;
             case "Strike":
                 span.classList.add("strike");
-                span.textContent = component.Content!;
+                span.textContent = component.Content;
                 break;
             case "Range":
                 span.classList.add("range");
-                span.textContent = `Range ${component.Content!}`;
+                span.textContent = `Range ${component.Content}`;
                 break;
             case "GainStructure":
                 span.classList.add("structure");
-                const structureGain = parseInt(component.Content!);
+                const structureGain = parseInt(component.Content);
                 if (isNaN(structureGain)) {
                     throw new Error("Invalid number");
                 }
@@ -84,15 +88,31 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "GainSpeed":
                 span.classList.add("speed");
-                const speedGain = parseInt(component.Content!);
+                const speedGain = parseInt(component.Content);
                 if (isNaN(speedGain)) {
                     throw new Error("Invalid number");
                 }
                 span.textContent = `+${speedGain} Speed`;
                 break;
+            case "GainArmSpeed":
+                span.classList.add("speed");
+                const armSpeedGain = parseInt(component.Content);
+                if (isNaN(armSpeedGain)) {
+                    throw new Error("Invalid number");
+                }
+                span.textContent = `+${armSpeedGain} Arm Speed`;
+                break;
+            case "GainArmSpeed":
+                span.classList.add("speed");
+                const legSpeedGain = parseInt(component.Content);
+                if (isNaN(legSpeedGain)) {
+                    throw new Error("Invalid number");
+                }
+                span.textContent = `+${legSpeedGain} Leg Speed`;
+                break;
             case "LoseStructure":
                 span.classList.add("structure");
-                const structureLoss = parseInt(component.Content!);
+                const structureLoss = parseInt(component.Content);
                 if (isNaN(structureLoss)) {
                     throw new Error("Invalid number");
                 }
@@ -100,15 +120,31 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "LoseSpeed":
                 span.classList.add("speed");
-                const speedLoss = parseInt(component.Content!);
+                const speedLoss = parseInt(component.Content);
                 if (isNaN(speedLoss)) {
                     throw new Error("Invalid number");
                 }
                 span.textContent = `-${speedLoss} Speed`;
                 break;
+            case "LoseArmSpeed":
+                span.classList.add("speed");
+                const armSpeedLoss = parseInt(component.Content);
+                if (isNaN(armSpeedLoss)) {
+                    throw new Error("Invalid number");
+                }
+                span.textContent = `-${armSpeedLoss} Arm Speed`;
+                break;
+            case "LoseLegSpeed":
+                span.classList.add("speed");
+                const legSpeedLoss = parseInt(component.Content);
+                if (isNaN(legSpeedLoss)) {
+                    throw new Error("Invalid number");
+                }
+                span.textContent = `-${legSpeedLoss} Leg Speed`;
+                break;
             case "Structure":
                 span.classList.add("structure");
-                const structure = parseInt(component.Content!);
+                const structure = parseInt(component.Content);
                 if (isNaN(structure)) {
                     throw new Error("Invalid number");
                 }
@@ -116,7 +152,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Speed":
                 span.classList.add("speed");
-                const speed = parseInt(component.Content!);
+                const speed = parseInt(component.Content);
                 if (isNaN(speed)) {
                     throw new Error("Invalid number");
                 }
@@ -124,11 +160,11 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Definition":
                 span.classList.add("definition");
-                span.textContent = component.Content!;
+                span.textContent = component.Content;
                 break;
             case "Guard":
                 span.classList.add("definition");
-                const guard = component.Content!;
+                const guard = component.Content;
                 const guardEntry = TextGuardMap[guard as keyof typeof TextGuardMap];
                 if (guardEntry) {
                     span.textContent = guardEntry;
@@ -138,7 +174,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 }
                 break;
             case "Keyword":
-                const text = component.Content!;
+                const text = component.Content;
                 const keyword = text!.split(' ')[0] || '';
                 const keywordEntry = TextKeywordMap[keyword as keyof typeof TextKeywordMap];
                 if (keywordEntry) {
@@ -153,12 +189,23 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             default:
                 consola.warn(`Unknown text component type ${component.Type}`);
                 span.classList.add("generic-highlight");
-                span.textContent = component.Content!;
+                span.textContent = component.Content;
                 break;
         }
         parent.appendChild(span);
     }
 };
+
+
+export const applyKeywordText = (keywords: Keywords | undefined, parent: HTMLElement) => {
+    if (!keywords) {
+        return;
+    }
+    const p = document.createElement("p");
+    p.classList.add("keyword-list");
+    renderJsonToHtml(convertKeywordsToJson(keywords), p);
+    parent.appendChild(p);
+}
 
 export const applyText = (action: CardAction, parent: HTMLElement, type: PlayActionType) => {
     let textLines: string[];
@@ -193,7 +240,7 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
             }
             isFirst = false;
         }
-        parent.appendChild(p);
         renderJsonToHtml(jsonText, p);
+        parent.appendChild(p);
     }
 };

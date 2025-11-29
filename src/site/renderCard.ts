@@ -2,7 +2,7 @@ import type { Card } from "../types/card";
 import { setText, query, setImageUrl, getClassList } from "./dom";
 import { fitCardText } from "./util/fitCardText";
 import { fitCardTitle } from "./util/fitCardTitle";
-import { applyText } from "./util/applyText";
+import { applyKeywordText, applyText } from "./util/applyText";
 import { rangeToStr } from "./util/rangeToStr";
 
 export const IconAssets = {
@@ -58,6 +58,9 @@ export const setCardView = (card: Card) => {
     const textContainer = query(".card-text");
     if (!textContainer) {
         throw new Error("Unable to find text container");
+    }
+    if (card.ActionType === "Arm") {
+        applyKeywordText(card.Keywords, textContainer);
     }
     applyText(card.Action, textContainer, PlayActionType.NORMAL);
 

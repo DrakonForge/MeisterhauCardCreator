@@ -1,9 +1,74 @@
 Id,Name,Secondary Name,Action Type,Category 1,Category 2,Tier,Speed,Structure,Parry Height,Range,Keywords,Action Text,Defend Action Title,Defend Action Text,Chamber Action Title,Chamber Action Text,Action Behavior,Defend Action Behavior,Chamber Action Behavior,Notes
-Oberhau,Oberhau,Cut From Above,Arm,Cut,Oberhau,0,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
-Unterhau,Unterhau,Cut From Below,Arm,Cut,Unterhau,0,3,1,Low,1-2,,<<Strike Unterhau>> to the lower opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
-FlashOfInsight,Flash of Insight,,Special,Special,,0,,,,,,"View the opponent's chambered card, then draw 1",,,,,,,,
 PushStep,Push Step,,Leg,Footwork,Linear,0,3,,,,,Move 1 unit forward OR backward.,,,Follow the Leader,"If the opponent moves forward or backward, move in the opposite direction with this card.",,,,
-Schielhau3,Scheilhau III,Squinting Strike,Arm,Meisterhau,Schielhau,3,4,3,High,1-2,,"Break any guard with <<Keyword PointForward>>.
-<<Range 2>>: <<Keyword Interrupt>>. <<Strike Thrust>> to the upper opening.
-Otherwise, <<Strike Oberhau>> to the upper opening.
-<<Keyword Sterck>>: The opponent's arm actions have <<LoseSpeed 2>> on their next turn.",Single-Time Counter,Defend any Oberhau or Thrust to the upper opening. <<Keyword Sterck>>: Attack with this card.,Masterstrike,"If the opponent threatens you with an Oberhau or Thrust to the upper opening, defend with this card. You have <<GainStructure 1>>.",,,,
+PassStep,Pass Step,,Leg,Footwork,Linear,0,2,,,,,Move 2 units forward OR backward.,,,Follow the Leader,"If the opponent moves forward or backward, move in the opposite direction with this card.",,,,
+TriangleStep,Triangle Step,,Leg,Footwork,Offline,0,1,,,,,Move 1 unit forward. You gain <<GainStructure 2>>.,,,Quick Step,"If the opponent makes any attack, play this card.",,,,
+Springen,Springen,Springing Step,Leg,Footwork,Offline,0,2,,,,,Move 1 unit forward. You gain <<GainStructure 1>>.,,,Quick Step,"If the opponent makes any attack, play this card.",,,,
+Sidestep,Sidestep,,Leg,Footwork,Offline,1,4,,,,,You gain <<GainStructure 1>>.,,,Quick Step,"If the opponent makes any attack, play this card.",,,,
+VomTag,Vom Tag,Roof Guard,Arm,Guard,Vom Tag,0,3,0,High,0+,ProtectsHands,"<<Keyword ProtectsHands>>.
+Consume: <<Card Oberhau>>.
+Change guard to <<Guard VomTag>>. While in this guard, you have <<GainSpeed 1>> to Meisterhau and Oberhau.",,,Return to Guard,"If you do not have a guard, enter this guard.",,,,
+Kron,Kron,Crown Guard,Arm,Guard,Vom Tag,1,4,3,High,0+,Volatile,"<<Keyword Volatile>>.
+Consume: <<Card Zwerchhau>>.
+Change guard to <<Guard Alber>>. While in this guard, you have <<GainSpeed 1>> to all Zwerchhau.",,,Crown Guard,"When the opponent attacks to the upper opening, enter this guard.",,,,
+Pflug,Pflug,Plow Guard,Arm,Guard,Pflug,0,3,2,Low,1+,"PointForward 0,ProtectsHands","<<Keyword PointForward 0>>. <<Keyword ProtectsHands>>.
+Consume: <<Card Thrust>>.
+Change guard to <<Guard Pflug>>. While in this guard, you have <<GainSpeed 1>> to Thrusts and <<GainSpeed 2>> to parrying Thrusts.",,,Absetzen - Thrust,"If the opponent makes a Thrust, defend the Thrust and enter this guard.",,,,
+Langort,Langort,Longpoint,Arm,Guard,Pflug,0,3,1,Both,2+,PointForward 2,"<<Keyword PointForward 2>>.
+Consume: <<Card Oberhau>> or <<Card Unterhau>>.
+Change guard to <<Guard Langort>>. While in this guard, you have <<GainSpeed 2>> to parrying Thrusts.
+",,,Warding,"If the opponent is within <<Range 2>>, enter this guard.",,,,
+Ochs,Ochs,Ox Guard,Arm,Guard,Ochs,0,3,3,High,1+,PointForward 1,"<<Keyword PointForward 1>>.
+Covers <<Category Oberhau>>.
+Consume: <<Card Thrust>> or <<Card Oberhau>>.
+Change guard to <<Guard Ochs>>. While in this guard, if your opponent has <<Definition strong pressure>> then your Oberhaus gain <<GainSpeed 1>>.
+",,,Absetzen - Oberhau,"If the opponent makes an Oberhau, enter this guard.",,,,
+Hangen,Hangen,Hanging Guard,Arm,Guard,Ochs,1,3,1,High,1+,Volatile,"<<Keyword Volatile>>.
+Covers any <<Category Cut>> to the upper opening.
+Consume: <<Card Oberhau>>.
+Change guard to <<Guard Hangen>>. If this guard <<Definition covered>> your opponent's last attack or the opponent has <<Definition strong pressure>>, then your Cuts next turn gain <<GainSpeed 2>>.",,,Hangen,"If the opponent attacks with a Cut to the upper opening, enter this guard.",,,,
+Alber,Alber,Fool's Guard,Arm,Guard,Alber,0,3,1,Low,1+,,"Consume: <<Card Unterhau>>.
+Change guard to <<Guard Alber>>. Whle in this guard, you have <<GainSpeed 1>> to parries and Defend actions.",,,Return to Guard,"If you do not have a guard, enter this guard.",,,,
+Nebenhut,Nebenhut,Tail Guard,Arm,Guard,Alber,1,3,0,Low,0+,,"Consume: <<Card Unterhau>>.
+Change guard to <<Guard Nebenhut>>. While in this guard, you have <<GainSpeed 1>> to Unterhau, Krumphau, and Guard.",,,Return to Guard,"If you do not have a guard, enter this guard.",,,,
+Oberhau,Oberhau,Cut From Above,Arm,Cut,Oberhau,0,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+Umbschlag,Umbschlag,Cutting Around,Arm,Cut,Oberhau,0,4,1,High,1-2,Swech 1,"<<Keyword Swech 1>>.
+<<Strike Oberhau>> to the upper opening.",Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,,,,,,
+ScheissenCut,Oberhau,Shooting Cut,Arm,Cut,Oberhau,1,4,1,High,1-2,,<<Strike Oberhau>> to the upper opening.,,,Fuhlen,"If the opponent has <<Definition weak pressure>> or makes a <<Keyword Disengage>>, attack with this card.",,,,
+Ablauffen,Ablauffen,Flowing Off,Arm,Cut,Oberhau,1,3,1,High,1-2,Swech 3,"<<Keyword Swech 3>>.
+<<Strike Oberhau>> to the upper opening.",Hangen,Defend any Cut to the upper opening. Your Cuts next turn have <<GainSpeed 2>>.,Schnappen,"If the opponent defends with <<Definition 3+ strong pressure>>, attack with this card.",,,,
+Duplieren,Duplieren,Redoubled Strike,Arm,Cut,Oberhau,1,3,0,High,1-2,"Offline 2,Swech 3","<<Keyword Offline 2>>. <<Keyword Swech 3>>.
+<<Strike Oberhau>> to the upper opening.",,,Fuhlen,"If the opponent has <<Definition strong pressure>>, attack with this card.",,,,
+Abnehmen,Abnehmen,Lifting / Taking Off,Arm,Cut,Oberhau,2,3,1,High,1-2,,"<<Keyword Disengage>>, then <<Strike Oberhau>> to the upper opening.",,,Seize the Vor,"If the opponent enters <<Range 3-4>>, move 2 units forward and attack with this card. You have <<Keyword Swiftness 1>>.",,,,
+Schnappen,Schnappen,Snapping Cut,Arm,Cut,Oberhau,2,3,2,High,1-2,Swech 5,"<<Keyword Swech 5>>.
+<<Strike Oberhau>> to the upper opening.",,,Fuhlen,"If the opponent has <<Definition strong pressure>>, attack with this card.",,,,
+Mittlehau,Mittlehau,Middle Cut,Arm,Cut,Mittlehau,0,4,2,Low,1-2,,<<Strike Mittlehau>> to the lower opening.,,,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+Unterhau,Unterhau,Cut From Below,Arm,Cut,Unterhau,0,3,1,Low,1-2,,<<Strike Unterhau>> to the lower opening.,Counter-Cut,<<Range 2>>. Defend any Thrust or Cut. Gain <<GainStructure 2>>.,Unrelenting Assault,"If the opponent parries <<Definition wide>>, attack with this card.",,,,
+Streichen ,Streichen ,Sweeping Strike,Arm,Cut,Unterhau,1,3,3,Low,1-2,HandSnipe ,"<<Keyword HandSnipe>>.
+<<Strike Unterhau>> to the lower opening.",Sweeping Parry,Defend any Oberhau or Thrust. The incoming attack has <<LoseStructure 2>>. You have <<KeywordSterk>>:The opponent’s arm actions next turn have <<LoseSpeed 2>>.,Striechen,"<<Range 2>>. If opponent makes an Oberhau, defend with this card.",,,,
+Thrust,Thrust,Stich,Arm,Thrust,,0,4,0,High,2,,<<Strike Thrust>> to the upper opening.,,,Ansetzen,<<Range 2>>. Attack with this card.,,,,
+ScheissenThrust,Scheissen - Thrust,Shooting Thrust,Arm,Thrust,,0,4,0,High,2,,<<Strike Thrust>> to the upper opening.,,,Fuhlen,"If oppenent has <<Definition weak pressure>> or makes a <<Keyword Disengage>>, attack with this card.",,,,
+Ansetzen,Ansetzen,Impaling,Arm,Thrust,,1,4,0,High,2,Interrupt,"<<Keyword Interrupt>>
+<<Strike Thrust>> to the upper opening.",,,Stop-Thrust,"If opponent threatens you, attack with this card.",,,,
+Absetzen,Absetzen,Setting Aside,Arm,Thrust,,2,3,2,High,1-2,,<<Strike Thrust>> to the upper opening.,Counter-Thrust,"Defend a Thrust or Oberhau. If defending a Thrust, this card gains <<GainStructure 1>> and <<GainSpeed 1>>. <<Keyword Sterk>>: Attack with this card.",Absetzen,"The opponent attacks with an Oberhau or Thrust, defend with this card. This card gains <<GainStructure 2>> and <<GainSpeed 2>>.",,,,
+Durchwescheln ,Durchwescheln ,Changing Through,Arm,Thrust,,1,4,0,High,2,,"<<Keyword Disengage>>, then <<Strike Thrust>> to the upper opening.",,,,"If the opponent defends a Thrust with <<Definition strong pressure>>, play this card.",,,,
+Sturzhau ,Sturzhau ,Plunging Strike,Arm,Thrust,,1,3,0,High,1-2,Offline 2,"<<Keyword Offline 2>>.
+<<Strike Thrust>> to the upper opening.",,,,"When your opponent makes a high parry, replace your attack last turn with this card.",,,,
+Mutieren,Mutieren,Mutating Cut,Arm,Technique,Bind,1,3,4,Low,1,Overbind,"<<Keyword Overbind>>.
+Bind with the opponent.
+<<Keyword Sterck>>: <<Strike Thrust>> to the lower opening.",,,,If your opponent would seize the vor with a parry and <<Keyword Sterck>>: attack with this card.,,,,
+Zornhau,Zornhau,Wrath Cut,Arm,Meisterhau,Zornhau,1,4,3,High,1-2,,<<Strike Oberhau>> to the upper opening. End in the <<Guard Langort>> guard.,Single-Time Counter,Defend any Thrust or Cut. You have <<Keyword Sterck>>: Attack with this card.,Master Strike,"If the opponent makes an Oberhau, defend with this card.",,,,
+Zwerchhau,Zwerchhau,Thwart Strike,Arm,Meisterhau,Zwerchhau,1,4,2,High,1,,Breaks <<Guard VomTag>>. <<Strike Mittlehau>> to the upper opening.,Single-Time Counter,Defend any Oberhau to the upper opening. You have <<GainStructure 1>> and <<Keyword Sterck>>: Attack with this card.,Master Strike,"If the opponent threatens you with an Oberhau, defend with this card. You have <<GainStructure 1>>. At <<Range 2+>>, also move 1 unit forward.",,,,
+Krumphau,Krumphau,Crooked Strike,Arm,Meisterhau,Krumpphau,1,3,5,High,1,"HandSnipe,Offline 1","<<Keyword HandSnipe>>. <<Keyword Offline 1>>.
+Breaks <<Guard Ochs>>. <<Strike Oberhau>> to the upper opening.",Counter-Cut,Defend any Thrust or Cut.,Flowing Defense,"If the opponent threatens you with a Thrust or Cut, defend with this card. <<Keyword Sterck>>: Your next arm action has <<GainSpeed 2>> and <<GainStructure 1>>.",,,,
+Scheitelhau,Scheitelhau,Scalping Strike,Arm,Meisterhau,Scheitelhau,1,4,0,High,1-2,Offline 2,"<<Keyword Offline 2>>.
+<<Strike Oberhau>> to the upper opening.",,,Uberlauffen,"If the opponent parries an Oberhau to the upper opening with <<Structure 2>> or less, replace your attack with this card.",,,,
+Schielhau,Schielhau,Squinting Strike,Arm,Meisterhau,Schielhau,1,3,3,High,1-2,,"Breaks <<Guard Pflug>>. <<Strike Oberhau>> to the upper opening.
+<<Keyword Sterck>>: The opponent's arm actions have <<LoseSpeed 2>> on their next turn.",Single-Time Counter,Defend any Oberhau or Thrust to the upper opening. <<Keyword Sterck>>: Attack with this card.,Master Strike,"If you can defend with this card, do so.",,,,
+Schielhau2,Schielhau 2,Squinting Strike,Arm,Meisterhau,Schielhau,2,3,3,High,1-2,,"""Break any guard with <<Keyword PointForward>>.
+<<Strike Oberhau>> to the upper opening.
+<<Keyword Sterck>>: The opponent's arm actions have <<LoseSpeed 2>> on their next turn.""",Single-Time Counter,Defend any Oberhau or Thrust to the upper opening. <<Keyword Sterck>>: Attack with this card.,Master Strike,"If you can defend with this card, do so. You have <<GainStructure 1>>.",,,,
+Schielhau3,Schielhau III,Squinting Strike,Arm,Meisterhau,Schielhau,3,4,3,High,1-2,,"Break any guard with <<Keyword PointForward>>.
+<<Range 2>>: <<Keyword Interrupt>>. <<Strike Thrust>> to the upper opening. Otherwise, <<Strike Oberhau>> to the upper opening.
+<<Keyword Sterck>>: The opponent's arm actions have <<LoseSpeed 2>> on their next turn.",Single-Time Counter,Defend any Oberhau or Thrust to the upper opening. <<Keyword Sterck>>: Attack with this card.,Master Strike,"If you can defend with this card, do so. You have <<GainStructure 1>>.",,,,
+FlashOfInsight,Flash of Insight,,Special,Special,,0,,,,,,"View the opponent's chambered card, then draw 1.",,,,,,,,
+FoolproofPlan,Foolproof Plan,,Special,Special,,0,,,,,,Destroy your opponent's chambered card.,,,,,,,,

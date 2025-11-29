@@ -6,15 +6,14 @@ import { createProgressBar, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import type { Card } from "./types/card";
 
+const CONCURRENT_TASK_LIMIT = 5;
 const processCardsParallel = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
     consola.log("Running parallel task.");
     const cardEntries = Object.entries(cardList);
     const tasks = [];
+    const executing = new Set();
 
-    for (const [key, card] of cardEntries) {
-        tasks.push(processCardParallel(key, card, outputDir, siteUrl));
-    }
-    consola.log(`Started ${tasks.length} tasks...`);
+    consola.log(`Started ${cardEntries.length} tasks...`);
     consola.log(`Progress: ${createProgressBar(0, 10)} (0/${cardEntries.length})`);
 
     let numProcessed = 0;
@@ -27,8 +26,25 @@ const processCardsParallel = async (cardList: Record<string, Card>, outputDir: s
         consola.log(`Progress: ${createProgressBar(numProcessed / cardEntries.length, 10)} (${numProcessed}/${cardEntries.length})`);
     }
 
-    await Promise.allSettled(tasks.map(t => t.then(t => updateProgress(t)).catch(() => updateProgress(false))));
+    for (const [key, card] of cardEntries) {
+        const task = processCardParallel(key, card, outputDir, siteUrl).then(t => {
+            updateProgress(t);
+            executing.delete(task);
+            return t;
+        }).catch((e) => {
+            consola.error("Failed to process image: ", e);
+            updateProgress(false);
+        });
 
+        tasks.push(task);
+        executing.add(task);
+
+        if (executing.size >= CONCURRENT_TASK_LIMIT) {
+            await Promise.race(executing);
+        }
+    }
+
+    await Promise.allSettled(tasks);
     if (numFails) {
         consola.error(`Processing completed with failures. Failed to generate ${numFails} images out of ${cardEntries.length} total.`);
     } else {
@@ -55,7 +71,7 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
     // Wait for process to finish
     await page.waitForFunction('window.status === "ready"', {
         polling: 100,
-        timeout: 5000,
+        timeout: 15000,
     });
 
     const url = await displayImg?.evaluate(img => img.src);

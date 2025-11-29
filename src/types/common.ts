@@ -23,7 +23,8 @@ const SimpleKeywordTypeSchema = z.enum([
     "HandSnipe",
     // Guard
     "Volatile",
-    "ProtectsHands"
+    "ProtectsHands",
+    "Winden",
 ]).meta({
     "id": "SimpleKeyword",
     "title": "Simple Keyword",
@@ -42,7 +43,7 @@ const NumericKeywordTypeSchema = z.enum([
     "description": "Keywords that must specify a value."
 });
 
-// Swiftness + Sterck are more shorthand effects than keywords
+// Sterck are more shorthand effects than keywords
 
 const KeywordSchema = z.union([
     z.object({
