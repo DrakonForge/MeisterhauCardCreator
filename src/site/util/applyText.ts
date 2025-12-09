@@ -59,7 +59,8 @@ const TextGuardMap = {
     "Pflug": "Pflug",
     "Ochs": "Ochs",
     "Alber": "Alber",
-    "Langort": "Langort"
+    "Langort": "Langort",
+    "HighTag": "High Tag",
 };
 
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
@@ -102,7 +103,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 }
                 span.textContent = `+${armSpeedGain} Arm Speed`;
                 break;
-            case "GainArmSpeed":
+            case "GainLegSpeed":
                 span.classList.add("speed");
                 const legSpeedGain = parseInt(component.Content);
                 if (isNaN(legSpeedGain)) {

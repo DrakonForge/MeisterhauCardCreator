@@ -29,8 +29,8 @@ export const clearCardView = () => {
     setText(".card-subtitle", "");
     setText(".card-category", "");
     setText(".card-range-text", "");
-    setText(".stat-speed", "");
-    setText(".stat-structure", "");
+    setText(".stat-speed", "–");
+    setText(".stat-structure", "–");
     setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
     setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
     const textContainer = query(".card-text");

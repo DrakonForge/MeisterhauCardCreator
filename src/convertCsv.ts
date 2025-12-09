@@ -258,6 +258,10 @@ const handleRecord = (record: RowData): boolean => {
     }
 };
 
+const shouldHandleRecord = (record: RowData): boolean => {
+    return !record.Notes.includes("IDEA");
+}
+
 const convertCsv = (inputPath: string, outputDir: string) => {
     checkInputPathExists(inputPath);
 
@@ -275,7 +279,12 @@ const convertCsv = (inputPath: string, outputDir: string) => {
 
     ensureOutputDirExists(outputDir);
     let numFail = 0;
+    let numTotal = 0;
     for (const record of records) {
+        if (!shouldHandleRecord(record)) {
+            continue;
+        }
+        numTotal++;
         const success = handleRecord(record);
         if (!success) {
             numFail++;
@@ -285,9 +294,9 @@ const convertCsv = (inputPath: string, outputDir: string) => {
     consola.info(`Results exported to ${outputDir}`);
 
     if (numFail) {
-        consola.fail(`Failed to convert ${numFail} rows out of ${records.length} total`);
+        consola.fail(`Failed to convert ${numFail} rows out of ${numTotal} total`);
     } else {
-        consola.success(`Successfully converted ${records.length} rows to JSON`);
+        consola.success(`Successfully converted ${numTotal} rows to JSON`);
     }
 };
 
