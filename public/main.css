@@ -21,6 +21,7 @@
     --color-speed: #3f00ff; /* More washed out: #3950a3 */
     --color-range: #924609;
     --color-strike: #924609;
+    --color-token: #7e00bc;
 }
 
 body {
@@ -155,6 +156,22 @@ img.hidden.hidden {
     letter-spacing: -2px;
 }
 
+.card-art-container {
+    top: 180px;
+    left: 125px;
+    right: 125px;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-art-container img {
+    flex-shrink: 1;
+    height: 100%;
+    object-fit: cover;
+}
+
 .divider {
     display: flex;
     flex-flow: row nowrap;
@@ -164,6 +181,13 @@ img.hidden.hidden {
     top: 418px;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
+}
+
+.card-type {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 5px;
 }
 
 .card-range {
@@ -179,13 +203,31 @@ img.hidden.hidden {
 }
 
 .card-text-container {
-    top: 477px;
+    top: 487px;
     width: 100%;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
     display: flex;
     flex-flow: column nowrap;
-    height: 485px; /* Hardcoded to the end of the text */
+    height: 470px; /* Hardcoded to the end of the text */
+}
+
+.card-body-background-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 477px;
+    width: 100%;
+    padding-left: var(--card-text-horizontal-margin);
+    padding-right: var(--card-text-horizontal-margin);
+    height: 505px;
+}
+
+.card-body-background-container img {
+    flex-shrink: 1;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.15;
 }
 
 .card-text {
@@ -194,6 +236,7 @@ img.hidden.hidden {
     flex-flow: column nowrap;
     justify-content: center;
     gap: 30px;
+    position: relative;
 }
 
 .card-overlay p > * {
@@ -224,6 +267,16 @@ img.icon.range-icon {
     height: 48px;
 }
 
+.card-footer {
+    bottom: 50px;
+    right: 50px;
+}
+
+.card-footer img.icon {
+    width: 40px;
+    height: 40px;
+}
+
 /* Card Text */
 
 span.action-title {
@@ -246,6 +299,15 @@ span.speed {
 }
 
 span.definition {
+    font-weight: bold;
+}
+
+span.reminder {
+    font-style: italic;
+}
+
+span.token {
+    color: var(--color-token);
     font-weight: bold;
 }
 

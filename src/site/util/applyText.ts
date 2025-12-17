@@ -79,6 +79,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("range");
                 span.textContent = `Range ${component.Content}`;
                 break;
+            case "Token":
+                span.classList.add("token");
+                span.textContent = component.Content;
+                break;
             case "GainStructure":
                 span.classList.add("structure");
                 const structureGain = parseInt(component.Content);
@@ -145,23 +149,35 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Structure":
                 span.classList.add("structure");
-                const structure = parseInt(component.Content);
-                if (isNaN(structure)) {
-                    throw new Error("Invalid number");
+                if (component.Content) {
+                    const structure = parseInt(component.Content);
+                    if (isNaN(structure)) {
+                        throw new Error("Invalid number");
+                    }
+                    span.textContent = `Structure ${structure}`;
+                } else {
+                    span.textContent = "Structure";
                 }
-                span.textContent = `Structure ${structure}`;
                 break;
             case "Speed":
                 span.classList.add("speed");
-                const speed = parseInt(component.Content);
-                if (isNaN(speed)) {
-                    throw new Error("Invalid number");
+                if (component.Content) {
+                    const speed = parseInt(component.Content);
+                    if (isNaN(speed)) {
+                        throw new Error("Invalid number");
+                    }
+                    span.textContent = `Speed ${speed}`;
+                } else {
+                    span.textContent = "Speed";
                 }
-                span.textContent = `Speed ${speed}`;
                 break;
             case "Definition":
                 span.classList.add("definition");
                 span.textContent = component.Content;
+                break;
+            case "Reminder":
+                span.classList.add("reminder");
+                span.textContent = `(${component.Content})`;
                 break;
             case "Guard":
                 span.classList.add("definition");

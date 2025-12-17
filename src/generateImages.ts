@@ -32,7 +32,7 @@ const processCardsParallel = async (cardList: Record<string, Card>, outputDir: s
             executing.delete(task);
             return t;
         }).catch((e) => {
-            consola.error("Failed to process image: ", e);
+            consola.error(`Failed to process image ${key}: `, e);
             updateProgress(false);
         });
 
@@ -69,10 +69,17 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
     await updateButton?.click();
 
     // Wait for process to finish
-    await page.waitForFunction('window.status === "ready"', {
+    await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
         polling: 100,
         timeout: 15000,
     });
+    const status = await page.evaluate("window.status");
+    if (status !== "ready") {
+        const errorMessage = await page.evaluate("window.errorMessage");
+        consola.error(`Failed to render image for ${key}, error: ${errorMessage}`);
+        await browser.close();
+        return false;
+    }
 
     const url = await displayImg?.evaluate(img => img.src);
     if (url) {
@@ -114,10 +121,17 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
         await updateButton?.click();
 
         // Wait for process to finish
-        await page.waitForFunction('window.status === "ready"', {
+        await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
             polling: 100,
-            timeout: 5000,
+            timeout: 15000,
         });
+        const status = await page.evaluate("window.status");
+        if (status !== "ready") {
+            const errorMessage = await page.evaluate("window.errorMessage");
+            consola.error(`Failed to render image for ${key}, error: ${errorMessage}`);
+            numFails++;
+            continue;
+        }
 
         const url = await displayImg?.evaluate(img => img.src);
         if (url) {

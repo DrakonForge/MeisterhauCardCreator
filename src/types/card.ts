@@ -27,6 +27,7 @@ const BaseCardSchema = z.object({
 const ArmLegActionCardSchema = BaseCardSchema.extend({
     Speed: z.int().nonnegative(),
     ChamberAction: CardActionSchema.optional(),
+    Range: ValueRangeSchema,
 });
 
 // TODO: Guards should be JSON-driven but stored separately.
@@ -35,7 +36,6 @@ const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Arm"),
     Structure: z.int().nonnegative(),
     ParryHeight: ParryHeightSchema,
-    Range: ValueRangeSchema,
     // Right now, only arm actions have keywords
     Keywords: KeywordsSchema.optional(),
     DefendAction: CardActionSchema.optional(),

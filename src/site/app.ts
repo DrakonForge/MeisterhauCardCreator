@@ -39,6 +39,8 @@ onClick(".update-button", async () => {
             setCardView(card);
         } catch(e) {
             consola.error(e);
+            (window as any).status = "fail";
+            (window as any).errorMessage = e instanceof Error ? e.message : e;
             return;
         }
     }

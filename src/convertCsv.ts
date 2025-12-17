@@ -16,6 +16,7 @@ interface RowData {
     Category1: string;
     Category2: string;
     Tier: string;
+    Packs: string;
     Speed: string;
     Structure: string;
     ParryHeight: string;
@@ -36,10 +37,11 @@ const HEADERS: (keyof RowData)[] = [
     "Id",
     "Name",
     "SecondaryName",
+    "Tier",
+    "Packs",
     "ActionType",
     "Category1",
     "Category2",
-    "Tier",
     "Speed",
     "Structure",
     "ParryHeight",
@@ -175,12 +177,14 @@ const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
 
 const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
     "Speed",
+    "Range"
 ];
 const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
         throw new Error("Missing required leg fields");
     }
     card.Speed = parseInt(data.Speed);
+    card.Range = parseRange(data.Range);
     if (parseString(data.ChamberActionText)) {
         card.ChamberAction = {
             Text: parseText(data.ChamberActionText),
