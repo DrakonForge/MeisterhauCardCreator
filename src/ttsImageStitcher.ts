@@ -5,8 +5,8 @@ import { createCardIdToPath } from "./util/cardIdToPath";
 import sharp from "sharp";
 
 const CARDS_PER_ROW = 10;
-const CARDS_PER_COLUMN = 7;
-const CARDS_PER_PAGE = CARDS_PER_ROW * CARDS_PER_COLUMN - 1; // Minus one for the back image
+const CARDS_PER_COLUMN = 4;
+const CARDS_PER_PAGE = CARDS_PER_ROW * CARDS_PER_COLUMN;
 
 const IMAGE_WIDTH = 744;
 const IMAGE_HEIGHT = 1038;
@@ -48,6 +48,7 @@ const createTabletopSimulatorDeckImage = async (inputDir: string, outputDir: str
 
 const createCardPage = async (cardIdToPath: Record<string, string>, cardIds: string[], startIndex: number, endIndex: number, cardBackPath: string, outputDir: string) => {
     const fileName = `deck_${startIndex + 1}-${endIndex}.jpg`;
+    // Apparently the card back path doesn't matter so much, so it's getting overwritten here
     const composite: sharp.OverlayOptions[] = [{
         input: cardBackPath,
         top: IMAGE_HEIGHT * CARDS_PER_COLUMN - IMAGE_HEIGHT,

@@ -37,8 +37,11 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
 2) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`.
 3) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
 4) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
-5) Ensure Width is 10 and Height is 7 (should be default). Paste in the Face link and the Back link (card back should be same for every page).
-6) Set the Number equal to the number of cards including the back/hidden card. Can typically be left at max (70) if you are okay generating blank cards at the bottom.
+5) Set the following parameters:
+   * Width: 10
+   * Height: 4
+   * Number: 40 (if it's the last page, some may be blank)
+6) Paste in the Face link and the Back link (card back should be same for every page).
 7) Press **Import**.
 
 ## Workflow 3: Visual Card Editor
@@ -112,7 +115,7 @@ TriangleStep
 
 Generates multiple stitched images of all card images in the provided directory which are compatible with Tabletop Simulator.
 
-Each stitched image contains 69 cards + 1 back/hidden card, so multiple must be created if more cards exist.
+Each stitched image contains 40 cards. The Tabletop Simulator tool can support up to 70 per "page", but suffers from resolution issues. 10x4 fixes the vast majority of these issues.
 
 ### `npm run upload`
 
