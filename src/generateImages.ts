@@ -7,32 +7,40 @@ import { consola } from "consola";
 import type { Card } from "./types/card";
 
 const CONCURRENT_TASK_LIMIT = 5;
+
+let shouldExitEarly = false;
+
 const processCardsParallel = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
     consola.log("Running parallel task.");
     const cardEntries = Object.entries(cardList);
     const tasks = [];
-    const executing = new Set();
+    const executing = new Set<Promise<boolean | void>>();
 
     consola.log(`Started ${cardEntries.length} tasks...`);
     consola.log(`Progress: ${createProgressBar(0, 10)} (0/${cardEntries.length})`);
 
     let numProcessed = 0;
     let numFails = 0;
+
     const updateProgress = (success: boolean) => {
         numProcessed++;
         if (!success) {
             numFails++;
+            shouldExitEarly = true;
         }
         consola.log(`Progress: ${createProgressBar(numProcessed / cardEntries.length, 10)} (${numProcessed}/${cardEntries.length})`);
     }
 
     for (const [key, card] of cardEntries) {
+        if (shouldExitEarly) {
+            break;
+        }
         const task = processCardParallel(key, card, outputDir, siteUrl).then(t => {
             updateProgress(t);
             executing.delete(task);
             return t;
         }).catch((e) => {
-            consola.error(`Failed to process image ${key}: `, e);
+            consola.error(`Failed to process image ${key}:`, e);
             updateProgress(false);
         });
 
@@ -54,46 +62,51 @@ const processCardsParallel = async (cardList: Record<string, Card>, outputDir: s
 
 const processCardParallel = async (key: string, card: Card, outputDir: string, siteUrl: string): Promise<boolean> => {
     const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    const response = await page.goto(siteUrl);
 
-    consola.debug(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
-    consola.debug(`Starting task for ${card.Name}`);
+    try {
+        const page = await browser.newPage();
+        const response = await page.goto(siteUrl);
 
-    const textarea = await page.$("textarea.json-entry");
-    const updateButton = await page.$('button.update-button');
-    const displayImg = await page.$('.card-display-output > img');
+        consola.debug(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
+        consola.debug(`Starting task for ${card.Name}`);
 
-    // Should be a fresh window, so no need to clear
-    await textarea?.type(JSON.stringify(card));
-    await updateButton?.click();
+        const textarea = await page.$("textarea.json-entry");
+        const updateButton = await page.$('button.update-button');
+        const displayImg = await page.$('.card-display-output > img');
 
-    // Wait for process to finish
-    await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
-        polling: 100,
-        timeout: 15000,
-    });
-    const status = await page.evaluate("window.status");
-    if (status !== "ready") {
-        const errorMessage = await page.evaluate("window.errorMessage");
-        consola.error(`Failed to render image for ${key}, error: ${errorMessage}`);
+        // Should be a fresh window, so no need to clear
+        await textarea?.type(JSON.stringify(card));
+        await updateButton?.click();
+
+        // Wait for process to finish
+        await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
+            polling: 100,
+            timeout: 15000,
+        });
+        const status = await page.evaluate("window.status");
+        if (status !== "ready") {
+            const errorMessage = await page.evaluate("window.errorMessage");
+            throw new Error(`Failed to render image for ${key}, error: ${errorMessage}`);
+        }
+
+        const url = await displayImg?.evaluate(img => img.src);
+        if (url) {
+            consola.debug(`Processing ${key} - ${url.length}`);
+            const viewSource = await page.goto(url);
+            const filePath = path.join(outputDir, key + ".png");
+            consola.debug(`Writing image to ${filePath}`);
+            fs.writeFileSync(filePath, await viewSource?.buffer()!);
+        } else {
+            consola.error(`Failed to find image for ${key}`);
+        }
+
+        await browser.close();
+        return !!url;
+    } catch (e) {
+        consola.error(`Failed to process image ${key}:`, e);
         await browser.close();
         return false;
     }
-
-    const url = await displayImg?.evaluate(img => img.src);
-    if (url) {
-        consola.debug(`Processing ${key} - ${url.length}`);
-        const viewSource = await page.goto(url);
-        const filePath = path.join(outputDir, key + ".png");
-        consola.debug(`Writing image to ${filePath}`);
-        fs.writeFileSync(filePath, await viewSource?.buffer()!);
-    } else {
-        consola.error(`Failed to find image for ${key}`);
-    }
-
-    await browser.close();
-    return !!url;
 }
 
 const processCardsSequential = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
@@ -145,6 +158,7 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
         } else {
             consola.error(`Failed to find image for ${key}`);
             numFails++;
+            break;  // Exit early
         }
     }
 
