@@ -1,6 +1,8 @@
 # SwordCardCreator
 
-A tool for creating cards for untitled Sword Card Game.
+A suite of tools for creating cards for *Meisterhau!: The Duel*.
+
+This repo provides a set of `npm` commands which can technically be adapted for any card game, or even used individually.
 
 ## Initial Setup (Required)
 

@@ -16,9 +16,10 @@ export function createBuildSettings(options) {
             'src/generateImages.ts',
             'src/convertCsv.ts',
             'src/deckBuilder.ts',
+            'src/ttsImageStitcher.ts',
         ],
         outdir: OUT_DIR,
-        external: ["puppeteer"], // Creates a build error if we try to bundle it
+        external: ["puppeteer", "sharp"], // Creates a build error if we try to bundle it
         bundle: true,
         format: "esm",
         plugins: [

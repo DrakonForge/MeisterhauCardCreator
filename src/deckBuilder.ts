@@ -1,8 +1,9 @@
-import { open, readdir } from "fs/promises";
+import { open } from "fs/promises";
 import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import path from "path";
 import * as fs from "fs";
+import { createCardIdToPath } from "./util/cardIdToPath";
 
 const createTabletopSimulatorDeck = async (imageDir: string, cardBackPath: string, inputPath: string, outputDir: string, recursive: boolean): Promise<void> => {
     checkInputPathExists(inputPath);
@@ -77,28 +78,6 @@ const createTabletopSimulatorDeck = async (imageDir: string, cardBackPath: strin
     } else {
         consola.fail(`Generation failed, some cards may still be generated at ${outputDir}`);
     }
-}
-
-const createCardIdToPath = async (imageDir: string, recursive: boolean): Promise<Record<string, string> | null> => {
-    const cardIdToPath: Record<string, string> = {};
-    let imageFiles: string[]
-    try {
-        imageFiles = await readdir(imageDir, { recursive });
-    } catch (e) {
-        consola.error("Error encountered while reading image files", e);
-        return null;
-    }
-
-    for (const file of imageFiles) {
-        if (!file.endsWith(".png")) {
-            continue;
-        }
-        const cardId = file.substring(0, file.length - ".png".length);
-        const imagePath = path.join(imageDir, file);
-        cardIdToPath[cardId] = imagePath;
-    }
-
-    return cardIdToPath;
 }
 
 await main(async args => {
