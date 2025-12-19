@@ -313,7 +313,7 @@ const convertCsv = (inputPath: string, outputDir: string) => {
 };
 
 await main(async args => {
-    const inputPath = args['input'] ?? "./test_data/data.csv";
+    const inputPath = args['input'] ?? "./MeisterhauCardData/data.csv";
     const outputDir = args['output'] ?? "./generated/card_data";
     convertCsv(inputPath, outputDir);
 });

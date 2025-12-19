@@ -1,0 +1,3 @@
+[submodule "MeisterhauCardData"]
+	path = MeisterhauCardData
+	url = https://github.com/DrakonForge/MeisterhauCardData.git

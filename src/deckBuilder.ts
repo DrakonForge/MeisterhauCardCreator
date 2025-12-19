@@ -103,8 +103,8 @@ const createCardIdToPath = async (imageDir: string, recursive: boolean): Promise
 
 await main(async args => {
     const imageDir = args['images'] ?? "./generated/card_images";
-    const cardBackPath = args['back'] ?? "./test_data/CardBack.png";
-    const inputPath = args['input'] ?? "./test_data/deck.txt";
+    const cardBackPath = args['back'] ?? "./src/assets/CardBack.png";
+    const inputPath = args['input'] ?? "./MeisterhauCardData/deck.txt";
     const outputDir = args['output'] ?? "./generated/output_deck";
     const recursive = args['r'] ?? false;
 

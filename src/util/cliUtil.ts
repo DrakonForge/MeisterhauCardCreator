@@ -25,7 +25,7 @@ export const main = async (callback: (args: minimist.ParsedArgs) => Promise<void
 export const ensureOutputDirExists = (path: string) => {
     if (!fs.existsSync(path)) {
         consola.log(`Creating ${path} since it does not exist`);
-        fs.mkdirSync(path);
+        fs.mkdirSync(path, { recursive: true });
     }
 };
 
