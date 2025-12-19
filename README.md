@@ -31,7 +31,17 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
    * This may take a while to finish.
 5) View the cards in `./generated/card_images` or other specified output folder.
 
-## Workflow 2: Visual Card Editor
+## Workflow 2: Create Deck in Tabletop Simulator
+
+1) Run Workflow 1 to generate the card images.
+2) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`.
+3) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
+4) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
+5) Ensure Width is 10 and Height is 7 (should be default). Paste in the Face link and the Back link (card back should be same for every page).
+6) Set the Number equal to the number of cards including the back/hidden card. Can typically be left at max (70) if you are okay generating blank cards at the bottom.
+7) Press **Import**.
+
+## Workflow 3: Visual Card Editor
 
 1) Run `npm run serve` in a terminal window. You should be able to access [http://localhost:3000](http://localhost:3000/).
 1) Input JSON data in the text area. You can copy-paste values from the output of `npm run csv` (see above) or write your own.
@@ -77,6 +87,8 @@ Opens the Visual Card Editor as a local site at [http://localhost:3000](http://l
 
 > Usage: `npm run deck -- [--images <image_directory>] [--back <image_path>] [--input <input_path>] [--output <output_directory>] [-r]`
 
+**This tool is deprecated in favor of `npm run tts` and `npm run upload`.**
+
 Assembles a folder of images for use with Tablestop Simulator's [custom deck builder](https://kb.tabletopsimulator.com/custom-content/custom-deck/#deck-builder), which expects a certain format.
 
 Pass in a `deck.txt` into the input containing a list of cards. Blank spaces and lines starting with `#` are ignored. For every other line, the first word should be the ID of the card and the second word (optional) should be the quantity.
@@ -93,6 +105,22 @@ PushStep 4
 PassStep 3
 TriangleStep
 ```
+
+### `npm run tts`
+
+> Usage: `npm run tts -- [--input <input_directory>] [--output <output_directory>] [--back <image_path>] [-r]`
+
+Generates multiple stitched images of all card images in the provided directory which are compatible with Tabletop Simulator.
+
+Each stitched image contains 69 cards + 1 back/hidden card, so multiple must be created if more cards exist.
+
+### `npm run upload`
+
+> Usage: `npm run upload -- [--input <input_directory>] [--back <image_url>] [-r]`
+
+Takes in a list of deck images produced with `npm run tts` and uploads them to imgur. Provides a list of links which can easily be imported into Tabletop Simulator.
+
+It does NOT upload the back image URL; a default link is provided but can be overridden in the command.
 
 ## Other Commands
 

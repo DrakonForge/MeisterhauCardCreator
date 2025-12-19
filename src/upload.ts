@@ -109,7 +109,7 @@ const createNewAlbum = async (clientId: string): Promise<string> => {
 await main(async args => {
     const inputDir = args['input'] ?? "./generated/deck_images";
     const recursive = args['r'] ?? false;
-    const albumId = args['album'] ?? null;
+    const albumId = args['album'] ?? null; // Unused
     const cardBackUrl = args['back'] ?? "https://i.imgur.com/T21T6RB.png";
 
     await uploadDeckImagesToImgur(inputDir, albumId, cardBackUrl, recursive);
