@@ -49,6 +49,13 @@ export const setTextColor = (selector: string, value: string): void => {
     }
 };
 
+export const setVisible = (selector: string, value: boolean): void => {
+    const element = query(selector);
+    if (element) {
+        element.style.visibility = value ? "visible" : "hidden";
+    }
+};
+
 export const onClick = (selector: string, callback: (event: Event) => any): void => {
     return onEvent(selector, callback, "click");
 };

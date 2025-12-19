@@ -30,6 +30,7 @@ interface RowData {
     ActionBehavior: string;
     DefendActionBehavior: string;
     ChamberActionBehavior: string;
+    MetaType: string;
     Notes: string;
 }
 
@@ -55,6 +56,7 @@ const HEADERS: (keyof RowData)[] = [
     "ActionBehavior",
     "DefendActionBehavior",
     "ChamberActionBehavior",
+    "MetaType",
     "Notes",
 ];
 
@@ -226,6 +228,12 @@ const convertCsvToJson = (data: RowData): Card => {
         baseCard.Category = [parseString(data.Category1), parseString(data.Category2)];
     } else {
         baseCard.Category = parseString(data.Category1);
+    }
+    if (parseString(data.MetaType)) {
+        const metaTypeStr = parseString(data.MetaType);
+        if (metaTypeStr === "Token") {
+            baseCard.MetaType = "Token";
+        }
     }
 
     if (data.ActionType === "Arm") {

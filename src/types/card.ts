@@ -1,7 +1,7 @@
 import z from "zod";
 import { ConditionsSchema } from "./condition";
 import { BehaviorSchema } from "./behavior";
-import { ActionTypeSchema, CardTextSchema, KeywordsSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
+import { ActionTypeSchema, CardTextSchema, KeywordsSchema, MetaTypeSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
@@ -22,6 +22,7 @@ const BaseCardSchema = z.object({
     ]),
     Tier: z.int().min(0).max(3),
     Action: CardActionSchema,
+    MetaType: MetaTypeSchema.default("None"),
 });
 
 const ArmLegActionCardSchema = BaseCardSchema.extend({

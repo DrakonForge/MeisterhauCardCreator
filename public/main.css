@@ -230,6 +230,10 @@ img.hidden.hidden {
     opacity: 0.15;
 }
 
+.card-body-background-container .card-body-background {
+    visibility: hidden;
+}
+
 .card-text {
     flex: 1;
     display: flex;

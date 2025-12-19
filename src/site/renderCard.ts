@@ -1,5 +1,5 @@
 import type { Card } from "../types/card";
-import { setText, query, setImageUrl, getClassList } from "./dom";
+import { setText, query, setImageUrl, getClassList, setVisible } from "./dom";
 import { fitCardText } from "./util/fitCardText";
 import { fitCardTitle } from "./util/fitCardTitle";
 import { applyKeywordText, applyText } from "./util/applyText";
@@ -33,6 +33,7 @@ export const clearCardView = () => {
     setText(".stat-structure", "–");
     setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
     setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
+    setVisible(".card-body-background-token", false);
     const textContainer = query(".card-text");
     if (textContainer) {
         textContainer.innerHTML = "";
@@ -52,6 +53,12 @@ export const setCardView = (card: Card) => {
             setText(".card-category", card.Category.join(" - "));
         } else {
             setText(".card-category", card.Category);
+        }
+    }
+
+    if (card.MetaType) {
+        if (card.MetaType === "Token") {
+            setVisible(".card-body-background-token", true);
         }
     }
 
