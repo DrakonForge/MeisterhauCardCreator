@@ -16,6 +16,27 @@ Then install required dependencies.
 npm install
 ```
 
+## Workflow 1: CSV -> JSON -> PNG Conversion
+
+We assume you have a Google Sheets/Excel file with the proper formatting for card data, and also have access to the MeisterhauCardData repository. Otherwise, you will need to adjust some of the input paths (see the full command details below).
+
+1) Run `npm run serve` in a separate terminal window. Validate you can access [http://localhost:3000](http://localhost:3000/) in a browser.
+2) Export spreadsheet as a CSV file. Paste the contents of the csv file into `MeisterhauCardData/data.csv`.
+3) Run `npm run csv`.
+   * This will also run validation on the card data and inform you of any errors in the CSV file. Fix these and ensure that it runs successfully before moving on.
+4) Run `npm run image`
+   * Assumes you used the default output for the last command. Adjust this command otherwise.
+   * This may take a while to finish.
+5) View the cards in `./generated/card_images` or other specified output folder.
+
+## Workflow 2: Visual Card Editor
+
+1) Run `npm run serve` in a terminal window. You should be able to access [http://localhost:3000](http://localhost:3000/).
+1) Input JSON data in the text area. You can copy-paste values from the output of `npm run csv` (see above) or write your own.
+1) Click **Update** to see the card visual.
+   * If there are validation errors, they will appear in the browser console.
+1) Click **Download Image** to download the image.
+
 ## Available Commands
 
 ### Setting Parameters
@@ -50,26 +71,26 @@ Converts JSON to PNG files. Takes in a path to a folder of JSON files, validates
 
 Opens the Visual Card Editor as a local site at [http://localhost:3000](http://localhost:3000/). Also **required** for image generation to work.
 
-## Workflow 1: CSV -> JSON -> PNG Conversion
+### `npm run deck`
 
-We assume you have a Google Sheets/Excel file with the proper formatting for card data.
+> Usage: `npm run deck -- [--images <image_directory>] [--back <image_path>] [--input <input_path>] [--output <output_directory>] [-r]`
 
-1) Run `npm run serve` in a separate terminal window. Validate you can access [http://localhost:3000](http://localhost:3000/) in a browser.
-1) Export spreadsheet as a CSV file. Grab the path to that CSV file.
-1) Run `npm run csv -- --input <path_to_csv>`.
-   * This will also run validation on the card data and inform you of any errors in the CSV file. Fix these and ensure that it runs successfully before moving on.
-1) Run `npm run image -- --input ./generated/card_data`
-   * Assumes you used the default output for the last command. Adjust this command otherwise.
-   * This may take a while to finish.
-1) View the cards in `./generated/card_images` or other specified output folder.
+Assembles a folder of images for use with Tablestop Simulator's [custom deck builder](https://kb.tabletopsimulator.com/custom-content/custom-deck/#deck-builder), which expects a certain format.
 
-## Workflow 2: Visual Card Editor
+Pass in a `deck.txt` into the input containing a list of cards. Blank spaces and lines starting with `#` are ignored. For every other line, the first word should be the ID of the card and the second word (optional) should be the quantity.
 
-1) Run `npm run serve` in a terminal window. You should be able to access [http://localhost:3000](http://localhost:3000/).
-1) Input JSON data in the text area. You can copy-paste values from the output of `npm run csv` (see above) or write your own.
-1) Click **Update** to see the card visual.
-   * If there are validation errors, they will appear in the browser console.
-1) Click **Download Image** to download the image.
+Example:
+
+```text
+# Starter Pack
+Oberhau
+Unterhau
+Mittlehau
+Thrust
+PushStep 4
+PassStep 3
+TriangleStep
+```
 
 ## Other Commands
 
