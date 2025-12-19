@@ -13,6 +13,7 @@
     "deck": "npm run build && node ./dist/deckBuilder.js",
     "tts": "npm run build && node ./dist/ttsImageStitcher.js",
     "image": "npm run build && node ./dist/generateImages.js",
+    "upload": "npm run build && node ./dist/upload.js",
     "csv": "npm run build && node ./dist/convertCsv.js"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "csv-parse": "^6.1.0",
     "json-stringify-pretty-compact": "^4.0.0",
     "minimist": "^1.2.8",
+    "node-fetch": "^3.3.2",
     "puppeteer": "^24.31.0",
     "sharp": "^0.34.5",
     "zod": "^4.1.12"

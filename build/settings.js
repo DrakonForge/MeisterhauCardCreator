@@ -17,6 +17,7 @@ export function createBuildSettings(options) {
             'src/convertCsv.ts',
             'src/deckBuilder.ts',
             'src/ttsImageStitcher.ts',
+            'src/upload.ts',
         ],
         outdir: OUT_DIR,
         external: ["puppeteer", "sharp"], // Creates a build error if we try to bundle it
