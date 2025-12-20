@@ -95,6 +95,7 @@ export const setCardView = (card: Card) => {
     } else if (card.ActionType === "Leg") {
         setImageUrl(".action-type-icon", IconAssets.LEG_ACTION);
         setText(".stat-speed", card.Speed.toString());
+        getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
         if (card.ChamberAction) {
             applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
