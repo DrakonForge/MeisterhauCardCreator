@@ -14,7 +14,8 @@
     "tts": "npm run build && node ./dist/ttsImageStitcher.js",
     "image": "npm run build && node ./dist/generateImages.js",
     "upload": "npm run build && node ./dist/upload.js",
-    "csv": "npm run build && node ./dist/convertCsv.js"
+    "csv": "npm run build && node ./dist/convertCsv.js",
+    "pdf": "npm run build && node ./dist/createPdf.js"
   },
   "dependencies": {
     "@jpinsonneau/html-to-image": "^1.11.13",
@@ -23,6 +24,7 @@
     "json-stringify-pretty-compact": "^4.0.0",
     "minimist": "^1.2.8",
     "node-fetch": "^3.3.2",
+    "pdf-lib": "^1.17.1",
     "puppeteer": "^24.31.0",
     "sharp": "^0.34.5",
     "zod": "^4.1.12"
