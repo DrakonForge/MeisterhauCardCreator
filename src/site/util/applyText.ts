@@ -76,14 +76,23 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = component.Content;
                 break;
             case "Range":
-                span.classList.add("range");
-                span.textContent = `Range ${component.Content}`;
+                const rangeIcon = document.createElement("img");
+                rangeIcon.classList.add("icon", "range-icon")
+                rangeIcon.src = "img/RangeIcon.svg";
+                span.appendChild(rangeIcon);
+
+                const rangeText = document.createElement("span");
+                rangeText.classList.add("range");
+                rangeText.textContent += `${component.Content}`;
+                span.appendChild(rangeText);
+
+                span.classList.add("no-wrap");
                 break;
             case "Token":
-                const icon = document.createElement("img");
-                icon.classList.add("icon", "token-icon")
-                icon.src = "img/TokenIcon.svg";
-                parent.appendChild(icon);
+                const tokenIcon = document.createElement("img");
+                tokenIcon.classList.add("icon", "token-icon")
+                tokenIcon.src = "img/TokenIcon.svg";
+                parent.appendChild(tokenIcon);
 
                 span.classList.add("token");
                 span.textContent = component.Content;
@@ -182,7 +191,9 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Reminder":
                 span.classList.add("reminder");
-                span.textContent = `(${component.Content})`;
+                const contents: TextComponent[] = convertTextToJson(component.Content);
+                renderJsonToHtml(contents, span);
+                // TODO: Still doesn't really work
                 break;
             case "Guard":
                 span.classList.add("definition");
@@ -233,9 +244,12 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
     let textLines: string[];
     if (typeof action.Text === "string") {
         textLines = [action.Text];
-
     } else {
         textLines = action.Text;
+    }
+
+    if ((type === PlayActionType.CHAMBER || type === PlayActionType.DEFEND) && textLines.length > 1) {
+        consola.warn("Cards with multiple lines of Defend or Chamber text are not supported");
     }
 
     let isFirst = true;
@@ -244,11 +258,13 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
         const jsonText = convertTextToJson(textLine);
         if (isFirst) {
             if (type === PlayActionType.CHAMBER) {
+                p.classList.add("chamber-text");
                 const icon = document.createElement("img");
                 icon.classList.add("icon");
                 icon.src = IconAssets.CHAMBER_ICON;
                 p.appendChild(icon);
             } else if (type === PlayActionType.DEFEND) {
+                p.classList.add("defend-text");
                 const icon = document.createElement("img");
                 icon.classList.add("icon");
                 icon.src = IconAssets.DEFEND_ICON;

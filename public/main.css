@@ -243,6 +243,22 @@ img.hidden.hidden {
     position: relative;
 }
 
+.card-text p.chamber-text {
+    background-color: #0000001a;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.card-text p.defend-text {
+    background-color: #0000001a;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
 .card-overlay p > * {
     /* Helps w/icon centering */
     /* To get this to work, everything must be in a span. No loose text */
@@ -269,6 +285,12 @@ img.icon {
 img.icon.token-icon.token-icon {
     margin-left: -8px;
     margin-right: -3px;
+}
+
+.card-text img.icon.range-icon {
+    margin-right: 5px;
+    width: 40px;
+    height: 40px;
 }
 
 img.icon.range-icon {
@@ -313,6 +335,14 @@ span.definition {
 
 span.reminder {
     font-style: italic;
+}
+
+span.reminder::before {
+    content: '(';
+}
+
+span.reminder::after {
+    content: ')';
 }
 
 span.token {

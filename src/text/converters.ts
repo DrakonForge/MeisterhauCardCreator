@@ -35,6 +35,25 @@ export const convertKeywordsToJson = (keywords: Keyword[]): TextComponent[] => {
     return result;
 }
 
+const findMatchingEndTag = (text: string, index: number): number => {
+    let tagLevel = 1;
+    let result = -1;
+    while (index < text.length && tagLevel > 0) {
+        if (text.substring(index, index + START_TAG.length) == START_TAG) {
+            tagLevel += 1;
+        }
+        if (text.substring(index, index + END_TAG.length) == END_TAG) {
+            tagLevel -= 1;
+            if (tagLevel < 0) {
+                throw new Error("Mismatched closing tags");
+            }
+            result = index;
+        }
+        index++;
+    }
+    return result;
+}
+
 export const convertTextToJson = (text: string): TextComponent[] => {
     let index = 0;
     const result: TextComponent[] = [];
@@ -49,7 +68,7 @@ export const convertTextToJson = (text: string): TextComponent[] => {
                 });
             }
             index = startOfNextTag + START_TAG.length;
-            const endOfNextTag = text.indexOf(END_TAG, index);
+            const endOfNextTag = findMatchingEndTag(text, index);
             if (endOfNextTag <= -1) {
                 throw new Error("Unclosed tag");
             }
