@@ -17,7 +17,6 @@ export const CardTextSchema = z.union([
 // TODO: Validator should handle keywords that have no effect
 const SimpleKeywordTypeSchema = z.enum([
     // Attack
-    "Overbind",
     "Interrupt",
     "Disengage",
     "HandSnipe",
@@ -33,6 +32,7 @@ const SimpleKeywordTypeSchema = z.enum([
 
 const NumericKeywordTypeSchema = z.enum([
     // Attack
+    "Overbind",
     "Swech",
     "Offline",
     // Guard
