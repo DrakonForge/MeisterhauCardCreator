@@ -38,7 +38,13 @@ interface Entry {
     quantity: number;
 }
 
-const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, recursive: boolean): Promise<void> => {
+const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, recursive: boolean): Promise<void> => {
+    if (noGaps) {
+        consola.info("Setting registered: No gaps");
+    }
+    if (noFillBorders) {
+        consola.info("Setting registered: No fill borders");
+    }
     checkInputPathExists(inputPath);
     checkInputPathExists(imageDir);
 
@@ -100,7 +106,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         const image = await pdfDoc.embedPng(imageBuffer);
         cardIdToImage[cardId] = image;
     }
-    consola.log(`Embedded ${Object.keys(cardIdToPath).length} unique images into the PDF`);
+    consola.log(`Embedded ${uniqueCardIds.size} unique images into the PDF`);
 
     // Generate PDF
     // Reverse it to correct the order
@@ -119,8 +125,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         if (!currentPage || imagesOnPage >= MAX_IMAGES_PER_PAGE) {
             currentPage = pdfDoc.addPage(PageSizes.Letter);
             if (!noFillBorders) {
-                const backgroundWidth = (CARD_WIDTH_IN * 3 + HORIZONTAL_GAP_IN * 2) * INCH_TO_PDF_UNIT;
-                const backgroundHeight = (CARD_HEIGHT_IN * 3 + VERTICAL_GAP_IN * 2) * INCH_TO_PDF_UNIT;
+                const backgroundWidth = (CARD_WIDTH_IN * 3 + (noGaps ? 0 : HORIZONTAL_GAP_IN * 2)) * INCH_TO_PDF_UNIT;
+                const backgroundHeight = (CARD_HEIGHT_IN * 3 + (noGaps ? 0 : VERTICAL_GAP_IN * 2)) * INCH_TO_PDF_UNIT;
                 currentPage.drawRectangle({
                     x: currentPage.getWidth() / 2 - backgroundWidth / 2,
                     y: currentPage.getHeight() / 2 - backgroundHeight / 2,
@@ -153,8 +159,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
                 throw new Error(`Invalid offset for ${imagesOnPage}`);
             }
             const imageDims = image.scaleToFit(CARD_WIDTH_IN * INCH_TO_PDF_UNIT, CARD_HEIGHT_IN * INCH_TO_PDF_UNIT); // Scale image down to right proportions
-            const xOffset = offset[0] * (imageDims.width + HORIZONTAL_GAP_IN * INCH_TO_PDF_UNIT);
-            const yOffset = offset[1] * (imageDims.height + VERTICAL_GAP_IN * INCH_TO_PDF_UNIT);
+            const xOffset = offset[0] * (imageDims.width + (noGaps ? 0 : HORIZONTAL_GAP_IN * INCH_TO_PDF_UNIT));
+            const yOffset = offset[1] * (imageDims.height + (noGaps ? 0 : VERTICAL_GAP_IN * INCH_TO_PDF_UNIT));
             consola.debug(`Dimensions: ${imageDims.width} x ${imageDims.height}`);
             currentPage.drawImage(image, {
                 x: currentPage.getWidth() / 2 - imageDims.width / 2 + xOffset,
@@ -180,7 +186,8 @@ await main(async args => {
     const outputDir = args['output'] ?? "./generated/pdf";
     const outputName = args['name'] ?? "MyDeck";
     const noFillBorders = args['noborder'] ?? false;
+    const noGaps = args['nogaps'] ?? false;
     const recursive = args['r'] ?? false;
 
-    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, recursive);
+    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, recursive);
 });
