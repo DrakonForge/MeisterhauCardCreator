@@ -80,6 +80,11 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = `Range ${component.Content}`;
                 break;
             case "Token":
+                const icon = document.createElement("img");
+                icon.classList.add("icon", "token-icon")
+                icon.src = "img/TokenIcon.svg";
+                parent.appendChild(icon);
+
                 span.classList.add("token");
                 span.textContent = component.Content;
                 break;
