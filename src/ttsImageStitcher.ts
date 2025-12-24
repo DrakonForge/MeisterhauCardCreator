@@ -6,7 +6,7 @@ import sharp from "sharp";
 
 const CARDS_PER_ROW = 10;
 const CARDS_PER_COLUMN = 4;
-const CARDS_PER_PAGE = CARDS_PER_ROW * CARDS_PER_COLUMN;
+const CARDS_PER_PAGE = CARDS_PER_ROW * CARDS_PER_COLUMN - 1;
 
 const IMAGE_WIDTH = 744;
 const IMAGE_HEIGHT = 1038;

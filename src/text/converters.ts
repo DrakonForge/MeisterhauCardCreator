@@ -41,15 +41,17 @@ const findMatchingEndTag = (text: string, index: number): number => {
     while (index < text.length && tagLevel > 0) {
         if (text.substring(index, index + START_TAG.length) == START_TAG) {
             tagLevel += 1;
-        }
-        if (text.substring(index, index + END_TAG.length) == END_TAG) {
+            index += START_TAG.length;
+        } else if (text.substring(index, index + END_TAG.length) == END_TAG) {
             tagLevel -= 1;
             if (tagLevel < 0) {
                 throw new Error("Mismatched closing tags");
             }
             result = index;
+            index += END_TAG.length;
+        } else {
+            index++;
         }
-        index++;
     }
     return result;
 }

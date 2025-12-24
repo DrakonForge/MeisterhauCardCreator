@@ -5,6 +5,30 @@ import { clearCardView, setCardView } from './renderCard';
 import { validateCardFromJson } from '../validation/validation';
 import { consola } from 'consola';
 
+const SAMPLE_CARD = `{
+    "Name": "Oberhau",
+        "SecondaryName": "Cut From Above",
+            "ActionType": "Arm",
+                "Category": ["Cut", "Oberhau"],
+                    "Tier": 0,
+                        "Action": {
+        "Text": "<<Strike Oberhau>> to the upper opening."
+    },
+    "MetaType": "None",
+        "Speed": 4,
+            "ChamberAction": {
+        "Title": "Versetzen",
+            "Text": "If you can defend with this card, do so. Gain <<GainSpeed 1>> on your next turn."
+    },
+    "Range": [1, 2],
+        "Structure": 2,
+            "ParryHeight": "High",
+                "DefendAction": {
+        "Title": "Counter-Cut",
+            "Text": "Defend any strike at <<Range 2>>. Gain <<GainStructure 2>>. You have <<Keyword Sterck>>: Draw 1. The opponent has <<LoseArmSpeed 1>> on their next turn."
+    }
+}`;
+
 const generateCardImage = (id: string) => {
     const element = document.querySelector<HTMLElement>(".card");
     if (!element) {
@@ -29,14 +53,18 @@ const displayImage = async () => {
     displayImg.src = dataUrl;
 }
 
+const updateCard = (jsonStr: string): void => {
+    const rawData = JSON.parse(jsonStr);
+    const card = validateCardFromJson(rawData);
+    setCardView(card);
+};
+
 onClick(".update-button", async () => {
     (window as any).status = "processing";
     const textarea = query<HTMLInputElement>(".json-entry");
     if (textarea) {
         try {
-            const rawData = JSON.parse(textarea.value);
-            const card = validateCardFromJson(rawData);
-            setCardView(card);
+            updateCard(textarea.value);
         } catch(e) {
             consola.error(e);
             (window as any).status = "fail";
@@ -54,3 +82,6 @@ onClick(".download-button", async () => {
     await displayImage();
     generateCardImage("MyCard");
 });
+
+clearCardView();
+updateCard(SAMPLE_CARD);
