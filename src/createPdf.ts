@@ -55,6 +55,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     }
 
     consola.info(`Found ${Object.keys(cardIdToPath).length} image files`);
+    consola.info(`Reading ${inputPath}`);
 
     // Gather the desired entries
     const entries: Entry[] = [];

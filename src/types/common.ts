@@ -24,6 +24,8 @@ const SimpleKeywordTypeSchema = z.enum([
     "Volatile",
     "ProtectsHands",
     "Winden",
+    // Other
+    "Token"
 ]).meta({
     "id": "SimpleKeyword",
     "title": "Simple Keyword",

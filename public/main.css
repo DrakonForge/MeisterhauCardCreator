@@ -18,7 +18,7 @@
     --color-dark: #130e0a;
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
-    --color-speed: #3f00ff; /* More washed out: #3950a3 */
+    --color-speed: #3a10ba;; /* More washed out: #3950a3 */
     --color-range: #924609;
     --color-strike: #924609;
     --color-token: #7e00bc;
@@ -324,6 +324,11 @@ span.structure {
     color: var(--color-structure);
 }
 
+span.consume {
+    font-weight: bold;
+    color: var(--color-token);
+}
+
 span.speed {
     font-weight: bold;
     color: var(--color-speed);
@@ -353,6 +358,20 @@ span.token {
 span.strike {
     font-weight: bold;
     color: var(--color-strike);
+}
+
+span.attack {
+    font-weight: bold;
+}
+
+span.parry {
+    font-weight: bold;
+    color: #1b4e30;
+}
+
+span.counter {
+    font-weight: bold;
+    /* color: #2e9cbf; */
 }
 
 span.generic-highlight {

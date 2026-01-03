@@ -42,7 +42,7 @@ const TextKeywordMap = {
     },
     "Interrupt": {
         Content: "Interrupt",
-        Decorator: "structure",
+        Decorator: "generic-highlight",
     },
     "Disengage": {
         Content: "Disengage",
@@ -51,6 +51,14 @@ const TextKeywordMap = {
     "Winden": {
         Content: "Winden",
         Decorator: "structure",
+    },
+    "Token": {
+        Content: "Token",
+        Decorator: "consume",
+    },
+    "Consume": {
+        Content: "Consume",
+        Decorator: "consume",
     }
 };
 
@@ -189,6 +197,59 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("definition");
                 span.textContent = component.Content;
                 break;
+            case "Strong":
+                span.classList.add("structure");
+                span.textContent = component.Content;
+                break;
+            case "Weak":
+                span.classList.add("speed");
+                span.textContent = component.Content;
+                break;
+            case "Attack":
+                const attackIcon = document.createElement("img");
+                attackIcon.classList.add("icon", "attack-icon")
+                attackIcon.src = "img/ArmActionIcon.svg";
+                parent.appendChild(attackIcon);
+
+                span.classList.add("attack");
+                span.textContent = component.Content || "Attack";
+                break;
+            case "Counter":
+                const defendIcon = document.createElement("img");
+                defendIcon.classList.add("icon", "defend-icon")
+                defendIcon.src = "img/DefendIcon.svg";
+                parent.appendChild(defendIcon);
+
+                span.classList.add("counter");
+                span.textContent = component.Content || "Counter";
+                break;
+            case "Parry":
+                const parryIcon = document.createElement("img");
+                parryIcon.classList.add("icon", "parry-icon")
+                parryIcon.src = "img/ParryIcon_Both.svg";
+                parent.appendChild(parryIcon);
+
+                span.classList.add("parry");
+                span.textContent = component.Content || "Parry";
+                break;
+            case "ParryHigh":
+                const parryHighIcon = document.createElement("img");
+                parryHighIcon.classList.add("icon", "parry-icon")
+                parryHighIcon.src = "img/ParryIcon_High.svg";
+                parent.appendChild(parryHighIcon);
+
+                span.classList.add("parry");
+                span.textContent = component.Content;
+                break;
+            case "ParryLow":
+                const parryLowIcon = document.createElement("img");
+                parryLowIcon.classList.add("icon", "parry-icon")
+                parryLowIcon.src = "img/ParryIcon_Low.svg";
+                parent.appendChild(parryLowIcon);
+
+                span.classList.add("parry");
+                span.textContent = component.Content;
+                break;
             case "Reminder":
                 span.classList.add("reminder");
                 const contents: TextComponent[] = convertTextToJson(component.Content);
@@ -196,7 +257,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 // TODO: Still doesn't really work
                 break;
             case "Guard":
-                span.classList.add("definition");
+                // span.classList.add("definition");
                 const guard = component.Content;
                 const guardEntry = TextGuardMap[guard as keyof typeof TextGuardMap];
                 if (guardEntry) {
