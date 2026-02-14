@@ -44,7 +44,12 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
 6) Paste in the Face link and the Back link (card back should be same for every page).
 7) Press **Import**.
 
-## Workflow 3: Visual Card Editor
+## Workflow 3: Generate PDFs for Printing Cards
+
+1) Run Workflow 1 to generate card images
+2) Run `npm run pdf`
+
+## Workflow 4: Visual Card Editor
 
 1) Run `npm run serve` in a terminal window. You should be able to access [http://localhost:3000](http://localhost:3000/).
 1) Input JSON data in the text area. You can copy-paste values from the output of `npm run csv` (see above) or write your own.
@@ -124,6 +129,15 @@ Each stitched image contains 40 cards. The Tabletop Simulator tool can support u
 Takes in a list of deck images produced with `npm run tts` and uploads them to imgur. Provides a list of links which can easily be imported into Tabletop Simulator.
 
 It does NOT upload the back image URL; a default link is provided but can be overridden in the command.
+
+### `npm run pdf`
+
+> Usage: `npm run pdf -- [--images <image_directory>][ [--input <deck_text_file>] [--output <output_directory>] [--name <deck_name>] [--noborder] [--nogaps] [-r]`
+
+Takes in a list of card images produced by `npm run image` and generates a pdf of the provided deck, similar to `npm run deck`. This is useful for printing decks.
+
+* Add `--noborder` to remove the filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
+* Add `--nogaps` to remove the gaps between the cards, so you need fewer cuts (which may require more precision) to cut out the cards.
 
 ## Other Commands
 
