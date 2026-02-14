@@ -1,4 +1,4 @@
-# SwordCardCreator
+# Meisterhau Card Creator
 
 A suite of tools for creating cards for *Meisterhau!: The Duel*.
 
