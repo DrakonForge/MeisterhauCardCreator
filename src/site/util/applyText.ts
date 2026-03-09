@@ -91,19 +91,29 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
 
                 const rangeText = document.createElement("span");
                 rangeText.classList.add("range");
-                rangeText.textContent += `${component.Content}`;
+                rangeText.textContent = component.Content;
                 span.appendChild(rangeText);
 
-                span.classList.add("no-wrap");
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                break;
+            case "Instant":
+                const instantIcon = document.createElement("img");
+                instantIcon.classList.add("icon", "instant-icon")
+                instantIcon.src = "img/InstantIconInverted.svg";
+                span.appendChild(instantIcon);
                 break;
             case "Token":
                 const tokenIcon = document.createElement("img");
                 tokenIcon.classList.add("icon", "token-icon")
                 tokenIcon.src = "img/TokenIcon.svg";
-                parent.appendChild(tokenIcon);
+                span.appendChild(tokenIcon);
 
-                span.classList.add("token");
-                span.textContent = component.Content;
+                const tokenText = document.createElement("span");
+                tokenText.classList.add("token");
+                tokenText.textContent = component.Content;
+                span.appendChild(tokenText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "GainStructure":
                 span.classList.add("structure");
@@ -197,6 +207,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("definition");
                 span.textContent = component.Content;
                 break;
+            case "Move":
+                span.classList.add("definition");
+                span.textContent = component.Content;
+                break;
             case "Strong":
                 span.classList.add("structure");
                 span.textContent = component.Content;
@@ -209,46 +223,66 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 const attackIcon = document.createElement("img");
                 attackIcon.classList.add("icon", "attack-icon")
                 attackIcon.src = "img/ArmActionIcon.svg";
-                parent.appendChild(attackIcon);
+                span.append(attackIcon);
 
-                span.classList.add("attack");
-                span.textContent = component.Content || "Attack";
+                const attackText = document.createElement("span");
+                attackText.classList.add("attack");
+                attackText.textContent = component.Content || "Attack";
+                span.append(attackText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Counter":
                 const defendIcon = document.createElement("img");
                 defendIcon.classList.add("icon", "defend-icon")
                 defendIcon.src = "img/DefendIcon.svg";
-                parent.appendChild(defendIcon);
+                span.appendChild(defendIcon);
 
-                span.classList.add("counter");
-                span.textContent = component.Content || "Counter";
+                const defendText = document.createElement("span");
+                defendText.classList.add("counter");
+                defendText.textContent = component.Content || "Counter";
+                span.append(defendText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Parry":
                 const parryIcon = document.createElement("img");
                 parryIcon.classList.add("icon", "parry-icon")
                 parryIcon.src = "img/ParryIcon_Both.svg";
-                parent.appendChild(parryIcon);
+                span.appendChild(parryIcon);
 
-                span.classList.add("parry");
-                span.textContent = component.Content || "Parry";
+                const parryText = document.createElement("span");
+                parryText.classList.add("parry");
+                parryText.textContent = component.Content || "Parry";
+                span.append(parryText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "ParryHigh":
                 const parryHighIcon = document.createElement("img");
                 parryHighIcon.classList.add("icon", "parry-icon")
                 parryHighIcon.src = "img/ParryIcon_High.svg";
-                parent.appendChild(parryHighIcon);
+                span.appendChild(parryHighIcon);
 
-                span.classList.add("parry");
-                span.textContent = component.Content;
+                const parryHighText = document.createElement("span");
+                parryHighText.classList.add("parry");
+                parryHighText.textContent = component.Content;
+                span.append(parryHighText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "ParryLow":
                 const parryLowIcon = document.createElement("img");
                 parryLowIcon.classList.add("icon", "parry-icon")
                 parryLowIcon.src = "img/ParryIcon_Low.svg";
-                parent.appendChild(parryLowIcon);
+                span.appendChild(parryLowIcon);
 
-                span.classList.add("parry");
-                span.textContent = component.Content;
+                const parryLowText = document.createElement("span");
+                parryLowText.classList.add("parry");
+                parryLowText.textContent = component.Content;
+                span.append(parryLowText);
+
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Reminder":
                 span.classList.add("reminder");
@@ -273,10 +307,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 const keywordEntry = TextKeywordMap[keyword as keyof typeof TextKeywordMap];
                 if (keywordEntry) {
                     span.textContent = text.replace(keyword, keywordEntry.Content);
-                    span.classList.add(keywordEntry.Decorator);
+                    span.classList.add(keywordEntry.Decorator, "keyword-item");
                 } else {
                     consola.warn(`Unknown keyword ${keyword}`);
-                    span.classList.add("generic-highlight");
+                    span.classList.add("generic-highlight", "keyword-item");
                     span.textContent = text;
                 }
                 break;

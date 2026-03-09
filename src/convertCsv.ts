@@ -14,7 +14,9 @@ interface RowData {
     SecondaryName: string;
     ActionType: string;
     Category1: string;
+    SubCategory1: string;
     Category2: string;
+    SubCategory2: string;
     Tier: string;
     Packs: string;
     Speed: string;
@@ -42,7 +44,9 @@ const HEADERS: (keyof RowData)[] = [
     "Packs",
     "ActionType",
     "Category1",
+    "SubCategory1",
     "Category2",
+    "SubCategory2",
     "Speed",
     "Structure",
     "ParryHeight",
@@ -187,6 +191,9 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     }
     card.Speed = parseInt(data.Speed);
     card.Range = parseRange(data.Range);
+    if (parseString(data.Keywords)) {
+        card.Keywords = parseKeywords(data.Keywords);
+    }
     if (parseString(data.ChamberActionText)) {
         card.ChamberAction = {
             Text: parseText(data.ChamberActionText),
@@ -224,11 +231,23 @@ const convertCsvToJson = (data: RowData): Card => {
     if (parseString(data.SecondaryName)) {
         baseCard.SecondaryName = parseString(data.SecondaryName);
     }
-    if (parseString(data.Category2)) {
-        baseCard.Category = [parseString(data.Category1), parseString(data.Category2)];
+    baseCard.Categories = [];
+    if (parseString(data.SubCategory1)) {
+        baseCard.Categories.push([parseString(data.Category1), parseString(data.SubCategory1)]);
     } else {
-        baseCard.Category = parseString(data.Category1);
+        baseCard.Categories.push(parseString(data.Category1));
     }
+    if (parseString(data.Category2)) {
+        if (parseString(data.SubCategory2)) {
+            baseCard.Categories.push([parseString(data.Category2), parseString(data.SubCategory2)]);
+        } else {
+            baseCard.Categories.push(parseString(data.Category2));
+        }
+    }
+    if (baseCard.Categories.length <= 0) {
+        throw new Error("Card must have at least one category");
+    }
+
     if (parseString(data.MetaType)) {
         const metaTypeStr = parseString(data.MetaType);
         if (metaTypeStr === "Token") {

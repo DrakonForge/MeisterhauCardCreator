@@ -9,7 +9,7 @@ const SAMPLE_CARD = `{
     "Name": "Oberhau",
         "SecondaryName": "Cut From Above",
             "ActionType": "Arm",
-                "Category": ["Cut", "Oberhau"],
+                "Categories": [["Cut", "Oberhau"]],
                     "Tier": 0,
                         "Action": {
         "Text": "<<Strike Oberhau>> to the upper opening."

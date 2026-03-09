@@ -16,10 +16,10 @@ const BaseCardSchema = z.object({
     Name: z.string().nonempty().describe("The name of the card."),
     SecondaryName: z.string().optional(),
     ActionType: ActionTypeSchema,
-    Category: z.union([
+    Categories: z.array(z.union([
         z.string().nonempty(),
         z.array(z.string().nonempty()).min(1).max(2),
-    ]),
+    ])),
     Tier: z.int().min(0).max(3),
     Action: CardActionSchema,
     MetaType: MetaTypeSchema.default("None"),
@@ -28,6 +28,7 @@ const BaseCardSchema = z.object({
 const ArmLegActionCardSchema = BaseCardSchema.extend({
     Speed: z.int().nonnegative(),
     ChamberAction: CardActionSchema.optional(),
+    Keywords: KeywordsSchema.optional(),
     Range: ValueRangeSchema,
 });
 
@@ -37,7 +38,6 @@ const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Arm"),
     Structure: z.int().nonnegative(),
     ParryHeight: ParryHeightSchema,
-    // Right now, only arm actions have keywords
     Keywords: KeywordsSchema.optional(),
     DefendAction: CardActionSchema.optional(),
 }).strict().meta({

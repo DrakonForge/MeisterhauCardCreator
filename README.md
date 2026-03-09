@@ -138,6 +138,7 @@ Takes in a list of card images produced by `npm run image` and generates a pdf o
 
 * Add `--noborder` to remove the filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
 * Add `--nogaps` to remove the gaps between the cards, so you need fewer cuts (which may require more precision) to cut out the cards.
+* Add `--all` to print 1 copy of all available images, ignoring the `--input` field.
 
 ## Other Commands
 

@@ -38,15 +38,20 @@ interface Entry {
     quantity: number;
 }
 
-const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, recursive: boolean): Promise<void> => {
+const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, recursive: boolean): Promise<void> => {
     if (noGaps) {
         consola.info("Setting registered: No gaps");
     }
     if (noFillBorders) {
         consola.info("Setting registered: No fill borders");
     }
+    if (allCards) {
+        consola.info("Setting registered: Printing all cards");
+    }
     checkInputPathExists(inputPath);
-    checkInputPathExists(imageDir);
+    if (!allCards) {
+        checkInputPathExists(imageDir);
+    }
 
     const cardIdToPath = await createCardIdToPath(imageDir, recursive);
     if (!cardIdToPath) {
@@ -54,42 +59,53 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         return;
     }
 
-    consola.info(`Found ${Object.keys(cardIdToPath).length} image files`);
-    consola.info(`Reading ${inputPath}`);
+    const cardIds = Object.keys(cardIdToPath);
+    consola.info(`Found ${cardIds.length} image files`);
 
     // Gather the desired entries
     const entries: Entry[] = [];
     const uniqueCardIds = new Set<string>();
     let numTotalCards = 0;
-    const file = await open(inputPath);
-    for await (const line of file.readLines()) {
-        const lineText = line.trim();
 
-        // Skip blank lines or comments
-        if (!lineText || lineText.startsWith("#")) {
-            continue;
+    if (allCards) {
+        consola.info(`Adding all ${cardIds.length} entries`);
+        for (const cardId of cardIds) {
+            entries.push({cardId, quantity: 1});
+            uniqueCardIds.add(cardId);
+            numTotalCards += 1;
         }
+    } else {
+        consola.info(`Reading ${inputPath}`);
+        const file = await open(inputPath);
+        for await (const line of file.readLines()) {
+            const lineText = line.trim();
 
-        const words = line.split(' ');
-        let cardId: string;
-        let quantity: number;
-        if (words.length > 2) {
-            throw new Error("Must be in format <CardId> [Quantity]. CardId must be a single word");
-        } if (words[0] && words[1]) {
-            cardId = words[0];
-            quantity = parseInt(words[1]);
-        } else {
-            cardId = lineText;
-            quantity = 1;
+            // Skip blank lines or comments
+            if (!lineText || lineText.startsWith("#")) {
+                continue;
+            }
+
+            const words = line.split(' ');
+            let cardId: string;
+            let quantity: number;
+            if (words.length > 2) {
+                throw new Error("Must be in format <CardId> [Quantity]. CardId must be a single word");
+            } if (words[0] && words[1]) {
+                cardId = words[0];
+                quantity = parseInt(words[1]);
+            } else {
+                cardId = lineText;
+                quantity = 1;
+            }
+
+            if (!(cardId in cardIdToPath)) {
+                throw new Error(`Unable to find card ID ${cardId} in provided image directory`);
+            }
+
+            entries.push({ cardId, quantity });
+            uniqueCardIds.add(cardId);
+            numTotalCards += quantity;
         }
-
-        if (!(cardId in cardIdToPath)) {
-            throw new Error(`Unable to find card ID ${cardId} in provided image directory`);
-        }
-
-        entries.push({cardId, quantity});
-        uniqueCardIds.add(cardId);
-        numTotalCards += quantity;
     }
 
     const numTotalPages = Math.ceil(numTotalCards / MAX_IMAGES_PER_PAGE);
@@ -188,7 +204,8 @@ await main(async args => {
     const outputName = args['name'] ?? "MyDeck";
     const noFillBorders = args['noborder'] ?? false;
     const noGaps = args['nogaps'] ?? false;
+    const allCards = args['all'] ?? false;
     const recursive = args['r'] ?? false;
 
-    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, recursive);
+    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, allCards, recursive);
 });

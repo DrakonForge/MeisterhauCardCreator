@@ -4,6 +4,8 @@ import { fitCardText } from "./util/fitCardText";
 import { fitCardTitle } from "./util/fitCardTitle";
 import { applyKeywordText, applyText } from "./util/applyText";
 import { rangeToStr } from "./util/rangeToStr";
+import { fitCardSubtitle } from "./util/fitCardSubtitle";
+import { fitCardCategories } from "./util/fitCardCategories";
 
 export const IconAssets = {
     ARM_ACTION: "img/ArmActionIcon.svg",
@@ -39,6 +41,7 @@ export const clearCardView = () => {
         textContainer.innerHTML = "";
     }
     getClassList(".range-icon")?.add("hidden");
+    getClassList(".stat-speed.stat-speed-instant")?.add("hidden");
 };
 
 export const setCardView = (card: Card) => {
@@ -48,12 +51,16 @@ export const setCardView = (card: Card) => {
         setText(".card-subtitle", `“${card.SecondaryName}”`);
     }
 
-    if (card.Category) {
-        if (Array.isArray(card.Category)) {
-            setText(".card-category", card.Category.join(" - "));
-        } else {
-            setText(".card-category", card.Category);
+    if (card.Categories) {
+        const categoryStrings: string[] = [];
+        for (const category of card.Categories) {
+            if (Array.isArray(category)) {
+                categoryStrings.push(category.join(" - "));
+            } else {
+                categoryStrings.push(category);
+            }
         }
+        setText(".card-category", categoryStrings.join(", "));
     }
 
     if (card.MetaType) {
@@ -66,7 +73,7 @@ export const setCardView = (card: Card) => {
     if (!textContainer) {
         throw new Error("Unable to find text container");
     }
-    if (card.ActionType === "Arm") {
+    if (card.ActionType === "Arm" || card.ActionType === "Leg") {
         applyKeywordText(card.Keywords, textContainer);
     }
     applyText(card.Action, textContainer, PlayActionType.NORMAL);
@@ -82,7 +89,7 @@ export const setCardView = (card: Card) => {
         } else if (card.ParryHeight === "None") {
             setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
         }
-        setText(".stat-speed", card.Speed.toString());
+        setText(".stat-speed.stat-speed-text", card.Speed.toString());
         setText(".stat-structure", card.Structure.toString());
         if (card.DefendAction) {
             applyText(card.DefendAction, textContainer, PlayActionType.DEFEND);
@@ -94,7 +101,7 @@ export const setCardView = (card: Card) => {
         setText(".card-range-text", rangeToStr(card.Range));
     } else if (card.ActionType === "Leg") {
         setImageUrl(".action-type-icon", IconAssets.LEG_ACTION);
-        setText(".stat-speed", card.Speed.toString());
+        setText(".stat-speed.stat-speed-text", card.Speed.toString());
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
         if (card.ChamberAction) {
@@ -102,8 +109,12 @@ export const setCardView = (card: Card) => {
         }
     } else if (card.ActionType === "Special") {
         setImageUrl(".action-type-icon", IconAssets.SPECIAL_ACTION);
+        setText(".stat-speed.stat-speed-text", "");
+        getClassList(".stat-speed.stat-speed-instant")?.remove("hidden");
     }
 
     fitCardText();
     fitCardTitle();
+    fitCardSubtitle();
+    fitCardCategories();
 };

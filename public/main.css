@@ -101,6 +101,17 @@ img.hidden.hidden {
     left: var(--card-stat-horizontal-margin);
 }
 
+.stat-speed-instant img {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    margin-left: -43px;
+}
+
+.stat-speed-instant.hidden img {
+    display: none;
+}
+
 .stat-structure {
     right: var(--card-stat-horizontal-margin);
 }
@@ -135,7 +146,7 @@ img.hidden.hidden {
 .card-title-container {
     display: flex;
     flex-flow: row nowrap;
-    width: 423px;
+    width: 430px;
     justify-content: center;
     white-space: nowrap; /* Force it to render on one line */
 }
@@ -151,6 +162,7 @@ img.hidden.hidden {
     font-family: "Eagle Lake", serif;
     text-align: center;
     font-size: 32px;
+    white-space: nowrap; /* Force it to render on one line */
     /* Optional letter spacing changes */
     font-style: italic;
     letter-spacing: -2px;
@@ -184,10 +196,16 @@ img.hidden.hidden {
 }
 
 .card-type {
+    flex: 1;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    overflow: hidden;
     gap: 5px;
+}
+
+.card-category {
+    white-space: nowrap; /* Force it to render on one line */
 }
 
 .card-range {
@@ -195,6 +213,7 @@ img.hidden.hidden {
     flex-flow: row nowrap;
     align-items: center;
     gap: 5px;
+    margin-left: 0.5rem;
 }
 
 .card-range-text {
@@ -273,6 +292,10 @@ img.hidden.hidden {
     text-align: center;
 }
 
+.card-overlay p.keyword-list .keyword-item {
+    white-space: nowrap;
+}
+
 img.icon {
     display: inline;
     /* Adjust icons to always be 16px bigger than text, but not break up line height */
@@ -291,6 +314,13 @@ img.icon.token-icon.token-icon {
     margin-right: 5px;
     width: 40px;
     height: 40px;
+}
+
+.card-text img.icon.instant-icon {
+    width: 40px;
+    height: 40px;
+    margin-left: -5px;
+    margin-right: -5px;
 }
 
 img.icon.range-icon {
