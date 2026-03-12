@@ -129,7 +129,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 if (isNaN(speedGain)) {
                     throw new Error("Invalid number");
                 }
-                span.textContent = `+${speedGain} Speed`;
+                span.textContent = `+${speedGain} All Speed`;
                 break;
             case "GainArmSpeed":
                 span.classList.add("speed");
@@ -161,7 +161,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 if (isNaN(speedLoss)) {
                     throw new Error("Invalid number");
                 }
-                span.textContent = `-${speedLoss} Speed`;
+                span.textContent = `-${speedLoss} All Speed`;
                 break;
             case "LoseArmSpeed":
                 span.classList.add("speed");

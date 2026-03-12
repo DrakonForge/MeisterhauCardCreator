@@ -18,7 +18,7 @@ interface RowData {
     Category2: string;
     SubCategory2: string;
     Tier: string;
-    Packs: string;
+    Deck: string;
     Speed: string;
     Structure: string;
     ParryHeight: string;
@@ -41,12 +41,12 @@ const HEADERS: (keyof RowData)[] = [
     "Name",
     "SecondaryName",
     "Tier",
-    "Packs",
+    "Deck",
     "ActionType",
-    "Category1",
     "SubCategory1",
-    "Category2",
+    "Category1",
     "SubCategory2",
+    "Category2",
     "Speed",
     "Structure",
     "ParryHeight",
@@ -233,13 +233,13 @@ const convertCsvToJson = (data: RowData): Card => {
     }
     baseCard.Categories = [];
     if (parseString(data.SubCategory1)) {
-        baseCard.Categories.push([parseString(data.Category1), parseString(data.SubCategory1)]);
+        baseCard.Categories.push(parseString(data.SubCategory1) + " " + parseString(data.Category1));
     } else {
         baseCard.Categories.push(parseString(data.Category1));
     }
     if (parseString(data.Category2)) {
         if (parseString(data.SubCategory2)) {
-            baseCard.Categories.push([parseString(data.Category2), parseString(data.SubCategory2)]);
+            baseCard.Categories.push(parseString(data.SubCategory2) + " " + parseString(data.Category2));
         } else {
             baseCard.Categories.push(parseString(data.Category2));
         }

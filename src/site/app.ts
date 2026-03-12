@@ -4,6 +4,7 @@ import { onClick, query } from './dom';
 import { clearCardView, setCardView } from './renderCard';
 import { validateCardFromJson } from '../validation/validation';
 import { consola } from 'consola';
+import { delay } from "../util/delay";
 
 const SAMPLE_CARD = `{
     "Name": "Oberhau",
@@ -72,6 +73,7 @@ onClick(".update-button", async () => {
             return;
         }
     }
+    await delay(100); // We need to wait for the HTML to finish rendering
     await displayImage();
     (window as any).status = "ready";
 });
@@ -84,4 +86,4 @@ onClick(".download-button", async () => {
 });
 
 clearCardView();
-updateCard(SAMPLE_CARD);
+// updateCard(SAMPLE_CARD);

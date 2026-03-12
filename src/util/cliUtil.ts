@@ -35,12 +35,6 @@ export const checkInputPathExists = (path: string) => {
     }
 };
 
-export const delay = (time: number) => {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, time);
-    });
-};
-
 export const createProgressBar = (progress: number, barWidth = 10) => {
     const filledWidth = Math.floor(progress * barWidth);
     const emptyWidth = barWidth - filledWidth;

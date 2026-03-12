@@ -44,7 +44,7 @@ export const clearCardView = () => {
     getClassList(".stat-speed.stat-speed-instant")?.add("hidden");
 };
 
-export const setCardView = (card: Card) => {
+export const setCardView = async (card: Card) => {
     clearCardView();
     setText(".card-title", card.Name);
     if (card.SecondaryName) {
@@ -54,13 +54,9 @@ export const setCardView = (card: Card) => {
     if (card.Categories) {
         const categoryStrings: string[] = [];
         for (const category of card.Categories) {
-            if (Array.isArray(category)) {
-                categoryStrings.push(category.join(" - "));
-            } else {
-                categoryStrings.push(category);
-            }
+            categoryStrings.push(category);
         }
-        setText(".card-category", categoryStrings.join(", "));
+        setText(".card-category", categoryStrings.join(" - "));
     }
 
     if (card.MetaType) {

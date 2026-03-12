@@ -70,12 +70,20 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
         consola.debug(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
         consola.debug(`Starting task for ${card.Name}`);
 
-        const textarea = await page.$("textarea.json-entry");
         const updateButton = await page.$('button.update-button');
         const displayImg = await page.$('.card-display-output > img');
 
         // Should be a fresh window, so no need to clear
-        await textarea?.type(JSON.stringify(card));
+        const text = JSON.stringify(card);
+        await page.evaluate((text) => {
+            const textarea = document.querySelector<HTMLTextAreaElement>("textarea.json-entry");
+            if (textarea != null) {
+                textarea.value = text;
+            } else {
+                (window as any).status = "fail";
+                (window as any).errorMessage = "No textarea found";
+            }
+        }, text);
         await updateButton?.click();
 
         // Wait for process to finish
@@ -111,7 +119,9 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
 
 const processCardsSequential = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
     consola.log("Running synchronous task.");
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        // headless: false,
+    });
     const page = await browser.newPage();
     const response = await page.goto(siteUrl);
     const cardEntries = Object.entries(cardList);
@@ -119,7 +129,6 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
     consola.log(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
     consola.log(`Progress: ${createProgressBar(0, 10)} (0/${cardEntries.length})`);
 
-    const textarea = await page.$("textarea.json-entry");
     const updateButton = await page.$('button.update-button');
     const displayImg = await page.$('.card-display-output > img');
     let numProcessed = 0;
@@ -129,13 +138,21 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
         numProcessed++;
         consola.log(`Progress: ${createProgressBar(numProcessed / cardEntries.length, 10)} (${numProcessed}/${cardEntries.length})`);
         consola.debug(`Received ${key}`);
-        await textarea?.evaluate(element => element.value = '');
-        await textarea?.type(JSON.stringify(card));
+        const text = JSON.stringify(card);
+        await page.evaluate((text) => {
+            const textarea = document.querySelector<HTMLTextAreaElement>("textarea.json-entry");
+            if (textarea != null) {
+                textarea.value = text;
+            } else {
+                (window as any).status = "fail";
+                (window as any).errorMessage = "No textarea found";
+            }
+        }, text);
         await updateButton?.click();
 
         // Wait for process to finish
         await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
-            polling: 100,
+            polling: 500,
             timeout: 15000,
         });
         const status = await page.evaluate("window.status");

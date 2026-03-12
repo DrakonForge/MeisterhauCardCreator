@@ -16,10 +16,7 @@ const BaseCardSchema = z.object({
     Name: z.string().nonempty().describe("The name of the card."),
     SecondaryName: z.string().optional(),
     ActionType: ActionTypeSchema,
-    Categories: z.array(z.union([
-        z.string().nonempty(),
-        z.array(z.string().nonempty()).min(1).max(2),
-    ])),
+    Categories: z.array(z.string().nonempty()),
     Tier: z.int().min(0).max(3),
     Action: CardActionSchema,
     MetaType: MetaTypeSchema.default("None"),
