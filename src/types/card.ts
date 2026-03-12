@@ -20,12 +20,13 @@ const BaseCardSchema = z.object({
     Tier: z.int().min(0).max(3),
     Action: CardActionSchema,
     MetaType: MetaTypeSchema.default("None"),
+    ChamberAction: CardActionSchema.optional(),
+    Keywords: KeywordsSchema.optional(),
+    Speed: z.int().nonnegative().optional(),
 });
 
 const ArmLegActionCardSchema = BaseCardSchema.extend({
     Speed: z.int().nonnegative(),
-    ChamberAction: CardActionSchema.optional(),
-    Keywords: KeywordsSchema.optional(),
     Range: ValueRangeSchema,
 });
 
@@ -49,6 +50,7 @@ const LegActionCardSchema = ArmLegActionCardSchema.extend({
 
 const SpecialActionCardSchema = BaseCardSchema.extend({
     ActionType: z.literal("Special"),
+    Speed: z.int().nonnegative().optional()
 }).strict().meta({
     id: "SpecialActionCard"
 });

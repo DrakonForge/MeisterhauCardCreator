@@ -5,6 +5,7 @@ import * as fs from "fs";
 import { createProgressBar, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import type { Card } from "./types/card";
+import { delay } from "./util/delay";
 
 const CONCURRENT_TASK_LIMIT = 5;
 
@@ -84,6 +85,9 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
                 (window as any).errorMessage = "No textarea found";
             }
         }, text);
+        // Need to call it twice due to rendering bugs
+        await updateButton?.click();
+        await delay(50);
         await updateButton?.click();
 
         // Wait for process to finish
@@ -119,8 +123,9 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
 
 const processCardsSequential = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
     consola.log("Running synchronous task.");
+    const debugMode = false;
     const browser = await puppeteer.launch({
-        // headless: false,
+        headless: !debugMode,
     });
     const page = await browser.newPage();
     const response = await page.goto(siteUrl);
@@ -148,6 +153,9 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
                 (window as any).errorMessage = "No textarea found";
             }
         }, text);
+        // Need to call it twice due to rendering bugs
+        await updateButton?.click();
+        await delay(50);
         await updateButton?.click();
 
         // Wait for process to finish
@@ -171,7 +179,9 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
             const filePath = path.join(outputDir, key + ".png");
             consola.debug(`Writing image to ${filePath}`);
             fs.writeFileSync(filePath, await viewSource?.buffer()!);
-            await imgPage.close();
+            if (!debugMode) {
+                await imgPage.close();
+            }
         } else {
             consola.error(`Failed to find image for ${key}`);
             numFails++;
@@ -180,7 +190,9 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
     }
 
     consola.log("Cleaning up...");
-    await browser.close();
+    if (!debugMode) {
+        await browser.close();
+    }
     if (numFails) {
         consola.error(`Processing completed with failures. Failed to generate ${numFails} images out of ${cardEntries.length} total.`);
     } else {

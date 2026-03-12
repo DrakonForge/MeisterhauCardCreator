@@ -73,7 +73,7 @@ onClick(".update-button", async () => {
             return;
         }
     }
-    await delay(100); // We need to wait for the HTML to finish rendering
+    await delay(50); // We need to wait for the HTML to finish rendering
     await displayImage();
     (window as any).status = "ready";
 });

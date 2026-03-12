@@ -69,7 +69,7 @@ export const setCardView = async (card: Card) => {
     if (!textContainer) {
         throw new Error("Unable to find text container");
     }
-    if (card.ActionType === "Arm" || card.ActionType === "Leg") {
+    if (card.Keywords) {
         applyKeywordText(card.Keywords, textContainer);
     }
     applyText(card.Action, textContainer, PlayActionType.NORMAL);
@@ -90,9 +90,6 @@ export const setCardView = async (card: Card) => {
         if (card.DefendAction) {
             applyText(card.DefendAction, textContainer, PlayActionType.DEFEND);
         }
-        if (card.ChamberAction) {
-            applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
-        }
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
     } else if (card.ActionType === "Leg") {
@@ -100,13 +97,17 @@ export const setCardView = async (card: Card) => {
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
-        if (card.ChamberAction) {
-            applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
-        }
     } else if (card.ActionType === "Special") {
         setImageUrl(".action-type-icon", IconAssets.SPECIAL_ACTION);
         setText(".stat-speed.stat-speed-text", "");
-        getClassList(".stat-speed.stat-speed-instant")?.remove("hidden");
+        if (card.Speed) {
+            setText(".stat-speed.stat-speed-text", card.Speed.toString());
+        } else {
+            getClassList(".stat-speed.stat-speed-instant")?.remove("hidden");
+        }
+    }
+    if (card.ChamberAction) {
+        applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
     }
 
     fitCardText();

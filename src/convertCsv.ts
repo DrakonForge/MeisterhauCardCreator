@@ -156,27 +156,15 @@ const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_ARM_FIELDS)) {
         throw new Error("Missing required arm fields");
     }
-    card.Speed = parseInt(data.Speed);
     card.Structure = parseInt(data.Structure);
     card.ParryHeight = ParryHeightSchema.parse(data.ParryHeight);
     card.Range = parseRange(data.Range);
-    if (parseString(data.Keywords)) {
-        card.Keywords = parseKeywords(data.Keywords);
-    }
     if (parseString(data.DefendActionText)) {
         card.DefendAction = {
             Text: parseText(data.DefendActionText),
         }
         if (parseString(data.DefendActionTitle)) {
             card.DefendAction.Title = parseString(data.DefendActionTitle);
-        }
-    }
-    if (parseString(data.ChamberActionText)) {
-        card.ChamberAction = {
-            Text: parseText(data.ChamberActionText),
-        }
-        if (parseString(data.ChamberActionTitle)) {
-            card.ChamberAction.Title = parseString(data.ChamberActionTitle);
         }
     }
 };
@@ -189,19 +177,7 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
         throw new Error("Missing required leg fields");
     }
-    card.Speed = parseInt(data.Speed);
     card.Range = parseRange(data.Range);
-    if (parseString(data.Keywords)) {
-        card.Keywords = parseKeywords(data.Keywords);
-    }
-    if (parseString(data.ChamberActionText)) {
-        card.ChamberAction = {
-            Text: parseText(data.ChamberActionText),
-        }
-        if (parseString(data.ChamberActionTitle)) {
-            card.ChamberAction.Title = parseString(data.ChamberActionTitle);
-        }
-    }
 }
 
 // TODO: Behaviors
@@ -252,6 +228,23 @@ const convertCsvToJson = (data: RowData): Card => {
         const metaTypeStr = parseString(data.MetaType);
         if (metaTypeStr === "Token") {
             baseCard.MetaType = "Token";
+        }
+    }
+
+    if (parseString(data.Keywords)) {
+        baseCard.Keywords = parseKeywords(data.Keywords);
+    }
+
+    if (parseInt(data.Speed)) {
+        baseCard.Speed = parseInt(data.Speed);
+    }
+
+    if (parseString(data.ChamberActionText)) {
+        baseCard.ChamberAction = {
+            Text: parseText(data.ChamberActionText),
+        }
+        if (parseString(data.ChamberActionTitle)) {
+            baseCard.ChamberAction.Title = parseString(data.ChamberActionTitle);
         }
     }
 

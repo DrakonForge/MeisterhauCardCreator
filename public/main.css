@@ -108,6 +108,10 @@ img.hidden.hidden {
     margin-left: -43px;
 }
 
+.stat-speed-instant.hidden {
+    display: none;
+}
+
 .stat-speed-instant.hidden img {
     display: none;
 }
@@ -146,7 +150,7 @@ img.hidden.hidden {
 .card-title-container {
     display: flex;
     flex-flow: row nowrap;
-    width: 430px;
+    width: 425px;
     justify-content: center;
     white-space: nowrap; /* Force it to render on one line */
 }
@@ -246,7 +250,7 @@ img.hidden.hidden {
     flex-shrink: 1;
     height: 100%;
     object-fit: cover;
-    opacity: 0.15;
+    opacity: 0.1;
 }
 
 .card-body-background-container .card-body-background {
@@ -305,6 +309,11 @@ img.icon {
     margin-bottom: -8px;
 }
 
+img.icon.attack-icon {
+    width: 42px;
+    height: 42px;
+}   
+
 img.icon.token-icon.token-icon {
     margin-left: -8px;
     margin-right: -3px;
@@ -326,6 +335,11 @@ img.icon.token-icon.token-icon {
 img.icon.range-icon {
     width: 48px;
     height: 48px;
+}
+
+img.icon.parry-icon {
+    width: 42px;
+    height: 42px;
 }
 
 .card-footer {
