@@ -83,6 +83,9 @@ Converts JSON to PNG files. Takes in a path to a folder of JSON files, validates
 
 * Add `-r` to make it recursive, so it will look through subfolders.
 * Add `--sync` to run the synchronous implementation. Defaults to the parallelized version because it tends to be twice as fast, but synchronous can help guarantee nothing goes wrong.
+* Add `--chunked` to run the asynchronous chunked implementation. This is parallelized but uses a persistent window for each process instead of creating new ones, leading to potential
+performance benefits. You can use `--chunk` to specify number of threads/chunks, which determines chunk size. I see performance benefits typically around 10-20 threads, but this will depend on machine.
+* `Add --chunk <numChunks>` to specify how many chunks, or parallel threads, should be used for the parallel and parallel chunked tasks (no effect on synchronous). Some computers will not be able to handle as many threads, and it will impact the initial startup time, but can lead to faster performance overall.
 * Generally, you should not specify `--siteUrl` so the local site created with `npm run serve` is used.
 
 ### `npm run serve`
