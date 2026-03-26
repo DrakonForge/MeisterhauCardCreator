@@ -62,7 +62,9 @@ const processCardsParallel = async (cardList: Record<string, Card>, outputDir: s
 }
 
 const processCardParallel = async (key: string, card: Card, outputDir: string, siteUrl: string): Promise<boolean> => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        // browser: "firefox"
+    });
 
     try {
         const page = await browser.newPage();
@@ -125,6 +127,7 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
     consola.log("Running synchronous task.");
     const debugMode = false;
     const browser = await puppeteer.launch({
+        // browser: "firefox",
         headless: !debugMode,
     });
     const page = await browser.newPage();

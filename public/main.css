@@ -266,16 +266,21 @@ img.hidden.hidden {
     position: relative;
 }
 
-.card-text p.chamber-text {
-    background-color: #0000001a;
+.card-text p.chamber-action {
+    background-color: rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     padding: 5px;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
-.card-text p.defend-text {
-    background-color: #0000001a;
+
+.card-text p.counter-action {
+    background-color: rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     padding: 5px;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 .no-wrap {
@@ -290,6 +295,7 @@ img.hidden.hidden {
 
 .card-overlay p > img.icon {
     margin-right: 5px;
+    margin-top: 0;
 }
 
 .card-overlay p.keyword-list {

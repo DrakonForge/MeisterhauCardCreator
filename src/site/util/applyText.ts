@@ -350,30 +350,37 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
     let isFirst = true;
     for (const textLine of textLines) {
         const p = document.createElement("p");
+        let textContainer = p;
         const jsonText = convertTextToJson(textLine);
         if (isFirst) {
             if (type === PlayActionType.CHAMBER) {
-                p.classList.add("chamber-text");
+                p.classList.add("chamber-action");
                 const icon = document.createElement("img");
                 icon.classList.add("icon");
                 icon.src = IconAssets.CHAMBER_ICON;
                 p.appendChild(icon);
+                textContainer = document.createElement("div");
+                p.appendChild(textContainer);
             } else if (type === PlayActionType.DEFEND) {
-                p.classList.add("defend-text");
+                p.classList.add("counter-action");
                 const icon = document.createElement("img");
                 icon.classList.add("icon");
                 icon.src = IconAssets.DEFEND_ICON;
                 p.appendChild(icon);
+                textContainer = document.createElement("div");
             }
             if (action.Title) {
                 const title = document.createElement("span");
                 title.classList.add("action-title");
                 title.textContent = action.Title + ". ";
-                p.appendChild(title);
+                textContainer.appendChild(title);
             }
             isFirst = false;
         }
-        renderJsonToHtml(jsonText, p);
+        renderJsonToHtml(jsonText, textContainer);
+        if (textContainer != p) {
+            p.appendChild(textContainer);
+        }
         parent.appendChild(p);
     }
 };
