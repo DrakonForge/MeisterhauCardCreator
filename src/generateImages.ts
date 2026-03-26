@@ -11,7 +11,133 @@ const CONCURRENT_TASK_LIMIT = 5;
 
 let shouldExitEarly = false;
 
-const processCardsParallel = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string): Promise<void> => {
+let allProcessed = 0;
+
+const processCardsParallelChunked = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string, taskLimit: number): Promise<void> => {
+    consola.log("Running chunked parallel task.");
+    const cardEntries = Object.entries(cardList);
+    const cardIds = Object.keys(cardList);
+    const numChunks = taskLimit;
+    const chunkSize = Math.ceil(cardEntries.length / numChunks);
+    const tasks = [];
+    const executing = new Set<Promise<boolean | void>>();
+
+    consola.log(`Started ${cardEntries.length} tasks...`);
+    consola.log(`Using chunk size of ${chunkSize} across ${numChunks} chunks`);
+
+    let numFails = 0;
+
+    const updateProgress = (success: boolean) => {
+        if (!success) {
+            numFails++;
+            shouldExitEarly = true;
+        }
+    }
+
+    for (let i = 0; i < numChunks; ++i) {
+        const chunk = cardIds.slice(i * chunkSize, Math.min((i + 1) * chunkSize, cardEntries.length));
+        consola.debug(`${chunk.length} cards in chunk ${i + 1}`);
+        const task = processParallelChunk(cardList, chunk, outputDir, siteUrl).then(t => {
+            updateProgress(t);
+            executing.delete(task);
+            return t;
+        }).catch((e) => {
+            consola.error(`Failed to process chunk ${i}:`, e);
+            updateProgress(false);
+        });
+        tasks.push(task);
+    }
+
+    let lastAllProcessed = -1;
+    const progressBarPoll = setInterval(() => {
+        if (allProcessed > lastAllProcessed) {
+            consola.log(`Progress: ${createProgressBar(allProcessed / cardEntries.length, 10)} (${allProcessed}/${cardEntries.length})`);
+            lastAllProcessed = allProcessed;
+        }
+    }, 100);
+    await Promise.allSettled(tasks);
+    clearInterval(progressBarPoll);
+    if (numFails) {
+        consola.error(`Processing completed with failures. Failed to generate ${numFails} images out of ${cardEntries.length} total.`);
+    } else {
+        consola.success(`Processing completed successfully. Generated ${cardEntries.length} images.`);
+    }
+}
+
+const processParallelChunk = async (cardList: Record<string, Card>, cardIds: string[], outputDir: string, siteUrl: string): Promise<boolean> => {
+    // consola.log("Running parallel chunk task.");
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const response = await page.goto(siteUrl);
+
+    // consola.log(`Connected to ${siteUrl}. Request status: ${response?.status()}`);
+
+    const updateButton = await page.$('button.update-button');
+    const displayImg = await page.$('.card-display-output > img');
+    let numFails = 0;
+
+    for (const key of cardIds) {
+        if (shouldExitEarly) {
+            throw new Error("Exiting early due to errors");
+        }
+        const card = cardList[key];
+        consola.debug(`Received ${key}`);
+        const text = JSON.stringify(card);
+        await page.evaluate((text) => {
+            const textarea = document.querySelector<HTMLTextAreaElement>("textarea.json-entry");
+            if (textarea != null) {
+                textarea.value = text;
+            } else {
+                (window as any).status = "fail";
+                (window as any).errorMessage = "No textarea found";
+            }
+        }, text);
+        // Need to call it twice due to rendering bugs
+        await updateButton?.click();
+        await delay(50);
+        await updateButton?.click();
+
+        // Wait for process to finish
+        await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
+            polling: 100,
+            timeout: 15000,
+        });
+        const status = await page.evaluate("window.status");
+        if (status !== "ready") {
+            const errorMessage = await page.evaluate("window.errorMessage");
+            consola.error(`Failed to render image for ${key}, error: ${errorMessage}`);
+            numFails++;
+            continue;
+        }
+
+        const url = await displayImg?.evaluate(img => img.src);
+        if (url) {
+            consola.debug(`Processing ${key} - ${url.length}`);
+            const imgPage = await browser.newPage();
+            const viewSource = await imgPage.goto(url);
+            const filePath = path.join(outputDir, key + ".png");
+            consola.debug(`Writing image to ${filePath}`);
+            fs.writeFileSync(filePath, await viewSource?.buffer()!);
+            await imgPage.close();
+            allProcessed += 1;
+        } else {
+            consola.error(`Failed to find image for ${key}`);
+            numFails++;
+            break;  // Exit early
+        }
+    }
+
+    // consola.log("Cleaning up...");
+    await browser.close();
+    if (numFails) {
+        consola.error(`Processing completed with failures. Failed to generate ${numFails} images out of ${cardIds.length} in the chunk.`);
+        throw new Error(`Processing completed with failures. Failed to generate ${numFails} images out of ${cardIds.length} in the chunk.`)
+    }
+    // consola.success(`Processing completed successfully. Generated all ${cardIds.length} images in the chunk.`);
+    return true;
+}
+
+const processCardsParallel = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string, taskLimit: number): Promise<void> => {
     consola.log("Running parallel task.");
     const cardEntries = Object.entries(cardList);
     const tasks = [];
@@ -48,7 +174,7 @@ const processCardsParallel = async (cardList: Record<string, Card>, outputDir: s
         tasks.push(task);
         executing.add(task);
 
-        if (executing.size >= CONCURRENT_TASK_LIMIT) {
+        if (executing.size >= taskLimit) {
             await Promise.race(executing);
         }
     }
@@ -203,13 +329,15 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
     }
 }
 
-const generateImages = async (inputDir: string, outputDir: string, siteUrl: string, recursive: boolean, sync: boolean) => {
+const generateImages = async (inputDir: string, outputDir: string, siteUrl: string, recursive: boolean, sync: boolean, chunked: boolean, taskLimit: number) => {
     ensureOutputDirExists(outputDir);
     const cardList = await readAndValidateFiles(inputDir, recursive);
     if (sync) {
         await processCardsSequential(cardList, outputDir, siteUrl);
+    } else if (chunked) {
+        await processCardsParallelChunked(cardList, outputDir, siteUrl, taskLimit);
     } else {
-        await processCardsParallel(cardList, outputDir, siteUrl);
+        await processCardsParallel(cardList, outputDir, siteUrl, taskLimit);
     }
 };
 
@@ -219,5 +347,7 @@ await main(async args => {
     const siteUrl = args['site'] ?? "http://localhost:3000/";
     const recursive = args['r'] ?? true;
     const sync = args['sync'] ?? false;
-    await generateImages(inputDir, outputDir, siteUrl, recursive, sync);
+    const chunked = args['chunked'] ?? false;
+    const taskLimit = args['chunk'] ?? CONCURRENT_TASK_LIMIT;
+    await generateImages(inputDir, outputDir, siteUrl, recursive, sync, chunked, taskLimit);
 });
