@@ -18,7 +18,7 @@
     --color-dark: #130e0a;
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
-    --color-speed: #3a10ba;; /* More washed out: #3950a3 */
+    --color-speed: #1639b8;; /* More washed out: #3950a3 */
     --color-range: #924609;
     --color-strike: #924609;
     --color-token: #7e00bc;
@@ -166,6 +166,7 @@ img.hidden.hidden {
     font-family: "Eagle Lake", serif;
     text-align: center;
     font-size: 32px;
+    /* color: #3a2005; */
     white-space: nowrap; /* Force it to render on one line */
     /* Optional letter spacing changes */
     font-style: italic;
@@ -318,7 +319,7 @@ img.icon {
 img.icon.attack-icon {
     width: 42px;
     height: 42px;
-}   
+}
 
 img.icon.token-icon.token-icon {
     margin-left: -8px;
@@ -336,6 +337,25 @@ img.icon.token-icon.token-icon {
     height: 40px;
     margin-left: -5px;
     margin-right: -5px;
+}
+
+.card-text img.icon.attack-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.card-text img.icon.dominate-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.card-text img.icon.defend-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.action-text-container {
+    width: 563px;
 }
 
 img.icon.range-icon {
@@ -372,6 +392,14 @@ span.range {
 span.structure {
     font-weight: bold;
     color: var(--color-structure);
+}
+
+span.dominate-arrow {
+    color: #c0140b;
+    font-weight: bold;
+    margin-left: -3px;
+    margin-right: -3px;
+    text-shadow: 1px 1px 1px #000;
 }
 
 span.consume {
@@ -412,6 +440,7 @@ span.strike {
 
 span.attack {
     font-weight: bold;
+    color: var(--color-strike);
 }
 
 span.parry {
@@ -421,7 +450,7 @@ span.parry {
 
 span.counter {
     font-weight: bold;
-    /* color: #2e9cbf; */
+    color: #1a4754;
 }
 
 span.generic-highlight {

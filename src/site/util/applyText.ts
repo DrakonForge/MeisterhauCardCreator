@@ -24,12 +24,8 @@ const TextKeywordMap = {
         Content: "Overbind",
         Decorator: "structure",
     },
-    "Sterck": {
-        Content: "Sterck",
-        Decorator: "structure"
-    },
-    "Swech": {
-        Content: "Swech",
+    "Redirect": {
+        Content: "Redirect",
         Decorator: "speed"
     },
     "HandSnipe": {
@@ -114,6 +110,20 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.appendChild(tokenText);
 
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                break;
+            case "Dominate":
+                const dominateIcon = document.createElement("img");
+                dominateIcon.classList.add("icon", "dominate-icon")
+                dominateIcon.src = "img/DominateIcon.svg";
+                span.appendChild(dominateIcon);
+
+                if (component.Content != "noarrow") {
+                    const dominateArrow = document.createElement("span");
+                    dominateArrow.classList.add("dominate-arrow");
+                    dominateArrow.textContent = " ➛";
+                    span.appendChild(dominateArrow);
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                }
                 break;
             case "GainStructure":
                 span.classList.add("structure");
@@ -343,44 +353,83 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
         textLines = action.Text;
     }
 
-    if ((type === PlayActionType.CHAMBER || type === PlayActionType.DEFEND) && textLines.length > 1) {
-        consola.warn("Cards with multiple lines of Defend or Chamber text are not supported");
+    if (type === PlayActionType.NORMAL) {
+        applyNormalText(action, parent, textLines);
+    } else if (type === PlayActionType.CHAMBER) {
+        applyChamberText(action, parent, textLines);
+    } else if (type === PlayActionType.DEFEND) {
+        applyCounterText(action, parent, textLines);
+    }
+};
+
+const applyNormalText = (action: CardAction, parent: HTMLElement, textLines: string[]) => {
+    for (const textLine of textLines) {
+        const p = document.createElement("p");
+        const jsonText = convertTextToJson(textLine);
+        renderJsonToHtml(jsonText, p);
+        parent.appendChild(p);
+    }
+}
+
+const applyChamberText = (action: CardAction, parent: HTMLElement, textLines: string[]) => {
+    const p = document.createElement("p");
+    p.classList.add("chamber-action");
+    const icon = document.createElement("img");
+    icon.classList.add("icon");
+    icon.src = IconAssets.CHAMBER_ICON;
+    p.appendChild(icon);
+    const textContainer = document.createElement("div");
+    textContainer.classList.add("action-text-container");
+    p.appendChild(textContainer);
+
+    if (action.Title) {
+        const title = document.createElement("span");
+        title.classList.add("action-title");
+        title.textContent = action.Title + ". ";
+        textContainer.appendChild(title);
     }
 
     let isFirst = true;
     for (const textLine of textLines) {
-        const p = document.createElement("p");
-        let textContainer = p;
-        const jsonText = convertTextToJson(textLine);
         if (isFirst) {
-            if (type === PlayActionType.CHAMBER) {
-                p.classList.add("chamber-action");
-                const icon = document.createElement("img");
-                icon.classList.add("icon");
-                icon.src = IconAssets.CHAMBER_ICON;
-                p.appendChild(icon);
-                textContainer = document.createElement("div");
-                p.appendChild(textContainer);
-            } else if (type === PlayActionType.DEFEND) {
-                p.classList.add("counter-action");
-                const icon = document.createElement("img");
-                icon.classList.add("icon");
-                icon.src = IconAssets.DEFEND_ICON;
-                p.appendChild(icon);
-                textContainer = document.createElement("div");
-            }
-            if (action.Title) {
-                const title = document.createElement("span");
-                title.classList.add("action-title");
-                title.textContent = action.Title + ". ";
-                textContainer.appendChild(title);
-            }
             isFirst = false;
+        } else {
+            textContainer.appendChild(document.createElement("br"));
         }
+        const jsonText = convertTextToJson(textLine);
         renderJsonToHtml(jsonText, textContainer);
-        if (textContainer != p) {
-            p.appendChild(textContainer);
-        }
-        parent.appendChild(p);
     }
-};
+
+    parent.appendChild(p);
+}
+
+const applyCounterText = (action: CardAction, parent: HTMLElement, textLines: string[]) => {
+    const p = document.createElement("p");
+    p.classList.add("counter-action");
+    const icon = document.createElement("img");
+    icon.classList.add("icon");
+    icon.src = IconAssets.DEFEND_ICON;
+    p.appendChild(icon);
+    const textContainer = document.createElement("div");
+    textContainer.classList.add("action-text-container");
+    p.appendChild(textContainer);
+
+    if (action.Title) {
+        const title = document.createElement("span");
+        title.classList.add("action-title");
+        title.textContent = action.Title + ". ";
+        textContainer.appendChild(title);
+    }
+
+    let isFirst = true;
+    for (const textLine of textLines) {
+        if (isFirst) {
+            isFirst = false;
+        } else {
+            textContainer.appendChild(document.createElement("br"));
+        }
+        const jsonText = convertTextToJson(textLine);
+        renderJsonToHtml(jsonText, textContainer);
+    }
+    parent.appendChild(p);
+}

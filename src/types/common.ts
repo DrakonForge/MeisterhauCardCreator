@@ -35,7 +35,7 @@ const SimpleKeywordTypeSchema = z.enum([
 const NumericKeywordTypeSchema = z.enum([
     // Attack
     "Overbind",
-    "Swech",
+    "Redirect",
     "Offline",
     // Guard
     "PointForward"
@@ -44,8 +44,6 @@ const NumericKeywordTypeSchema = z.enum([
     "title": "Numeric Keyword",
     "description": "Keywords that must specify a value."
 });
-
-// Sterck are more shorthand effects than keywords
 
 const KeywordSchema = z.union([
     z.object({
