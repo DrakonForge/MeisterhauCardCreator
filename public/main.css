@@ -19,7 +19,7 @@
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
-    --color-range: #924609;
+    --color-range: #4b4541;
     --color-strike: #924609;
     --color-token: #7e00bc;
 }
@@ -381,6 +381,7 @@ img.icon.parry-icon {
 /* Card Text */
 
 span.action-title {
+    /* color: #403d3b; */
     font-style: italic;
 }
 
