@@ -1,4 +1,4 @@
-import { type ActionCard, type ArmActionCard, type BaseCard, type Card, type LegActionCard } from "./types/card";
+import { type ActionCard, type ArmActionCard, type Card, type LegActionCard } from "./types/card";
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
@@ -185,6 +185,7 @@ const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
     "Name",
     "Category1",
     "ActionType",
+    "Deck",
     "Tier",
     "ActionText",
 ];
@@ -200,6 +201,7 @@ const convertCsvToJson = (data: RowData): Card => {
     const baseCard: Partial<ActionCard> = {
         Name: parseString(data.Name),
         Type: "Action",
+        Deck: data.Deck,
         ActionType: ActionTypeSchema.parse(parseString(data.ActionType)),
         Tier: parseInt(data.Tier),
         Action: {

@@ -10,7 +10,7 @@
     "serve": "node ./build/serve.js",
     "validate": "npm run build && node ./dist/validate.js",
     "schema": "npm run build && node ./dist/createSchema.js",
-    "deck": "npm run build && node ./dist/deckBuilder.js",
+    "decklist": "npm run build && node ./dist/deckListBuilder.js",
     "tts": "npm run build && node ./dist/ttsImageStitcher.js",
     "image": "npm run build && node ./dist/generateImages.js",
     "upload": "npm run build && node ./dist/upload.js",

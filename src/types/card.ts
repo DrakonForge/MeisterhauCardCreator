@@ -15,6 +15,7 @@ const BaseCardSchema = z.object({
 const ActionBaseCardSchema = BaseCardSchema.extend({
     Type: z.literal("Action"),
     ActionType: ActionTypeSchema,
+    Deck: z.string(),
     Categories: z.array(z.string().nonempty()),
     SecondaryName: z.string().optional(),
     Action: CardActionSchema,
@@ -55,6 +56,7 @@ const SpecialActionCardSchema = ActionBaseCardSchema.extend({
 
 const TalentCardSchema = BaseCardSchema.extend({
     Type: z.literal("Talent"),
+    Deck: z.string(),
     Effect: CardTextSchema,
 });
 
