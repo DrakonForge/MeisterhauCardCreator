@@ -3,7 +3,12 @@ import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "..
 import type { CardAction, Keywords } from "../../types/card";
 import { PlayActionType, IconAssets } from "../renderCard";
 
-const TextKeywordMap = {
+interface KeywordEntry {
+    Content: string;
+    Decorator: string;
+    Icon?: string;
+}
+const TextKeywordMap: Record<string, KeywordEntry> = {
     "Swiftness": {
         Content: "Swiftness",
         Decorator: "speed",
@@ -49,13 +54,10 @@ const TextKeywordMap = {
         Decorator: "structure",
     },
     "Token": {
+        Icon: "img/TokenIcon.svg",
         Content: "Token",
         Decorator: "consume",
     },
-    "Consume": {
-        Content: "Consume",
-        Decorator: "consume",
-    }
 };
 
 const TextGuardMap = {
@@ -110,6 +112,12 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.appendChild(tokenText);
 
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                break;
+            case "Flow":
+                const flowText = document.createElement("span");
+                flowText.textContent = "Flow:";
+                flowText.classList.add("flow");
+                span.appendChild(flowText);
                 break;
             case "Dominate":
                 const dominateIcon = document.createElement("img");
@@ -243,10 +251,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Counter":
-                const defendIcon = document.createElement("img");
-                defendIcon.classList.add("icon", "defend-icon")
-                defendIcon.src = "img/DefendIcon.svg";
-                span.appendChild(defendIcon);
+                const counterIcon = document.createElement("img");
+                counterIcon.classList.add("icon", "counter-icon")
+                counterIcon.src = "img/DefendIcon.svg";
+                span.appendChild(counterIcon);
 
                 const defendText = document.createElement("span");
                 defendText.classList.add("counter");
@@ -265,32 +273,6 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 parryText.classList.add("parry");
                 parryText.textContent = component.Content || "Parry";
                 span.append(parryText);
-
-                span.classList.add("no-wrap"); // Needed whenever there is more than one element
-                break;
-            case "ParryHigh":
-                const parryHighIcon = document.createElement("img");
-                parryHighIcon.classList.add("icon", "parry-icon")
-                parryHighIcon.src = "img/ParryIcon_High.svg";
-                span.appendChild(parryHighIcon);
-
-                const parryHighText = document.createElement("span");
-                parryHighText.classList.add("parry");
-                parryHighText.textContent = component.Content;
-                span.append(parryHighText);
-
-                span.classList.add("no-wrap"); // Needed whenever there is more than one element
-                break;
-            case "ParryLow":
-                const parryLowIcon = document.createElement("img");
-                parryLowIcon.classList.add("icon", "parry-icon")
-                parryLowIcon.src = "img/ParryIcon_Low.svg";
-                span.appendChild(parryLowIcon);
-
-                const parryLowText = document.createElement("span");
-                parryLowText.classList.add("parry");
-                parryLowText.textContent = component.Content;
-                span.append(parryLowText);
 
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
@@ -316,8 +298,17 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 const keyword = text!.split(' ')[0] || '';
                 const keywordEntry = TextKeywordMap[keyword as keyof typeof TextKeywordMap];
                 if (keywordEntry) {
-                    span.textContent = text.replace(keyword, keywordEntry.Content);
-                    span.classList.add(keywordEntry.Decorator, "keyword-item");
+                    if (keywordEntry.Icon) {
+                        const keywordIcon = document.createElement("img");
+                        keywordIcon.classList.add("icon", "keyword-icon")
+                        keywordIcon.src = keywordEntry.Icon;
+                        span.appendChild(keywordIcon);
+                    }
+                    const keywordText = document.createElement("span");
+                    keywordText.textContent = text.replace(keyword, keywordEntry.Content)
+                    keywordText.classList.add(keywordEntry.Decorator);
+                    span.appendChild(keywordText);
+                    span.classList.add("keyword-item", "no-wrap");
                 } else {
                     consola.warn(`Unknown keyword ${keyword}`);
                     span.classList.add("generic-highlight", "keyword-item");
@@ -375,7 +366,7 @@ const applyChamberText = (action: CardAction, parent: HTMLElement, textLines: st
     const p = document.createElement("p");
     p.classList.add("chamber-action");
     const icon = document.createElement("img");
-    icon.classList.add("icon");
+    icon.classList.add("icon", "chamber-icon");
     icon.src = IconAssets.CHAMBER_ICON;
     p.appendChild(icon);
     const textContainer = document.createElement("div");
@@ -407,7 +398,7 @@ const applyCounterText = (action: CardAction, parent: HTMLElement, textLines: st
     const p = document.createElement("p");
     p.classList.add("counter-action");
     const icon = document.createElement("img");
-    icon.classList.add("icon");
+    icon.classList.add("icon", "counter-icon");
     icon.src = IconAssets.DEFEND_ICON;
     p.appendChild(icon);
     const textContainer = document.createElement("div");

@@ -1,4 +1,4 @@
-import { type ArmActionCard, type BaseCard, type Card, type LegActionCard } from "./types/card";
+import { type ActionCard, type ArmActionCard, type BaseCard, type Card, type LegActionCard } from "./types/card";
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
@@ -19,6 +19,7 @@ interface RowData {
     SubCategory2: string;
     Tier: string;
     Deck: string;
+    Quantity: number;
     Speed: string;
     Structure: string;
     ParryHeight: string;
@@ -32,7 +33,6 @@ interface RowData {
     ActionBehavior: string;
     DefendActionBehavior: string;
     ChamberActionBehavior: string;
-    MetaType: string;
     Notes: string;
 }
 
@@ -60,7 +60,6 @@ const HEADERS: (keyof RowData)[] = [
     "ActionBehavior",
     "DefendActionBehavior",
     "ChamberActionBehavior",
-    "MetaType",
     "Notes",
 ];
 
@@ -193,9 +192,14 @@ const convertCsvToJson = (data: RowData): Card => {
     if (!checkRequiredFields(data, REQUIRED_BASE_FIELDS)) {
         throw new Error("Missing base fields");
     }
+
+    validateId(data.Id);
+
+    // TODO: Handle other card types
     // Required stuff first
-    const baseCard: Partial<BaseCard> = {
+    const baseCard: Partial<ActionCard> = {
         Name: parseString(data.Name),
+        Type: "Action",
         ActionType: ActionTypeSchema.parse(parseString(data.ActionType)),
         Tier: parseInt(data.Tier),
         Action: {
@@ -222,13 +226,6 @@ const convertCsvToJson = (data: RowData): Card => {
     }
     if (baseCard.Categories.length <= 0) {
         throw new Error("Card must have at least one category");
-    }
-
-    if (parseString(data.MetaType)) {
-        const metaTypeStr = parseString(data.MetaType);
-        if (metaTypeStr === "Token") {
-            baseCard.MetaType = "Token";
-        }
     }
 
     if (parseString(data.Keywords)) {
@@ -281,6 +278,17 @@ const handleRecord = (record: RowData): boolean => {
         return false;
     }
 };
+
+const seenIds = new Set();
+const validateId = (id: string): void => {
+    if (id.includes(' ')) {
+        throw new Error(`ID cannot include spaces: ${id}`)
+    }
+    if (seenIds.has(id)) {
+        throw new Error(`Duplicate ID found: ${id}`)
+    }
+    seenIds.add(id);
+}
 
 const shouldHandleRecord = (record: RowData): boolean => {
     return !record.Notes.includes("IDEA");

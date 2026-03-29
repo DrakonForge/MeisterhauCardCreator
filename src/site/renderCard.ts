@@ -44,9 +44,13 @@ export const clearCardView = () => {
     getClassList(".stat-speed.stat-speed-instant")?.add("hidden");
 };
 
-export const setCardView = async (card: Card) => {
-    clearCardView();
+const setActionCardView = async(card: Card) => {
+    if (card.Type !== "Action") {
+        return;
+    }
+
     setText(".card-title", card.Name);
+
     if (card.SecondaryName) {
         setText(".card-subtitle", `“${card.SecondaryName}”`);
     }
@@ -59,10 +63,8 @@ export const setCardView = async (card: Card) => {
         setText(".card-category", categoryStrings.join(" - "));
     }
 
-    if (card.MetaType) {
-        if (card.MetaType === "Token") {
-            setVisible(".card-body-background-token", true);
-        }
+    if (card.Keywords?.includes("Token")) {
+        setVisible(".card-body-background-token", true);
     }
 
     const textContainer = query(".card-text");
@@ -114,4 +116,11 @@ export const setCardView = async (card: Card) => {
     fitCardTitle();
     fitCardSubtitle();
     fitCardCategories();
+}
+
+export const setCardView = async (card: Card) => {
+    clearCardView();
+    if (card.Type === "Action") {
+        await setActionCardView(card);
+    }
 };

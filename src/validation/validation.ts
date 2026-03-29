@@ -6,12 +6,14 @@ import type { CardText } from "../types/common";
 
 export const validateCardFromJson = (data: any): Card => {
     const cardData = CardSchema.parse(data);
-    validateCardText(cardData.Action.Text, false);
-    if (cardData.ActionType === "Arm") {
-        validateCardText(cardData.ChamberAction?.Text)
-        validateCardText(cardData.DefendAction?.Text)
-    } else if (cardData.ActionType === "Leg") {
-        validateCardText(cardData.ChamberAction?.Text);
+    if (cardData.Type === "Action") {
+        validateCardText(cardData.Action.Text, false);
+        if (cardData.ActionType === "Arm") {
+            validateCardText(cardData.ChamberAction?.Text)
+            validateCardText(cardData.DefendAction?.Text)
+        } else if (cardData.ActionType === "Leg") {
+            validateCardText(cardData.ChamberAction?.Text);
+        }
     }
     return cardData;
 };
