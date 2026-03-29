@@ -1,9 +1,10 @@
-import { open, readFile, writeFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import path from "path";
 import { createCardIdToPath } from "./util/cardIdToPath";
 import { PageSizes, PDFDocument, PDFImage, PDFPage, rgb } from "pdf-lib";
+import { cardIdsToEntries, getTotalCardQuantity, getUniqueCardIds, readDecklist, type DeckListEntry } from "./validation/parseFiles";
 
 const MAX_IMAGES_PER_PAGE = 9;
 const OFFSETS: number[][] = [
@@ -33,11 +34,6 @@ const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 
 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
 
-interface Entry {
-    cardId: string;
-    quantity: number;
-}
-
 const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, recursive: boolean): Promise<void> => {
     if (noGaps) {
         consola.info("Setting registered: No gaps");
@@ -63,50 +59,16 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     consola.info(`Found ${cardIds.length} image files`);
 
     // Gather the desired entries
-    const entries: Entry[] = [];
-    const uniqueCardIds = new Set<string>();
-    let numTotalCards = 0;
-
+    let entries: DeckListEntry[];
     if (allCards) {
         consola.info(`Adding all ${cardIds.length} entries`);
-        for (const cardId of cardIds) {
-            entries.push({cardId, quantity: 1});
-            uniqueCardIds.add(cardId);
-            numTotalCards += 1;
-        }
+        entries = cardIdsToEntries(cardIds);
     } else {
         consola.info(`Reading ${inputPath}`);
-        const file = await open(inputPath);
-        for await (const line of file.readLines()) {
-            const lineText = line.trim();
-
-            // Skip blank lines or comments
-            if (!lineText || lineText.startsWith("#")) {
-                continue;
-            }
-
-            const words = line.split(' ');
-            let cardId: string;
-            let quantity: number;
-            if (words.length > 2) {
-                throw new Error("Must be in format <CardId> [Quantity]. CardId must be a single word");
-            } if (words[0] && words[1]) {
-                cardId = words[0];
-                quantity = parseInt(words[1]);
-            } else {
-                cardId = lineText;
-                quantity = 1;
-            }
-
-            if (!(cardId in cardIdToPath)) {
-                throw new Error(`Unable to find card ID ${cardId} in provided image directory`);
-            }
-
-            entries.push({ cardId, quantity });
-            uniqueCardIds.add(cardId);
-            numTotalCards += quantity;
-        }
+        entries = await readDecklist(inputPath, cardIdToPath);
     }
+    const uniqueCardIds = getUniqueCardIds(entries);
+    let numTotalCards = getTotalCardQuantity(entries);
 
     const numTotalPages = Math.ceil(numTotalCards / MAX_IMAGES_PER_PAGE);
     consola.log(`PDF will contain ${numTotalCards} cards total, for a total of ${numTotalPages} pages`);

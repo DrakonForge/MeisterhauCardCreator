@@ -77,7 +77,7 @@ const uploadDeckImage = async (fileName: string, inputPath: string, clientId: st
     if (!data) {
         throw new Error(`Failed to upload image ${inputPath}: No data`);
     }
-    consola.log(`Uploaded image to ${data.link}`);
+    consola.log(`Uploaded ${fileName} to ${data.link}`);
     return data.link;
 }
 
