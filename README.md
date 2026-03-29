@@ -34,15 +34,16 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
 ## Workflow 2: Create Deck in Tabletop Simulator
 
 1) Run Workflow 1 to generate the card images.
-2) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`.
-3) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
-4) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
-5) Set the following parameters:
+2) Run `npm run decklist` to generate the deck lists based on the `Deck` attribute in `./generated/decklists`.
+3) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`. You may need to modify `--include` and `--ignore` parameters to select the right decklists.
+4) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
+5) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
+6) Set the following parameters:
    * Width: 10
    * Height: 4
    * Number: 40 (if it's the last page, some may be blank)
-6) Paste in the Face link and the Back link (card back should be same for every page).
-7) Press **Import**.
+7) Paste in the Face link and the Back link (card back should be same for every page).
+8) Press **Import**.
 
 ## Workflow 3: Generate PDFs for Printing Cards
 
@@ -94,36 +95,25 @@ performance benefits. You can use `--chunk` to specify number of threads/chunks,
 
 Opens the Visual Card Editor as a local site at [http://localhost:3000](http://localhost:3000/). Also **required** for image generation to work.
 
-### `npm run deck`
+### `npm run decklist`
 
-> Usage: `npm run deck -- [--images <image_directory>] [--back <image_path>] [--input <input_path>] [--output <output_directory>] [-r]`
+> Usage: `npm run decklist -- [--input <input_path>] [--output <output_directory>] [-r]`
 
-**This tool is deprecated in favor of `npm run tts` and `npm run upload`.**
+You need to run `npm run csv` first as this uses JSON files.
 
-Assembles a folder of images for use with Tablestop Simulator's [custom deck builder](https://kb.tabletopsimulator.com/custom-content/custom-deck/#deck-builder), which expects a certain format.
-
-Pass in a `deck.txt` into the input containing a list of cards. Blank spaces and lines starting with `#` are ignored. For every other line, the first word should be the ID of the card and the second word (optional) should be the quantity.
-
-Example:
-
-```text
-# Starter Pack
-Oberhau
-Unterhau
-Mittlehau
-Thrust
-PushStep 4
-PassStep 3
-TriangleStep
-```
+Generates deck lists based on the `Deck` attribute. This can be found in `generated/decklists`.
 
 ### `npm run tts`
 
-> Usage: `npm run tts -- [--input <input_directory>] [--output <output_directory>] [--back <image_path>] [-r]`
+> Usage: `npm run tts -- [--input <input_directory>] [--output <output_directory>] [--back <image_path>] [-r] [--all] [--ignore <decklists>] [--include <decklists>]`
 
 Generates multiple stitched images of all card images in the provided directory which are compatible with Tabletop Simulator.
 
 Each stitched image contains 40 cards. The Tabletop Simulator tool can support up to 70 per "page", but suffers from resolution issues. 10x4 fixes the vast majority of these issues.
+
+* Add `-r` to make it recursive, so it will look through subfolders.
+* Add `--ignore` and provide a comma-separated list of decklists (example: `Deck_All,DeckForbidden`) to ignore. These deck lists will not generate any images.
+* Add `--include` to specifically only generate the comma-separated lists of decklists (example: `Deck_Fundamentals,Deck_Token`). If this option is specified, only these will be generated (assuming they are also not ignored).
 
 ### `npm run upload`
 
@@ -142,6 +132,25 @@ Takes in a list of card images produced by `npm run image` and generates a pdf o
 * Add `--noborder` to remove the filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
 * Add `--nogaps` to remove the gaps between the cards, so you need fewer cuts (which may require more precision) to cut out the cards.
 * Add `--all` to print 1 copy of all available images, ignoring the `--input` field.
+
+## Deck List Format
+
+You can define a list of cards and their quantities for use in certain commands.
+
+Blank spaces and lines starting with `#` are ignored. For every other line, the first word should be the ID of the card and the second word (optional) should be the quantity.
+
+Example:
+
+```text
+# Starter Pack
+Oberhau
+Unterhau
+Mittlehau
+Thrust
+PushStep 4
+PassStep 3
+TriangleStep
+```
 
 ## Other Commands
 
