@@ -7,17 +7,32 @@ import { rangeToStr } from "./util/rangeToStr";
 import { fitCardSubtitle } from "./util/fitCardSubtitle";
 import { fitCardCategories } from "./util/fitCardCategories";
 
-export const IconAssets = {
-    ARM_ACTION: "img/ArmActionIcon.svg",
-    LEG_ACTION: "img/LegActionIcon.svg",
-    SPECIAL_ACTION: "img/SpecialActionIcon.svg",
-    PARRY_BOTH: "img/ParryIcon_Both.svg",
-    PARRY_HIGH: "img/ParryIcon_High.svg",
-    PARRY_LOW: "img/ParryIcon_Low.svg",
-    PARRY_NONE: "img/ParryIcon_None.svg",
-    RANGE_ICON: "img/RangeIcon.svg",
-    CHAMBER_ICON: "img/ChamberIcon.svg",
-    DEFEND_ICON: "img/DefendIcon.svg",
+export const Assets = {
+    // Icons
+    ICON_ARM_ACTION: "img/ArmActionIcon.svg",
+    ICON_LEG_ACTION: "img/LegActionIcon.svg",
+    ICON_SPECIAL_ACTION: "img/SpecialActionIcon.svg",
+    ICON_PARRY_BOTH: "img/ParryIcon_Both.svg",
+    ICON_PARRY_HIGH: "img/ParryIcon_High.svg",
+    ICON_PARRY_LOW: "img/ParryIcon_Low.svg",
+    ICON_PARRY_NONE: "img/ParryIcon_None.svg",
+    ICON_RANGE: "img/RangeIcon.svg",
+    ICON_INSTANT_INVERTED: "img/InstantIconInverted.svg",
+    ICON_CHAMBER: "img/ChamberIcon.svg",
+    ICON_COUNTER: "img/CounterIcon.svg",
+    ICON_TOKEN: "img/TokenIcon.svg",
+    ICON_DOMINATE: "img/DominateIcon.svg",
+    // Borders
+    BORDER_TOKEN: "img/Border_Token.svg",
+    BORDER_VOR: "img/Border_Vor.svg",
+    BORDER_NACH: "img/Border_Nach.svg",
+    BORDER_MEISTERHAU: "img/Border_Meisterhau.svg",
+    BORDER_BINDWORK: "img/Border_Bindwork.svg",
+    // Tiers
+    TIER_DEFAULT: "img/Tier_Default.svg",
+    TIER_1: "img/Tier_1.svg",
+    TIER_2: "img/Tier_2.svg",
+    TIER_3: "img/Tier_3.svg",
 };
 
 export enum PlayActionType {
@@ -33,8 +48,12 @@ export const clearCardView = () => {
     setText(".card-range-text", "");
     setText(".stat-speed", "–");
     setText(".stat-structure", "–");
-    setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
-    setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
+    setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
+    setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
+    setImageUrl(".card-tier-overlay", Assets.TIER_DEFAULT);
+    setVisible(".card-tier-overlay", false);
+    setImageUrl(".card-border-overlay", Assets.BORDER_VOR);
+    setVisible(".card-border-overlay", false);
     setVisible(".card-body-background-token", false);
     const textContainer = query(".card-text");
     if (textContainer) {
@@ -44,12 +63,46 @@ export const clearCardView = () => {
     getClassList(".stat-speed.stat-speed-instant")?.add("hidden");
 };
 
+const setCardBorderFromDeck = (deck: string) => {
+    if (deck === "Token") {
+        setVisible(".card-body-background-token", true);
+        setImageUrl(".card-border-overlay", Assets.BORDER_TOKEN);
+        setVisible(".card-border-overlay", true);
+    } else if (deck === "Vor") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_VOR);
+        setVisible(".card-border-overlay", true);
+    } else if (deck === "Nach") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_NACH);
+        setVisible(".card-border-overlay", true);
+    } else if (deck === "Bindwork") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_BINDWORK);
+        setVisible(".card-border-overlay", true);
+    } else if (deck === "Meisterhau") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_MEISTERHAU);
+        setVisible(".card-border-overlay", true);
+    }
+}
+
+const setCardTier = (tier: number) => {
+    if (tier === 0) {
+        setImageUrl(".card-tier-overlay", Assets.TIER_DEFAULT);
+    } else if (tier === 1) {
+        setImageUrl(".card-tier-overlay", Assets.TIER_1);
+    } else if (tier === 2) {
+        setImageUrl(".card-tier-overlay", Assets.TIER_2);
+    } else if (tier === 3) {
+        setImageUrl(".card-tier-overlay", Assets.TIER_3);
+    }
+    setVisible(".card-tier-overlay", true);
+}
+
 const setActionCardView = async(card: Card) => {
     if (card.Type !== "Action") {
         return;
     }
 
     setText(".card-title", card.Name);
+    setCardTier(card.Tier);
 
     if (card.SecondaryName) {
         setText(".card-subtitle", `“${card.SecondaryName}”`);
@@ -63,9 +116,7 @@ const setActionCardView = async(card: Card) => {
         setText(".card-category", categoryStrings.join(" - "));
     }
 
-    if (card.Keywords?.includes("Token")) {
-        setVisible(".card-body-background-token", true);
-    }
+    setCardBorderFromDeck(card.Deck);
 
     const textContainer = query(".card-text");
     if (!textContainer) {
@@ -77,15 +128,15 @@ const setActionCardView = async(card: Card) => {
     applyText(card.Action, textContainer, PlayActionType.NORMAL);
 
     if (card.ActionType === "Arm") {
-        setImageUrl(".action-type-icon", IconAssets.ARM_ACTION);
+        setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
         if (card.ParryHeight === "High") {
-            setImageUrl(".parry-height-icon", IconAssets.PARRY_HIGH);
+            setImageUrl(".parry-height-icon", Assets.ICON_PARRY_HIGH);
         } else if (card.ParryHeight === "Low") {
-            setImageUrl(".parry-height-icon", IconAssets.PARRY_LOW);
+            setImageUrl(".parry-height-icon", Assets.ICON_PARRY_LOW);
         } else if (card.ParryHeight === "Both") {
-            setImageUrl(".parry-height-icon", IconAssets.PARRY_BOTH);
+            setImageUrl(".parry-height-icon", Assets.ICON_PARRY_BOTH);
         } else if (card.ParryHeight === "None") {
-            setImageUrl(".parry-height-icon", IconAssets.PARRY_NONE);
+            setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
         }
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
         setText(".stat-structure", card.Structure.toString());
@@ -95,12 +146,12 @@ const setActionCardView = async(card: Card) => {
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
     } else if (card.ActionType === "Leg") {
-        setImageUrl(".action-type-icon", IconAssets.LEG_ACTION);
+        setImageUrl(".action-type-icon", Assets.ICON_LEG_ACTION);
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
         getClassList(".range-icon")?.remove("hidden");
         setText(".card-range-text", rangeToStr(card.Range));
     } else if (card.ActionType === "Special") {
-        setImageUrl(".action-type-icon", IconAssets.SPECIAL_ACTION);
+        setImageUrl(".action-type-icon", Assets.ICON_SPECIAL_ACTION);
         setText(".stat-speed.stat-speed-text", "");
         if (card.Speed) {
             setText(".stat-speed.stat-speed-text", card.Speed.toString());

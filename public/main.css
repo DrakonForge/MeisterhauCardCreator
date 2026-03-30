@@ -69,6 +69,19 @@ img.hidden.hidden {
     width: 744px;
     height: 1038px;
     background-image: url("img/CardFrame.svg");
+    position: relative;
+}
+
+.card-border-overlay {
+    position: absolute;
+    width: 744px;
+    height: 1038px;
+}
+
+.card-tier-overlay {
+    position: absolute;
+    width: 744px;
+    height: 1038px;
 }
 
 .card-overlay {
@@ -233,7 +246,7 @@ img.hidden.hidden {
     padding-right: var(--card-text-horizontal-margin);
     display: flex;
     flex-flow: column nowrap;
-    height: 470px; /* Hardcoded to the end of the text */
+    height: 475px; /* Hardcoded to the end of the text */
 }
 
 .card-body-background-container {

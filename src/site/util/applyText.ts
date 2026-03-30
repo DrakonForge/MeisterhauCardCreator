@@ -1,7 +1,7 @@
 import { consola } from "consola";
 import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "../../text/converters";
 import type { CardAction, Keywords } from "../../types/card";
-import { PlayActionType, IconAssets } from "../renderCard";
+import { PlayActionType, Assets } from "../renderCard";
 
 interface KeywordEntry {
     Content: string;
@@ -54,7 +54,7 @@ const TextKeywordMap: Record<string, KeywordEntry> = {
         Decorator: "structure",
     },
     "Token": {
-        Icon: "img/TokenIcon.svg",
+        // Icon: "img/TokenIcon.svg", // Can't use Assets constant for some reason, probably circular reference?
         Content: "Token",
         Decorator: "consume",
     },
@@ -84,7 +84,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Range":
                 const rangeIcon = document.createElement("img");
                 rangeIcon.classList.add("icon", "range-icon")
-                rangeIcon.src = "img/RangeIcon.svg";
+                rangeIcon.src = Assets.ICON_RANGE;
                 span.appendChild(rangeIcon);
 
                 const rangeText = document.createElement("span");
@@ -97,13 +97,13 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Instant":
                 const instantIcon = document.createElement("img");
                 instantIcon.classList.add("icon", "instant-icon")
-                instantIcon.src = "img/InstantIconInverted.svg";
+                instantIcon.src = Assets.ICON_INSTANT_INVERTED;
                 span.appendChild(instantIcon);
                 break;
             case "Token":
                 const tokenIcon = document.createElement("img");
                 tokenIcon.classList.add("icon", "token-icon")
-                tokenIcon.src = "img/TokenIcon.svg";
+                tokenIcon.src = Assets.ICON_TOKEN;
                 span.appendChild(tokenIcon);
 
                 const tokenText = document.createElement("span");
@@ -122,7 +122,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Dominate":
                 const dominateIcon = document.createElement("img");
                 dominateIcon.classList.add("icon", "dominate-icon")
-                dominateIcon.src = "img/DominateIcon.svg";
+                dominateIcon.src = Assets.ICON_DOMINATE;
                 span.appendChild(dominateIcon);
 
                 if (component.Content != "noarrow") {
@@ -240,7 +240,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Attack":
                 const attackIcon = document.createElement("img");
                 attackIcon.classList.add("icon", "attack-icon")
-                attackIcon.src = "img/ArmActionIcon.svg";
+                attackIcon.src = Assets.ICON_ARM_ACTION;
                 span.append(attackIcon);
 
                 const attackText = document.createElement("span");
@@ -253,7 +253,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Counter":
                 const counterIcon = document.createElement("img");
                 counterIcon.classList.add("icon", "counter-icon")
-                counterIcon.src = "img/DefendIcon.svg";
+                counterIcon.src = Assets.ICON_COUNTER;
                 span.appendChild(counterIcon);
 
                 const defendText = document.createElement("span");
@@ -266,7 +266,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Parry":
                 const parryIcon = document.createElement("img");
                 parryIcon.classList.add("icon", "parry-icon")
-                parryIcon.src = "img/ParryIcon_Both.svg";
+                parryIcon.src = Assets.ICON_PARRY_BOTH;
                 span.appendChild(parryIcon);
 
                 const parryText = document.createElement("span");
@@ -367,7 +367,7 @@ const applyChamberText = (action: CardAction, parent: HTMLElement, textLines: st
     p.classList.add("chamber-action");
     const icon = document.createElement("img");
     icon.classList.add("icon", "chamber-icon");
-    icon.src = IconAssets.CHAMBER_ICON;
+    icon.src = Assets.ICON_CHAMBER;
     p.appendChild(icon);
     const textContainer = document.createElement("div");
     textContainer.classList.add("action-text-container");
@@ -399,7 +399,7 @@ const applyCounterText = (action: CardAction, parent: HTMLElement, textLines: st
     p.classList.add("counter-action");
     const icon = document.createElement("img");
     icon.classList.add("icon", "counter-icon");
-    icon.src = IconAssets.DEFEND_ICON;
+    icon.src = Assets.ICON_COUNTER;
     p.appendChild(icon);
     const textContainer = document.createElement("div");
     textContainer.classList.add("action-text-container");

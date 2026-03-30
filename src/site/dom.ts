@@ -31,6 +31,7 @@ export const setImageUrl = (selector: string, path: string): boolean => {
     const element = query<HTMLImageElement>(selector);
     if (element) {
         element.src = path;
+        return true;
     }
     return false;
 }

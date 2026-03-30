@@ -75,13 +75,14 @@ const processParallelChunk = async (cardList: Record<string, Card>, cardIds: str
     const updateButton = await page.$('button.update-button');
     const displayImg = await page.$('.card-display-output > img');
     let numFails = 0;
+    let index = 0;
 
     for (const key of cardIds) {
         if (shouldExitEarly) {
             throw new Error("Exiting early due to errors");
         }
         const card = cardList[key];
-        consola.debug(`Received ${key}`);
+        consola.debug(`Received ${key} at index ${index++}`);
         const text = JSON.stringify(card);
         await page.evaluate((text) => {
             const textarea = document.querySelector<HTMLTextAreaElement>("textarea.json-entry");
@@ -98,16 +99,21 @@ const processParallelChunk = async (cardList: Record<string, Card>, cardIds: str
         await updateButton?.click();
 
         // Wait for process to finish
-        await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
-            polling: 100,
-            timeout: 15000,
-        });
+        try {
+            await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
+                polling: 100,
+                timeout: 30000,
+            });
+        } catch {
+            // Don't error on timeout, let it be caught in the status later
+        }
+
         const status = await page.evaluate("window.status");
         if (status !== "ready") {
             const errorMessage = await page.evaluate("window.errorMessage");
-            consola.error(`Failed to render image for ${key}, error: ${errorMessage}`);
+            consola.error(`Failed to render image for ${key} with status ${status}, error: ${errorMessage}`);
             numFails++;
-            continue;
+            break;
         }
 
         const url = await displayImg?.evaluate(img => img.src);
