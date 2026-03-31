@@ -2,6 +2,7 @@ import { consola } from "consola";
 import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "../../text/converters";
 import type { CardAction, Keywords } from "../../types/card";
 import { PlayActionType, Assets } from "../renderCard";
+import { rangeStrToFontSizeText } from "./rangeUtils";
 
 interface KeywordEntry {
     Content: string;
@@ -93,6 +94,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 const rangeText = document.createElement("span");
                 rangeText.classList.add("range");
                 rangeText.textContent = component.Content;
+                rangeText.style.fontSize = rangeStrToFontSizeText(component.Content) + "px";
                 rangeIconContainer.appendChild(rangeText);
 
                 span.appendChild(rangeIconContainer);

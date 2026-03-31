@@ -27,6 +27,15 @@ export const setText = (selector: string, value: string): boolean => {
     return false;
 };
 
+export const setFontSizePx = (selector: string, value: number): boolean => {
+    const element = query(selector);
+    if (element) {
+        element.style.fontSize = value + "px";
+        return true;
+    }
+    return false;
+}
+
 export const setImageUrl = (selector: string, path: string): boolean => {
     const element = query<HTMLImageElement>(selector);
     if (element) {

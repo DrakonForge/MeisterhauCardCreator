@@ -1,11 +1,12 @@
 import type { Card } from "../types/card";
-import { setText, query, setImageUrl, getClassList, setVisible } from "./dom";
+import { setText, query, setImageUrl, getClassList, setVisible, setFontSizePx } from "./dom";
 import { fitCardText } from "./util/fitCardText";
 import { fitCardTitle } from "./util/fitCardTitle";
 import { applyKeywordText, applyText } from "./util/applyText";
-import { rangeToStr } from "./util/rangeToStr";
+import { rangeStrToFontSizeMain, rangeToStr } from "./util/rangeUtils";
 import { fitCardSubtitle } from "./util/fitCardSubtitle";
 import { fitCardCategories } from "./util/fitCardCategories";
+import type { ValueRange } from "../types/common";
 
 export const Assets = {
     // Icons
@@ -96,6 +97,13 @@ const setCardTier = (tier: number) => {
     setVisible(".card-tier-overlay", true);
 }
 
+const setRangeIcon = (range: ValueRange) => {
+    const rangeStr = rangeToStr(range);
+    getClassList(".range-icon")?.remove("hidden");
+    setText(".card-range-text", rangeStr);
+    setFontSizePx(".card-range-text", rangeStrToFontSizeMain(rangeStr));
+}
+
 const setActionCardView = async(card: Card) => {
     if (card.Type !== "Action") {
         return;
@@ -143,13 +151,11 @@ const setActionCardView = async(card: Card) => {
         if (card.DefendAction) {
             applyText(card.DefendAction, textContainer, PlayActionType.DEFEND);
         }
-        getClassList(".range-icon")?.remove("hidden");
-        setText(".card-range-text", rangeToStr(card.Range));
+        setRangeIcon(card.Range);
     } else if (card.ActionType === "Leg") {
         setImageUrl(".action-type-icon", Assets.ICON_LEG_ACTION);
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
-        getClassList(".range-icon")?.remove("hidden");
-        setText(".card-range-text", rangeToStr(card.Range));
+        setRangeIcon(card.Range);
     } else if (card.ActionType === "Special") {
         setImageUrl(".action-type-icon", Assets.ICON_SPECIAL_ACTION);
         setText(".stat-speed.stat-speed-text", "");
