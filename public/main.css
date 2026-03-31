@@ -19,7 +19,7 @@
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
-    --color-range: #4b4541;
+    --color-range: #c59f4e;
     --color-strike: #924609;
     --color-token: #7e00bc;
 }
@@ -210,7 +210,7 @@ img.hidden.hidden {
     align-items: center;
     top: 418px;
     padding-left: var(--card-text-horizontal-margin);
-    padding-right: var(--card-text-horizontal-margin);
+    padding-right: 45px;
 }
 
 .card-type {
@@ -232,11 +232,25 @@ img.hidden.hidden {
     align-items: center;
     gap: 5px;
     margin-left: 0.5rem;
+    position: relative;
+    width: 107px;
 }
 
-.card-range-text {
+.card-range .card-range-text {
+    position: absolute;
     color: var(--color-range);
     font-weight: bold;
+    left: 20px;
+    right: 20px;
+    font-size: 26px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.card-range .range-icon {
+    position: absolute;
+    width: 100%;
+    height: 55px;
 }
 
 .card-text-container {
@@ -351,10 +365,31 @@ img.keyword-icon {
     height: 48px;
 }
 
-.card-text img.icon.range-icon {
-    margin-right: 5px;
-    width: 38px;
-    height: 38px;
+.card-text .range-icon-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 90px;
+    height: 50px;
+}
+
+.card-text .range-icon-container .range-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /*
+    Don't ask me specifically why this offset
+    I don't know either
+    */
+    top: 7px;
+}
+
+.card-text .range-icon-container .range {
+    position: absolute;
+    text-align: center;
+    top: 10px;
+    width: 100%;
+    font-size: 22px;
 }
 
 .card-text img.icon.instant-icon {
@@ -362,18 +397,19 @@ img.keyword-icon {
     margin-right: -5px;
 }
 
-.card-text img.icon.counter-icon {
+/* Specifically only the action icon, not if it's used in normal text */
+.counter-action.counter-action img.icon.counter-icon {
     width: 48px;
     height: 48px;
+}
+
+.card-text img.icon.counter-icon {
+    width: 42px;
+    height: 42px;
 }
 
 .action-text-container {
     width: 563px;
-}
-
-img.icon.range-icon {
-    width: 48px;
-    height: 48px;
 }
 
 img.icon.parry-icon {
@@ -469,7 +505,7 @@ span.parry {
 
 span.counter {
     font-weight: bold;
-    color: #1a4754;
+    color: rgb(8, 65, 82);
 }
 
 span.generic-highlight {

@@ -82,17 +82,20 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = component.Content;
                 break;
             case "Range":
+                const rangeIconContainer = document.createElement("span");
+                rangeIconContainer.classList.add("range-icon-container");
+
                 const rangeIcon = document.createElement("img");
                 rangeIcon.classList.add("icon", "range-icon")
                 rangeIcon.src = Assets.ICON_RANGE;
-                span.appendChild(rangeIcon);
+                rangeIconContainer.appendChild(rangeIcon);
 
                 const rangeText = document.createElement("span");
                 rangeText.classList.add("range");
                 rangeText.textContent = component.Content;
-                span.appendChild(rangeText);
+                rangeIconContainer.appendChild(rangeText);
 
-                span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                span.appendChild(rangeIconContainer);
                 break;
             case "Instant":
                 const instantIcon = document.createElement("img");
