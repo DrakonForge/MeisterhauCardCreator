@@ -308,12 +308,13 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                         keywordIcon.classList.add("icon", "keyword-icon")
                         keywordIcon.src = keywordEntry.Icon;
                         span.appendChild(keywordIcon);
+                        span.classList.add("no-wrap");
                     }
                     const keywordText = document.createElement("span");
                     keywordText.textContent = text.replace(keyword, keywordEntry.Content)
                     keywordText.classList.add(keywordEntry.Decorator);
                     span.appendChild(keywordText);
-                    span.classList.add("keyword-item", "no-wrap");
+                    span.classList.add("keyword-item");
                 } else {
                     consola.warn(`Unknown keyword ${keyword}`);
                     span.classList.add("generic-highlight", "keyword-item");
