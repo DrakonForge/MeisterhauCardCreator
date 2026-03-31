@@ -33,6 +33,7 @@ interface RowData {
     ActionBehavior: string;
     DefendActionBehavior: string;
     ChamberActionBehavior: string;
+    Flavor: string;
     Notes: string;
 }
 
@@ -60,6 +61,7 @@ const HEADERS: (keyof RowData)[] = [
     "ActionBehavior",
     "DefendActionBehavior",
     "ChamberActionBehavior",
+    "Flavor",
     "Notes",
 ];
 
@@ -208,6 +210,10 @@ const convertCsvToJson = (data: RowData): Card => {
             Text: parseText(data.ActionText)
         }
     };
+
+    if (parseString(data.Flavor)) {
+        baseCard.Flavor = parseText(data.Flavor);
+    }
 
     // Optional
     if (parseString(data.SecondaryName)) {

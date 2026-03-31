@@ -1,7 +1,7 @@
 import { consola } from "consola";
 import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "../../text/converters";
 import type { CardAction, Keywords } from "../../types/card";
-import { PlayActionType, Assets } from "../renderCard";
+import { TextType, Assets } from "../renderCard";
 import { rangeStrToFontSizeText } from "./rangeUtils";
 
 interface KeywordEntry {
@@ -342,7 +342,7 @@ export const applyKeywordText = (keywords: Keywords | undefined, parent: HTMLEle
     parent.appendChild(p);
 }
 
-export const applyText = (action: CardAction, parent: HTMLElement, type: PlayActionType) => {
+export const applyText = (action: CardAction, parent: HTMLElement, type: TextType) => {
     let textLines: string[];
     if (typeof action.Text === "string") {
         textLines = [action.Text];
@@ -350,18 +350,34 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: PlayAct
         textLines = action.Text;
     }
 
-    if (type === PlayActionType.NORMAL) {
-        applyNormalText(action, parent, textLines);
-    } else if (type === PlayActionType.CHAMBER) {
+    if (type === TextType.NORMAL) {
+        applyNormalText(parent, textLines);
+    } else if (type === TextType.CHAMBER) {
         applyChamberText(action, parent, textLines);
-    } else if (type === PlayActionType.DEFEND) {
+    } else if (type === TextType.COUNTER) {
         applyCounterText(action, parent, textLines);
+    } else if (type === TextType.FLAVOR) {
+        applyFlavorText(parent, textLines);
+    } else {
+        consola.warn(`Unknown text type ${type}`);
     }
 };
 
-const applyNormalText = (action: CardAction, parent: HTMLElement, textLines: string[]) => {
+const applyNormalText = (parent: HTMLElement, textLines: string[]) => {
     for (const textLine of textLines) {
         const p = document.createElement("p");
+        const jsonText = convertTextToJson(textLine);
+        renderJsonToHtml(jsonText, p);
+        parent.appendChild(p);
+    }
+}
+
+const applyFlavorText = (parent: HTMLElement, textLines: string[]) => {
+    // TODO: These flavor lines should not have as large of spaces between them
+    // TODO: Add handling for de-italicizing for emphasis
+    for (const textLine of textLines) {
+        const p = document.createElement("p");
+        p.classList.add("flavor-text");
         const jsonText = convertTextToJson(textLine);
         renderJsonToHtml(jsonText, p);
         parent.appendChild(p);

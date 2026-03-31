@@ -36,10 +36,11 @@ export const Assets = {
     TIER_3: "img/Tier_3.svg",
 };
 
-export enum PlayActionType {
+export enum TextType {
     NORMAL = "Normal",
     CHAMBER = "Chamber",
-    DEFEND = "Defend",
+    COUNTER = "Counter",
+    FLAVOR = "Flavor",
 }
 
 export const clearCardView = () => {
@@ -133,7 +134,7 @@ const setActionCardView = async(card: Card) => {
     if (card.Keywords) {
         applyKeywordText(card.Keywords, textContainer);
     }
-    applyText(card.Action, textContainer, PlayActionType.NORMAL);
+    applyText(card.Action, textContainer, TextType.NORMAL);
 
     if (card.ActionType === "Arm") {
         setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
@@ -149,7 +150,7 @@ const setActionCardView = async(card: Card) => {
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
         setText(".stat-structure", card.Structure.toString());
         if (card.DefendAction) {
-            applyText(card.DefendAction, textContainer, PlayActionType.DEFEND);
+            applyText(card.DefendAction, textContainer, TextType.COUNTER);
         }
         setRangeIcon(card.Range);
     } else if (card.ActionType === "Leg") {
@@ -166,7 +167,11 @@ const setActionCardView = async(card: Card) => {
         }
     }
     if (card.ChamberAction) {
-        applyText(card.ChamberAction, textContainer, PlayActionType.CHAMBER);
+        applyText(card.ChamberAction, textContainer, TextType.CHAMBER);
+    }
+
+    if (card.Flavor) {
+        applyText({ Text: card.Flavor }, textContainer, TextType.FLAVOR);
     }
 
     fitCardText();

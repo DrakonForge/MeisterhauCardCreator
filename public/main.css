@@ -445,6 +445,12 @@ span.action-title {
     font-style: italic;
 }
 
+.flavor-text {
+    font-style: italic;
+    color: rgb(85, 76, 67);
+    font-size: 0.85em;
+}
+
 span.range {
     color: var(--color-range);
     font-weight: bold;

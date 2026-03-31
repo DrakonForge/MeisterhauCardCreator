@@ -7,9 +7,10 @@ const CardActionSchema = z.object({
 });
 
 const BaseCardSchema = z.object({
-    Name: z.string().nonempty().describe("The name of the card."),
+    Name: z.string().nonempty(),
     Type: z.enum(["Action", "Talent"]),
     Tier: z.int().min(0).max(3),
+    Flavor: CardTextSchema.optional(),
 });
 
 const ActionBaseCardSchema = BaseCardSchema.extend({
