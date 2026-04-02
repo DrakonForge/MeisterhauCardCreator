@@ -1,5 +1,5 @@
 import z from "zod";
-import { ActionTypeSchema, CardTextSchema, KeywordsSchema, ParryHeightSchema, ValueRangeSchema } from "./common";
+import { ActionTypeSchema, CardTextSchema, CardTypeSchema, KeywordsSchema, ParryHeightSchema, TierSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
@@ -8,29 +8,29 @@ const CardActionSchema = z.object({
 
 const BaseCardSchema = z.object({
     Name: z.string().nonempty(),
-    Type: z.enum(["Action", "Talent"]),
-    Tier: z.int().min(0).max(3),
+    Type: CardTypeSchema,
     Flavor: CardTextSchema.optional(),
+    Deck: z.string(),
+    Quantity: z.number(),
+    Expansion: z.string(),
 });
 
 const ActionBaseCardSchema = BaseCardSchema.extend({
     Type: z.literal("Action"),
     ActionType: ActionTypeSchema,
-    Deck: z.string(),
     Categories: z.array(z.string().nonempty()),
     SecondaryName: z.string().optional(),
     Action: CardActionSchema,
     ChamberAction: CardActionSchema.optional(),
     Keywords: KeywordsSchema.optional(),
     Speed: z.int().nonnegative().optional(),
+    Tier: TierSchema,
 })
 
 const ArmLegActionCardSchema = ActionBaseCardSchema.extend({
     Speed: z.int().nonnegative(),
     Range: ValueRangeSchema,
 });
-
-// TODO: Guards should be JSON-driven but stored separately.
 
 const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Arm"),
@@ -57,8 +57,17 @@ const SpecialActionCardSchema = ActionBaseCardSchema.extend({
 
 const TalentCardSchema = BaseCardSchema.extend({
     Type: z.literal("Talent"),
-    Deck: z.string(),
     Effect: CardTextSchema,
+    Tier: TierSchema,
+});
+
+const TrainingOptionSchema = z.object({
+    Tier: TierSchema,
+    Effect: CardTextSchema
+})
+const TrainingCardSchema = BaseCardSchema.extend({
+    Type: z.literal("Training"),
+    Options: TrainingOptionSchema.array().min(1)
 });
 
 export const ActionCardSchema = z.discriminatedUnion("ActionType", [
@@ -68,7 +77,8 @@ export const ActionCardSchema = z.discriminatedUnion("ActionType", [
 ])
 export const CardSchema = z.discriminatedUnion("Type", [
     ActionCardSchema,
-    TalentCardSchema
+    TalentCardSchema,
+    TrainingCardSchema
 ]).meta({
     id: "Card"
 });

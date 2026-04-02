@@ -25,22 +25,33 @@ const generateDeckLists = async (inputDir: string, outputDir: string, recursive:
     }
 }
 
+const toEntry = (cardId: string, quantity: number) => {
+    if (quantity > 1) {
+        return cardId + " " + quantity;
+    }
+    return cardId;
+}
+
 const getCardsByDeck = (cardList: Record<string, Card>): Record<string, string[]> => {
     const cardsByDeck: Record<string, string[]> = {
         [DECK_ALL]: []
     };
 
     for (const [cardId, card] of Object.entries(cardList)) {
-        cardsByDeck[DECK_ALL]?.push(cardId);
-        if (card.Type === "Action") {
-            const deck = card.Deck;
-            if (!cardsByDeck[deck]) {
-                cardsByDeck[deck] = [];
-            }
-            cardsByDeck[deck].push(cardId);
-        } else {
-            // TODO: Handle other card types
+        const deck = card.Deck;
+        let quantity = card.Quantity;
+
+        cardsByDeck[DECK_ALL]?.push(toEntry(cardId, quantity));
+
+        // Special rule to make TTS printing easier -- only print one copy of starter deck
+        if (deck == "Fundamentals") {
+            quantity /= 2;
         }
+
+        if (!cardsByDeck[deck]) {
+            cardsByDeck[deck] = [];
+        }
+        cardsByDeck[deck].push(toEntry(cardId, quantity));
     }
 
     return cardsByDeck;

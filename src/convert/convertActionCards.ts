@@ -19,7 +19,6 @@ interface RowData {
     SubCategory2: string;
     Tier: string;
     Deck: string;
-    Quantity: number;
     Speed: string;
     Structure: string;
     ParryHeight: string;
@@ -35,6 +34,7 @@ interface RowData {
     ChamberActionBehavior: string;
     Flavor: string;
     Expansion: string;
+    Quantity: string;
     Notes: string;
 }
 
@@ -64,7 +64,31 @@ const HEADERS: (keyof RowData)[] = [
     "ChamberActionBehavior",
     "Flavor",
     "Expansion",
+    "Quantity",
     "Notes",
+];
+
+const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
+    "Id",
+    "Name",
+    "Category1",
+    "ActionType",
+    "Deck",
+    "Tier",
+    "ActionText",
+    "Expansion"
+];
+
+const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
+    "Speed",
+    "Structure",
+    "ParryHeight",
+    "Range"
+];
+
+const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
+    "Speed",
+    "Range"
 ];
 
 const checkRequiredFields = (data: RowData, requiredFields: (keyof RowData)[]) => {
@@ -149,12 +173,7 @@ const parseString = (str: string): string => {
     return str;
 };
 
-const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
-    "Speed",
-    "Structure",
-    "ParryHeight",
-    "Range"
-];
+
 const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_ARM_FIELDS)) {
         throw new Error("Missing required arm fields");
@@ -172,10 +191,6 @@ const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
     }
 };
 
-const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
-    "Speed",
-    "Range"
-];
 const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
         throw new Error("Missing required leg fields");
@@ -183,16 +198,7 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     card.Range = parseRange(data.Range);
 }
 
-// TODO: Behaviors
-const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
-    "Id",
-    "Name",
-    "Category1",
-    "ActionType",
-    "Deck",
-    "Tier",
-    "ActionText",
-];
+
 const convertCsvToJson = (data: RowData): Card => {
     if (!checkRequiredFields(data, REQUIRED_BASE_FIELDS)) {
         throw new Error("Missing base fields");
@@ -205,13 +211,24 @@ const convertCsvToJson = (data: RowData): Card => {
     const baseCard: Partial<ActionCard> = {
         Name: parseString(data.Name),
         Type: "Action",
-        Deck: data.Deck,
+        Deck: parseString(data.Deck),
         ActionType: ActionTypeSchema.parse(parseString(data.ActionType)),
         Tier: parseInt(data.Tier),
         Action: {
             Text: parseText(data.ActionText)
-        }
+        },
+        Quantity: 1,
+        Expansion: parseString(data.Expansion)
     };
+
+    // TODO: Hard error on this later
+    if (!baseCard.Expansion?.length) {
+        consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
+    }
+
+    if (parseString(data.Quantity)) {
+        baseCard.Quantity = parseInt(data.Quantity);
+    }
 
     if (parseString(data.Flavor)) {
         baseCard.Flavor = parseText(data.Flavor);

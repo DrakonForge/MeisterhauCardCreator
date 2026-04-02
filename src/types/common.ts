@@ -64,7 +64,11 @@ export const ParryHeightSchema = z.enum(["High", "Low", "Both", "None"]).meta({
     "id": "ParryHeight"
 });
 
+export const CardTypeSchema = z.enum(["Action", "Talent", "Training"]);
+export const TierSchema = z.int().min(0).max(3);
+
 export type Keyword = z.infer<typeof KeywordSchema>;
 export type ValueRange = z.infer<typeof ValueRangeSchema>;
 export type CardText = z.infer<typeof CardTextSchema>;
 export type ActionType = z.infer<typeof ActionTypeSchema>;
+export type CardType = z.infer<typeof CardTypeSchema>;
