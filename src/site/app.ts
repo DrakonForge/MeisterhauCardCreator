@@ -2,7 +2,7 @@
 import { toPng } from '@jpinsonneau/html-to-image';
 import { onClick, query } from './dom';
 import { Assets, clearCardView, setCardView } from './renderCard';
-import { validateCardFromJson } from '../validation/validation';
+import { validateActionCard } from '../validation/validation';
 import { consola } from 'consola';
 import { delay } from "../util/delay";
 
@@ -64,7 +64,7 @@ const displayImage = async () => {
 
 const updateCard = (jsonStr: string): void => {
     const rawData = JSON.parse(jsonStr);
-    const card = validateCardFromJson(rawData);
+    const card = validateActionCard(rawData);
     setCardView(card);
 };
 

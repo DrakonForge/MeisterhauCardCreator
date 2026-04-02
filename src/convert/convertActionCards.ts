@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "../types/common";
 import stringify from "json-stringify-pretty-compact";
-import { validateCardFromJson } from '../validation/validation';
+import { validateActionCard } from '../validation/validation';
 import { checkInputPathExists, ensureOutputDirExists } from "../util/cliUtil";
 import { consola } from "consola";
 
@@ -199,7 +199,7 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
 }
 
 
-const convertCsvToJson = (data: RowData): Card => {
+const convertCsvToJson = (data: RowData): ActionCard => {
     if (!checkRequiredFields(data, REQUIRED_BASE_FIELDS)) {
         throw new Error("Missing base fields");
     }
@@ -284,7 +284,7 @@ const convertCsvToJson = (data: RowData): Card => {
     }
 
     // Validate it actually fits
-    const cardData = validateCardFromJson(baseCard);
+    const cardData = validateActionCard(baseCard);
     return cardData;
 }
 

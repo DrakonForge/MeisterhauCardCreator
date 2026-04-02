@@ -1,22 +1,28 @@
 import { convertTextToJson, type TextComponent } from "../text/converters";
-import { type Card, CardSchema } from "../types/card";
+import { type ActionCard, ActionCardSchema, type TalentCard, type TrainingCard } from "../types/card";
 import type { CardText } from "../types/common";
 
 // TODO: Support validation for guard JSON as well
 
-export const validateCardFromJson = (data: any): Card => {
-    const cardData = CardSchema.parse(data);
-    if (cardData.Type === "Action") {
-        validateCardText(cardData.Action.Text, false);
-        if (cardData.ActionType === "Arm") {
-            validateCardText(cardData.ChamberAction?.Text)
-            validateCardText(cardData.DefendAction?.Text)
-        } else if (cardData.ActionType === "Leg") {
-            validateCardText(cardData.ChamberAction?.Text);
-        }
+export const validateActionCard = (data: any): ActionCard => {
+    const cardData = ActionCardSchema.parse(data);
+    validateCardText(cardData.Action.Text, false);
+    if (cardData.ActionType === "Arm") {
+        validateCardText(cardData.ChamberAction?.Text)
+        validateCardText(cardData.DefendAction?.Text)
+    } else if (cardData.ActionType === "Leg") {
+        validateCardText(cardData.ChamberAction?.Text);
     }
     return cardData;
 };
+
+export const validateTalentCard = (data: any): TalentCard => {
+    return {} as TalentCard;
+}
+
+export const validateTrainingCard = (data: any): TrainingCard => {
+    return {} as TrainingCard;
+}
 
 const validateCardText = (cardText: CardText | undefined, canBeOptional = true): void => {
     if (!cardText) {

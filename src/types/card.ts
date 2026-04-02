@@ -85,6 +85,8 @@ export const CardSchema = z.discriminatedUnion("Type", [
 
 export type Card = z.infer<typeof CardSchema>;
 export type BaseCard = z.infer<typeof BaseCardSchema>;
+export type TalentCard = z.infer<typeof TalentCardSchema>;
+export type TrainingCard = z.infer<typeof TrainingCardSchema>;
 export type ActionCard = z.infer<typeof ActionBaseCardSchema>;
 export type ArmActionCard = z.infer<typeof ArmActionCardSchema>;
 export type LegActionCard = z.infer<typeof LegActionCardSchema>;
