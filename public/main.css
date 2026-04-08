@@ -211,7 +211,7 @@ img.hidden.hidden {
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    top: 418px;
+    top: 478px;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: 45px;
 }
@@ -257,13 +257,14 @@ img.hidden.hidden {
 }
 
 .card-text-container {
-    top: 487px;
+    top: 547px;
     width: 100%;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
     display: flex;
     flex-flow: column nowrap;
-    height: 475px; /* Hardcoded to the end of the text */
+    line-height: 1.1;
+    height: 415px; /* Hardcoded to the end of the text */
 }
 
 .card-body-background-container {

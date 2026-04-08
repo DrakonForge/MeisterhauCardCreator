@@ -1,7 +1,7 @@
 import { consola } from "consola";
 import { query } from "../dom";
 
-const MAX_FONT_SIZE = 60;
+const MAX_FONT_SIZE = 50;
 const MIN_FONT_SIZE = 32;
 const FONT_SIZE_STEP = 2;
 
