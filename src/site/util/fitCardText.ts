@@ -2,9 +2,9 @@ import { consola } from "consola";
 import { query, queryAll } from "../dom";
 
 const MIN_GAP = 5;
-const MAX_GAP = 30;
-const MAX_FONT_SIZE = 36;
-const MIN_FONT_SIZE = 24;
+const MAX_GAP = 15;
+const MAX_FONT_SIZE = 36; // Everything is scaled up by 4x, so this is min 7.5px and max 9px
+const MIN_FONT_SIZE = 30;
 const FONT_SIZE_STEP = 2;
 const ICON_SIZE_OFFSET = 16; // Works together w/CSS to make icons look bigger
 
