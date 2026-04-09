@@ -380,6 +380,7 @@ const applyFlavorText = (parent: HTMLElement, textLines: string[]) => {
         p.classList.add("flavor-text");
         const jsonText = convertTextToJson(textLine);
         renderJsonToHtml(jsonText, p);
+        parent.appendChild(document.createElement("hr"))
         parent.appendChild(p);
     }
 }

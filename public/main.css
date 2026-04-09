@@ -259,7 +259,7 @@ img.hidden.hidden {
     display: flex;
     flex-flow: column nowrap;
     line-height: 1.1;
-    height: 415px; /* Hardcoded to the end of the text */
+    height: 425px; /* Hardcoded to the end of the text */
 }
 
 .card-body-background-container {
@@ -289,10 +289,17 @@ img.hidden.hidden {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    gap: 30px;
+    gap: 15px;
     position: relative;
 }
 
+.card-text hr {
+    border: 0;
+    height: 2px;
+    background-image: linear-gradient(to right, rgba(78, 77, 75, 0),
+        rgba(78, 77, 75, 0.75),
+        rgba(78, 77, 75, 0));
+}
 .card-text p.chamber-action {
     background-color: rgba(0, 0, 0, 0.15);
     border-radius: 10px;

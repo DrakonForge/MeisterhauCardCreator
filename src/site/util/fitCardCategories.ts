@@ -18,7 +18,6 @@ export const fitCardCategories = () => {
 
     if (text.clientWidth <= container.clientWidth) {
         // No need to do anything
-        consola.log("We chillin", text.clientWidth, container.clientWidth);
         return;
     }
 
