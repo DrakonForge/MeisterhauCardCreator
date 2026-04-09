@@ -34,6 +34,9 @@ export const Assets = {
     TIER_1: "img/Tier_1.svg",
     TIER_2: "img/Tier_2.svg",
     TIER_3: "img/Tier_3.svg",
+    // Arches
+    ARCH_LEFT: "img/Arch_Left.svg",
+    ARCH_RIGHT: "img/Arch_Right.svg",
 };
 
 export enum TextType {
@@ -41,6 +44,20 @@ export enum TextType {
     CHAMBER = "Chamber",
     COUNTER = "Counter",
     FLAVOR = "Flavor",
+}
+
+const clearRightArch = () => {
+    setVisible(".card-arch-right-overlay", false);
+    setVisible(".parry-height-icon", false);
+    setVisible(".stat-structure", false);
+}
+
+const setRightArch = (structure: number) => {
+    setText(".stat-structure", structure.toString());
+    // Assume parry height is already set
+    setVisible(".card-arch-right-overlay", true);
+    setVisible(".parry-height-icon", true);
+    setVisible(".stat-structure", true);
 }
 
 export const clearCardView = () => {
@@ -57,6 +74,7 @@ export const clearCardView = () => {
     setImageUrl(".card-border-overlay", Assets.BORDER_VOR);
     setVisible(".card-border-overlay", false);
     setVisible(".card-body-background-token", false);
+    clearRightArch();
     const textContainer = query(".card-text");
     if (textContainer) {
         textContainer.innerHTML = "";
@@ -136,6 +154,13 @@ const setActionCardView = async(card: Card) => {
     }
     applyText(card.Action, textContainer, TextType.NORMAL);
 
+    if (card.Speed) {
+        setText(".stat-speed.stat-speed-text", card.Speed.toString());
+    } else {
+        setText(".stat-speed.stat-speed-text", "");
+        getClassList(".stat-speed.stat-speed-instant")?.remove("hidden");
+    }
+
     if (card.ActionType === "Arm") {
         setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
         if (card.ParryHeight === "High") {
@@ -147,24 +172,17 @@ const setActionCardView = async(card: Card) => {
         } else if (card.ParryHeight === "None") {
             setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
         }
-        setText(".stat-speed.stat-speed-text", card.Speed.toString());
-        setText(".stat-structure", card.Structure.toString());
+        if (card.Structure) {
+            setRightArch(card.Structure);
+        }
         if (card.DefendAction) {
             applyText(card.DefendAction, textContainer, TextType.COUNTER);
         }
         setRangeIcon(card.Range);
     } else if (card.ActionType === "Leg") {
         setImageUrl(".action-type-icon", Assets.ICON_LEG_ACTION);
-        setText(".stat-speed.stat-speed-text", card.Speed.toString());
-        setRangeIcon(card.Range);
     } else if (card.ActionType === "Special") {
         setImageUrl(".action-type-icon", Assets.ICON_SPECIAL_ACTION);
-        setText(".stat-speed.stat-speed-text", "");
-        if (card.Speed) {
-            setText(".stat-speed.stat-speed-text", card.Speed.toString());
-        } else {
-            getClassList(".stat-speed.stat-speed-instant")?.remove("hidden");
-        }
     }
     if (card.ChamberAction) {
         applyText(card.ChamberAction, textContainer, TextType.CHAMBER);

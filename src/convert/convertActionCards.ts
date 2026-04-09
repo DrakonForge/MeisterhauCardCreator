@@ -81,14 +81,12 @@ const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
 
 const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
     "Speed",
-    "Structure",
     "ParryHeight",
     "Range"
 ];
 
 const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
-    "Speed",
-    "Range"
+    "Speed"
 ];
 
 const checkRequiredFields = (data: RowData, requiredFields: (keyof RowData)[]) => {
@@ -195,7 +193,6 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
     if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
         throw new Error("Missing required leg fields");
     }
-    card.Range = parseRange(data.Range);
 }
 
 

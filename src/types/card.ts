@@ -29,13 +29,13 @@ const ActionBaseCardSchema = BaseCardSchema.extend({
 
 const ArmLegActionCardSchema = ActionBaseCardSchema.extend({
     Speed: z.int().nonnegative(),
-    Range: ValueRangeSchema,
 });
 
 const ArmActionCardSchema = ArmLegActionCardSchema.extend({
     ActionType: z.literal("Arm"),
-    Structure: z.int().nonnegative(),
+    Structure: z.int().nonnegative().optional(),
     ParryHeight: ParryHeightSchema,
+    Range: ValueRangeSchema,
     Keywords: KeywordsSchema.optional(),
     DefendAction: CardActionSchema.optional(),
 }).strict().meta({
