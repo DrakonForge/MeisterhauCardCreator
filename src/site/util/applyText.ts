@@ -321,6 +321,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                     span.textContent = text;
                 }
                 break;
+            case "Control":
+                span.classList.add("generic-highlight");
+                span.textContent = `Control ${component.Content}`;
+                break;
             default:
                 consola.warn(`Unknown text component type ${component.Type}`);
                 span.classList.add("generic-highlight");
@@ -385,6 +389,13 @@ const applyFlavorText = (parent: HTMLElement, textLines: string[]) => {
     }
 }
 
+const wrapTitleText = (title: string): string => {
+    if (title.endsWith('!') || title.endsWith('.') || title.endsWith('?')) {
+        return title + " ";
+    }
+    return title + ". ";
+}
+
 const applyChamberText = (action: CardAction, parent: HTMLElement, textLines: string[]) => {
     const p = document.createElement("p");
     p.classList.add("chamber-action");
@@ -399,7 +410,7 @@ const applyChamberText = (action: CardAction, parent: HTMLElement, textLines: st
     if (action.Title) {
         const title = document.createElement("span");
         title.classList.add("action-title");
-        title.textContent = action.Title + ". ";
+        title.textContent = wrapTitleText(action.Title);
         textContainer.appendChild(title);
     }
 
@@ -431,7 +442,7 @@ const applyCounterText = (action: CardAction, parent: HTMLElement, textLines: st
     if (action.Title) {
         const title = document.createElement("span");
         title.classList.add("action-title");
-        title.textContent = action.Title + ". ";
+        title.textContent = wrapTitleText(action.Title);
         textContainer.appendChild(title);
     }
 

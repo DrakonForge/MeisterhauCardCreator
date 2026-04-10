@@ -89,13 +89,14 @@ const REQUIRED_LEG_FIELDS: (keyof RowData)[] = [
     "Speed"
 ];
 
-const checkRequiredFields = (data: RowData, requiredFields: (keyof RowData)[]) => {
+const checkRequiredFields = (data: RowData, requiredFields: (keyof RowData)[]): string[] => {
+    const missingFields = [];
     for (const field of requiredFields) {
         if (!data[field]) {
-            return false;
+            missingFields.push(field);
         }
     }
-    return true;
+    return missingFields;
 };
 
 const RANGE_SEPARATORS = ['-', '+', '..'];
@@ -173,10 +174,13 @@ const parseString = (str: string): string => {
 
 
 const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
-    if (!checkRequiredFields(data, REQUIRED_ARM_FIELDS)) {
-        throw new Error("Missing required arm fields");
+    const missingFields = checkRequiredFields(data, REQUIRED_ARM_FIELDS);
+    if (missingFields.length) {
+        throw new Error(`Missing required arm fields: ${missingFields.join(', ')}`);
     }
-    card.Structure = parseInt(data.Structure);
+    if (data.Structure) {
+        card.Structure = parseInt(data.Structure);
+    }
     card.ParryHeight = ParryHeightSchema.parse(data.ParryHeight);
     card.Range = parseRange(data.Range);
     if (parseString(data.DefendActionText)) {
@@ -190,15 +194,17 @@ const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
 };
 
 const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
-    if (!checkRequiredFields(data, REQUIRED_LEG_FIELDS)) {
-        throw new Error("Missing required leg fields");
+    const missingFields = checkRequiredFields(data, REQUIRED_LEG_FIELDS);
+    if (missingFields.length) {
+        throw new Error(`Missing required leg fields: ${missingFields.join(', ')}`);
     }
 }
 
 
 const convertCsvToJson = (data: RowData): ActionCard => {
-    if (!checkRequiredFields(data, REQUIRED_BASE_FIELDS)) {
-        throw new Error("Missing base fields");
+    const missingFields = checkRequiredFields(data, REQUIRED_BASE_FIELDS);
+    if (missingFields.length) {
+        throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
     validateId(data.Id);
