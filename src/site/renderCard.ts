@@ -172,7 +172,7 @@ const setActionCardView = async(card: Card) => {
         } else if (card.ParryHeight === "None") {
             setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
         }
-        if (card.Structure) {
+        if (card.Structure != null) {
             setRightArch(card.Structure);
         }
         if (card.DefendAction) {

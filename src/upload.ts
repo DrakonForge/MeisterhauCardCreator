@@ -23,12 +23,14 @@ const uploadDeckImagesToImgur = async (inputDir: string, _albumId: string | null
     // consola.log(`Using album ID ${uploadAlbumId}`);
 
     // There shouldn't be too many files so let's do this synchronously
+    const linkNames: string[] = [];
     const links: string[] = [];
     for (const file of inputFiles) {
         if (!file.endsWith(".jpg")) {
             continue;
         }
         const filePath = path.join(inputDir, file);
+        linkNames.push(file);
         consola.debug(`Processing ${filePath}`);
         const link = await uploadDeckImage(file, filePath, imgurClientId);
         links.push(link);
@@ -38,11 +40,12 @@ const uploadDeckImagesToImgur = async (inputDir: string, _albumId: string | null
 
     // consola.success(`Successfully uploaded ${inputFiles.length} images at https://imgur.com/a/${uploadAlbumId}`);
     consola.success(`Successfully uploaded ${inputFiles.length} images`);
-    consola.log(`Card Faces:`);
-    for (const link of links) {
-        consola.log(`- ${link}`);
+    let resultStr = "\nCard Faces:\n";
+    for (let i = 0; i < links.length; ++i) {
+        resultStr += `- ${linkNames[i]}: ${links[i]}\n`;
     }
-    consola.log(`Card Back:\n- ${cardBackUrl}`);
+    resultStr += `\nCard Back:\n- ${cardBackUrl}\n`;
+    consola.log(resultStr);
 }
 
 const uploadDeckImage = async (fileName: string, inputPath: string, clientId: string) => {

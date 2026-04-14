@@ -266,11 +266,11 @@ img.hidden.hidden {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 477px;
+    top: 537px;
     width: 100%;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
-    height: 505px;
+    height: 435px;
 }
 
 .card-body-background-container img {

@@ -35,6 +35,7 @@ interface RowData {
     Flavor: string;
     Expansion: string;
     Quantity: string;
+    Art: string;
     Notes: string;
 }
 
@@ -64,6 +65,7 @@ const HEADERS: (keyof RowData)[] = [
     "ChamberActionBehavior",
     "Flavor",
     "Expansion",
+    "Art",
     "Quantity",
     "Notes",
 ];
