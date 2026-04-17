@@ -23,6 +23,7 @@ export const Assets = {
     ICON_COUNTER: "img/CounterIcon.svg",
     ICON_TOKEN: "img/TokenIcon.svg",
     ICON_DOMINATE: "img/DominateIcon.svg",
+    ICON_FLOW: "img/FlowIcon.svg",
     // Borders
     BORDER_TOKEN: "img/Border_Token.svg",
     BORDER_VOR: "img/Border_Vor.svg",

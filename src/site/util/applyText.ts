@@ -70,6 +70,14 @@ const TextGuardMap = {
     "HighTag": "High Tag",
 };
 
+const PLACEHOLDER_NUMBER = "X";
+
+const validateNumber = (str: string): void => {
+    if(isNaN(parseInt(str)) && str != PLACEHOLDER_NUMBER) {
+        throw new Error("Invalid number");
+    }
+}
+
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
     for (const component of components) {
         const span = document.createElement("span");
@@ -119,10 +127,25 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Flow":
+                // Option 1: Flow Text
                 const flowText = document.createElement("span");
                 flowText.textContent = "Flow:";
                 flowText.classList.add("flow");
                 span.appendChild(flowText);
+
+                // Option 2: Flow Icon
+                // const flowIcon = document.createElement("img");
+                // flowIcon.classList.add("icon", "flow-icon")
+                // flowIcon.src = Assets.ICON_FLOW;
+                // span.appendChild(flowIcon);
+
+                // if (component.Content != "noarrow") {
+                //     const flowArrow = document.createElement("span");
+                //     flowArrow.classList.add("flow-arrow");
+                //     flowArrow.textContent = "➛";
+                //     span.appendChild(flowArrow);
+                //     span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                // }
                 break;
             case "Dominate":
                 const dominateIcon = document.createElement("img");
@@ -140,75 +163,57 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "GainStructure":
                 span.classList.add("structure");
-                const structureGain = parseInt(component.Content);
-                if (isNaN(structureGain)) {
-                    throw new Error("Invalid number");
-                }
+                const structureGain = component.Content;
+                validateNumber(structureGain);
                 span.textContent = `+${structureGain} Structure`;
                 break;
             case "GainSpeed":
                 span.classList.add("speed");
-                const speedGain = parseInt(component.Content);
-                if (isNaN(speedGain)) {
-                    throw new Error("Invalid number");
-                }
+                const speedGain = component.Content;
+                validateNumber(speedGain);
                 span.textContent = `+${speedGain} All Speed`;
                 break;
             case "GainArmSpeed":
                 span.classList.add("speed");
-                const armSpeedGain = parseInt(component.Content);
-                if (isNaN(armSpeedGain)) {
-                    throw new Error("Invalid number");
-                }
+                const armSpeedGain = component.Content;
+                validateNumber(armSpeedGain);
                 span.textContent = `+${armSpeedGain} Arm Speed`;
                 break;
             case "GainLegSpeed":
                 span.classList.add("speed");
-                const legSpeedGain = parseInt(component.Content);
-                if (isNaN(legSpeedGain)) {
-                    throw new Error("Invalid number");
-                }
+                const legSpeedGain = component.Content;
+                validateNumber(legSpeedGain);
                 span.textContent = `+${legSpeedGain} Leg Speed`;
                 break;
             case "LoseStructure":
                 span.classList.add("structure");
-                const structureLoss = parseInt(component.Content);
-                if (isNaN(structureLoss)) {
-                    throw new Error("Invalid number");
-                }
+                const structureLoss = component.Content;
+                validateNumber(structureLoss);
                 span.textContent = `-${structureLoss} Structure`;
                 break;
             case "LoseSpeed":
                 span.classList.add("speed");
-                const speedLoss = parseInt(component.Content);
-                if (isNaN(speedLoss)) {
-                    throw new Error("Invalid number");
-                }
+                const speedLoss = component.Content;
+                validateNumber(speedLoss);
                 span.textContent = `-${speedLoss} All Speed`;
                 break;
             case "LoseArmSpeed":
                 span.classList.add("speed");
-                const armSpeedLoss = parseInt(component.Content);
-                if (isNaN(armSpeedLoss)) {
-                    throw new Error("Invalid number");
-                }
+                const armSpeedLoss = component.Content;
+                validateNumber(armSpeedLoss);
                 span.textContent = `-${armSpeedLoss} Arm Speed`;
                 break;
             case "LoseLegSpeed":
                 span.classList.add("speed");
-                const legSpeedLoss = parseInt(component.Content);
-                if (isNaN(legSpeedLoss)) {
-                    throw new Error("Invalid number");
-                }
+                const legSpeedLoss = component.Content;
+                validateNumber(legSpeedLoss);
                 span.textContent = `-${legSpeedLoss} Leg Speed`;
                 break;
             case "Structure":
                 span.classList.add("structure");
                 if (component.Content) {
-                    const structure = parseInt(component.Content);
-                    if (isNaN(structure)) {
-                        throw new Error("Invalid number");
-                    }
+                    const structure = component.Content;
+                    validateNumber(structure);
                     span.textContent = `Structure ${structure}`;
                 } else {
                     span.textContent = "Structure";
@@ -217,10 +222,8 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Speed":
                 span.classList.add("speed");
                 if (component.Content) {
-                    const speed = parseInt(component.Content);
-                    if (isNaN(speed)) {
-                        throw new Error("Invalid number");
-                    }
+                    const speed = component.Content;
+                    validateNumber(speed);
                     span.textContent = `Speed ${speed}`;
                 } else {
                     span.textContent = "Speed";
@@ -323,7 +326,22 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Control":
                 span.classList.add("generic-highlight");
-                span.textContent = `Control ${component.Content}`;
+                if (component.Content) {
+                    validateNumber(component.Content);
+                    span.textContent = `Control ${component.Content}`;
+                } else {
+                    span.textContent = "Control";
+                }
+                break;
+            case "Valor":
+                // TODO: Eventually move to an icon for valor? Magenta
+                span.classList.add("generic-highlight");
+                if (component.Content) {
+                    validateNumber(component.Content);
+                    span.textContent = `${component.Content} Valor`;
+                } else {
+                    span.textContent = "Valor";
+                }
                 break;
             default:
                 consola.warn(`Unknown text component type ${component.Type}`);
