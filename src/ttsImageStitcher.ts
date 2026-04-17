@@ -87,7 +87,12 @@ const retrieveDeckLists = async (deckDir: string, recursive: boolean, ignore: st
 }
 
 const createImagesForDeck = async (deckId: string, entries: DeckListEntry[], cardIdToPath: Record<string, string>, cardBackPath: string, outputDir: string): Promise<void> => {
-    const cardIds = entries.map(entry => entry.cardId);
+    const cardIds = [];
+    for (const entry of entries) {
+        for (let i = 0; i < entry.quantity; ++i) {
+            cardIds.push(entry.cardId);
+        }
+    }
 
     // Sort tokens to be last
     cardIds.sort((a, b) => {
