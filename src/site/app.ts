@@ -5,6 +5,7 @@ import { Assets, clearCardView, setCardView } from './renderCard';
 import { validateActionCard } from '../validation/validation';
 import { consola } from 'consola';
 import { delay } from "../util/delay";
+import type { Card } from '../types/card';
 
 const SAMPLE_CARD = `{
     "Name": "Oberhau",
@@ -64,7 +65,7 @@ const displayImage = async () => {
 
 const updateCard = (jsonStr: string): void => {
     const rawData = JSON.parse(jsonStr);
-    const card = validateActionCard(rawData);
+    const card: Card = validateActionCard(rawData) as Card; // Not sure why this is failing?
     setCardView(card);
 };
 
