@@ -26,10 +26,11 @@ export const Assets = {
     ICON_FLOW: "img/FlowIcon.svg",
     // Borders
     BORDER_TOKEN: "img/Border_Token.svg",
-    BORDER_VOR: "img/Border_Vor.svg",
-    BORDER_NACH: "img/Border_Nach.svg",
-    BORDER_MEISTERHAU: "img/Border_Meisterhau.svg",
-    BORDER_BINDWORK: "img/Border_Bindwork.svg",
+    BORDER_AUDACITY: "img/Border_Audacity.svg",
+    BORDER_CELERITY: "img/Border_Celerity.svg",
+    BORDER_INSIGHT: "img/Border_Insight.svg",
+    BORDER_FORTITUDE: "img/Border_Fortitude.svg",
+    BORDER_FOOTWORK: "img/Border_Footwork.svg",
     // Tiers
     TIER_DEFAULT: "img/Tier_Default.svg",
     TIER_1: "img/Tier_1.svg",
@@ -72,7 +73,7 @@ export const clearCardView = () => {
     setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
     setImageUrl(".card-tier-overlay", Assets.TIER_DEFAULT);
     setVisible(".card-tier-overlay", false);
-    setImageUrl(".card-border-overlay", Assets.BORDER_VOR);
+    setImageUrl(".card-border-overlay", Assets.BORDER_AUDACITY);
     setVisible(".card-border-overlay", false);
     setVisible(".card-body-background-token", false);
     clearRightArch();
@@ -89,18 +90,22 @@ const setCardBorderFromDeck = (deck: string) => {
         setVisible(".card-body-background-token", true);
         setImageUrl(".card-border-overlay", Assets.BORDER_TOKEN);
         setVisible(".card-border-overlay", true);
-    } else if (deck === "Vor") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_VOR);
+    } else if (deck === "Audacity") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_AUDACITY);
         setVisible(".card-border-overlay", true);
-    } else if (deck === "Nach") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_NACH);
+    } else if (deck === "Celerity") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_CELERITY);
         setVisible(".card-border-overlay", true);
-    } else if (deck === "Bindwork") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_BINDWORK);
+    } else if (deck === "Fortitude") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_FORTITUDE);
         setVisible(".card-border-overlay", true);
-    } else if (deck === "Meisterhau") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_MEISTERHAU);
+    } else if (deck === "Insight") {
+        setImageUrl(".card-border-overlay", Assets.BORDER_INSIGHT);
         setVisible(".card-border-overlay", true);
+    } else if (deck === "Footwork") {
+        // TODO: Need asset
+        // setImageUrl(".card-border-overlay", Assets.BORDER_FOOTWORK);
+        // setVisible(".card-border-overlay", true);
     }
 }
 
