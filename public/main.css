@@ -20,7 +20,7 @@
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
     --color-range: #c59f4e;
-    --color-strike: #924609;
+    --color-strike: #84400a;
     --color-token: #7e00bc;
 }
 
@@ -458,8 +458,9 @@ span.action-title {
 
 .flavor-text {
     font-style: italic;
-    color: rgb(85, 76, 67);
-    font-size: 0.85em;
+    /* color: rgb(49, 46, 43); */
+    font-size: 0.9em;
+    line-height: 1;
 }
 
 span.range {
