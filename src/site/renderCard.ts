@@ -17,6 +17,7 @@ export const Assets = {
     ICON_PARRY_HIGH: "img/ParryIcon_High.svg",
     ICON_PARRY_LOW: "img/ParryIcon_Low.svg",
     ICON_PARRY_NONE: "img/ParryIcon_None.svg",
+    ICON_PARRY_SMALL: "img/ParryIcon_Small.svg",
     ICON_RANGE: "img/RangeIcon.svg",
     ICON_INSTANT_INVERTED: "img/InstantIconInverted.svg",
     ICON_CHAMBER: "img/ChamberIcon.svg",
@@ -103,9 +104,8 @@ const setCardBorderFromDeck = (deck: string) => {
         setImageUrl(".card-border-overlay", Assets.BORDER_INSIGHT);
         setVisible(".card-border-overlay", true);
     } else if (deck === "Footwork") {
-        // TODO: Need asset
-        // setImageUrl(".card-border-overlay", Assets.BORDER_FOOTWORK);
-        // setVisible(".card-border-overlay", true);
+        setImageUrl(".card-border-overlay", Assets.BORDER_FOOTWORK);
+        setVisible(".card-border-overlay", true);
     }
 }
 

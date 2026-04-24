@@ -129,7 +129,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Flow":
                 // Option 1: Flow Text
                 const flowText = document.createElement("span");
-                flowText.textContent = "Flow:";
+                flowText.textContent = component.Content != "noarrow" ? "Flow:" : "Flow";
                 flowText.classList.add("flow");
                 span.appendChild(flowText);
 
@@ -274,7 +274,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Parry":
                 const parryIcon = document.createElement("img");
                 parryIcon.classList.add("icon", "parry-icon")
-                parryIcon.src = Assets.ICON_PARRY_BOTH;
+                parryIcon.src = Assets.ICON_PARRY_SMALL;
                 span.appendChild(parryIcon);
 
                 const parryText = document.createElement("span");
