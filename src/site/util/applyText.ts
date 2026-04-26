@@ -364,7 +364,7 @@ export const applyKeywordText = (keywords: Keywords | undefined, parent: HTMLEle
     parent.appendChild(p);
 }
 
-export const applyText = (action: CardAction, parent: HTMLElement, type: TextType) => {
+export const applyActionText = (action: CardAction, parent: HTMLElement, type: TextType) => {
     let textLines: string[];
     if (typeof action.Text === "string") {
         textLines = [action.Text];
@@ -384,6 +384,16 @@ export const applyText = (action: CardAction, parent: HTMLElement, type: TextTyp
         consola.warn(`Unknown text type ${type}`);
     }
 };
+
+export const applySimpleText = (text: string | string[], parent: HTMLElement) => {
+    let textLines: string[];
+    if (typeof text === "string") {
+        textLines = [text];
+    } else {
+        textLines = text;
+    }
+    applyNormalText(parent, textLines);
+}
 
 const applyNormalText = (parent: HTMLElement, textLines: string[]) => {
     for (const textLine of textLines) {

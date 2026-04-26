@@ -5,7 +5,7 @@ import * as path from "path";
 import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "../types/common";
 import stringify from "json-stringify-pretty-compact";
 import { validateActionCard } from '../validation/validation';
-import { checkInputPathExists, ensureOutputDirExists } from "../util/cliUtil";
+import { checkInputPathExists } from "../util/cliUtil";
 import { consola } from "consola";
 
 interface RowData {

@@ -1,8 +1,17 @@
 import { convertTextToJson, type TextComponent } from "../text/converters";
-import { type ActionCard, ActionCardSchema, type TalentCard, type TrainingCard } from "../types/card";
+import { type ActionCard, ActionCardSchema, type Card, type TalentCard, TalentCardSchema, type TrainingCard } from "../types/card";
 import type { CardText } from "../types/common";
 
-// TODO: Support validation for guard JSON as well
+export const validateCard = (data: any): Card => {
+    if (data.Type === "Action") {
+        return validateActionCard(data);
+    } else if (data.Type === "Talent") {
+        return validateTalentCard(data);
+    } else if (data.Type === "Training") {
+        return validateTrainingCard(data);
+    }
+    throw new Error(`Cannot validated card of unsupported type: ${data.Type}`);
+}
 
 export const validateActionCard = (data: any): ActionCard => {
     const cardData = ActionCardSchema.parse(data);
@@ -17,7 +26,9 @@ export const validateActionCard = (data: any): ActionCard => {
 };
 
 export const validateTalentCard = (data: any): TalentCard => {
-    return {} as TalentCard;
+    const cardData = TalentCardSchema.parse(data);
+    validateCardText(cardData.Effect);
+    return cardData;
 }
 
 export const validateTrainingCard = (data: any): TrainingCard => {

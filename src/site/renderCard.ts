@@ -1,12 +1,13 @@
 import type { Card } from "../types/card";
-import { setText, query, setImageUrl, getClassList, setVisible, setFontSizePx } from "./dom";
+import { setText, query, setImageUrl, getClassList, setVisible, setFontSizePx, setBackgroundColor, setBackgroundImage } from "./dom";
 import { fitCardText } from "./util/fitCardText";
 import { fitCardTitle } from "./util/fitCardTitle";
-import { applyKeywordText, applyText } from "./util/applyText";
+import { applyKeywordText, applyActionText, applySimpleText } from "./util/applyText";
 import { rangeStrToFontSizeMain, rangeToStr } from "./util/rangeUtils";
 import { fitCardSubtitle } from "./util/fitCardSubtitle";
 import { fitCardCategories } from "./util/fitCardCategories";
 import type { ValueRange } from "../types/common";
+import { consola } from "consola";
 
 export const Assets = {
     // Icons
@@ -33,13 +34,21 @@ export const Assets = {
     BORDER_FORTITUDE: "img/Border_Fortitude.svg",
     BORDER_FOOTWORK: "img/Border_Footwork.svg",
     // Tiers
-    TIER_DEFAULT: "img/Tier_Default.svg",
-    TIER_1: "img/Tier_1.svg",
-    TIER_2: "img/Tier_2.svg",
-    TIER_3: "img/Tier_3.svg",
-    // Arches
+    TIER_0_ACTION: "img/Tier_0_Action.svg",
+    TIER_1_ACTION: "img/Tier_1_Action.svg",
+    TIER_2_ACTION: "img/Tier_2_Action.svg",
+    TIER_3_ACTION: "img/Tier_3_Action.svg",
+    TIER_0_TALENT: "img/Tier_0_Talent.svg",
+    TIER_1_TALENT: "img/Tier_1_Talent.svg",
+    TIER_2_TALENT: "img/Tier_2_Talent.svg",
+    TIER_3_TALENT: "img/Tier_3_Talent.svg",
+    // Arches and Decor
     ARCH_LEFT: "img/Arch_Left.svg",
     ARCH_RIGHT: "img/Arch_Right.svg",
+    TITLE_TALENT: "img/Title_Talent.svg",
+    // Frames
+    FRAME_ACTION: "img/CardFrame_Action.svg",
+    FRAME_TALENT: "img/CardFrame_Talent.svg",
 };
 
 export enum TextType {
@@ -49,18 +58,40 @@ export enum TextType {
     FLAVOR = "Flavor",
 }
 
+const clearLeftArch = () => {
+    setVisible(".card-arch-left-overlay", false);
+    setVisible(".action-type-icon", false);
+    setVisible(".stat-speed", false);
+}
+
 const clearRightArch = () => {
     setVisible(".card-arch-right-overlay", false);
     setVisible(".parry-height-icon", false);
     setVisible(".stat-structure", false);
 }
 
-const setRightArch = (structure: number) => {
-    setText(".stat-structure", structure.toString());
-    // Assume parry height is already set
+const showRightArch = () => {
     setVisible(".card-arch-right-overlay", true);
     setVisible(".parry-height-icon", true);
     setVisible(".stat-structure", true);
+}
+
+const showLeftArch = () => {
+    setVisible(".card-arch-left-overlay", true);
+    setVisible(".action-type-icon", true);
+    setVisible(".stat-speed", true);
+}
+
+const setCardStyleType = (type: string) => {
+    const card = query(".card");
+    if (!card) {
+        throw new Error("Unable to find card class");
+    }
+    card.classList.remove("talent");
+
+    if (type === "Talent") {
+        card.classList.add("talent");
+    }
 }
 
 export const clearCardView = () => {
@@ -72,11 +103,13 @@ export const clearCardView = () => {
     setText(".stat-structure", "–");
     setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
     setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
-    setImageUrl(".card-tier-overlay", Assets.TIER_DEFAULT);
+    setImageUrl(".card-tier-overlay", Assets.TIER_0_ACTION);
     setVisible(".card-tier-overlay", false);
     setImageUrl(".card-border-overlay", Assets.BORDER_AUDACITY);
     setVisible(".card-border-overlay", false);
     setVisible(".card-body-background-token", false);
+    setVisible(".card-title-overlay", false);
+    clearLeftArch();
     clearRightArch();
     const textContainer = query(".card-text");
     if (textContainer) {
@@ -109,17 +142,25 @@ const setCardBorderFromDeck = (deck: string) => {
     }
 }
 
-const setCardTier = (tier: number) => {
-    if (tier === 0) {
-        setImageUrl(".card-tier-overlay", Assets.TIER_DEFAULT);
-    } else if (tier === 1) {
-        setImageUrl(".card-tier-overlay", Assets.TIER_1);
-    } else if (tier === 2) {
-        setImageUrl(".card-tier-overlay", Assets.TIER_2);
-    } else if (tier === 3) {
-        setImageUrl(".card-tier-overlay", Assets.TIER_3);
+const ACTION_TIERS = [Assets.TIER_0_ACTION, Assets.TIER_1_ACTION, Assets.TIER_2_ACTION, Assets.TIER_3_ACTION];
+const TALENT_TIERS = [Assets.TIER_0_TALENT, Assets.TIER_1_TALENT, Assets.TIER_2_TALENT, Assets.TIER_3_TALENT];
+const setCardTier = (type: string, tier: number) => {
+    let tierArray = ACTION_TIERS;
+    if (type === "Talent") {
+        tierArray = TALENT_TIERS;
     }
-    setVisible(".card-tier-overlay", true);
+
+    let imageUrl = '';
+    if (0 <= tier && tier <= 3) {
+        imageUrl = tierArray[tier] ?? '';
+    }
+
+    if (imageUrl) {
+        setImageUrl(".card-tier-overlay", imageUrl);
+        setVisible(".card-tier-overlay", true);
+    } else {
+        consola.error(`Unknown tier for type: tier ${tier}, type ${type}`);
+    }
 }
 
 const setRangeIcon = (range: ValueRange) => {
@@ -135,7 +176,9 @@ const setActionCardView = async(card: Card) => {
     }
 
     setText(".card-title", card.Name);
-    setCardTier(card.Tier);
+    setBackgroundImage(".card", Assets.FRAME_ACTION);
+    setCardTier(card.Type, card.Tier);
+    showLeftArch();
 
     if (card.SecondaryName) {
         setText(".card-subtitle", `“${card.SecondaryName}”`);
@@ -158,7 +201,7 @@ const setActionCardView = async(card: Card) => {
     if (card.Keywords) {
         applyKeywordText(card.Keywords, textContainer);
     }
-    applyText(card.Action, textContainer, TextType.NORMAL);
+    applyActionText(card.Action, textContainer, TextType.NORMAL);
 
     if (card.Speed) {
         setText(".stat-speed.stat-speed-text", card.Speed.toString());
@@ -179,10 +222,11 @@ const setActionCardView = async(card: Card) => {
             setImageUrl(".parry-height-icon", Assets.ICON_PARRY_NONE);
         }
         if (card.Structure != null) {
-            setRightArch(card.Structure);
+            showRightArch();
+            setText(".stat-structure", card.Structure.toString());
         }
         if (card.DefendAction) {
-            applyText(card.DefendAction, textContainer, TextType.COUNTER);
+            applyActionText(card.DefendAction, textContainer, TextType.COUNTER);
         }
         setRangeIcon(card.Range);
     } else if (card.ActionType === "Leg") {
@@ -191,11 +235,11 @@ const setActionCardView = async(card: Card) => {
         setImageUrl(".action-type-icon", Assets.ICON_SPECIAL_ACTION);
     }
     if (card.ChamberAction) {
-        applyText(card.ChamberAction, textContainer, TextType.CHAMBER);
+        applyActionText(card.ChamberAction, textContainer, TextType.CHAMBER);
     }
 
     if (card.Flavor) {
-        applyText({ Text: card.Flavor }, textContainer, TextType.FLAVOR);
+        applyActionText({ Text: card.Flavor }, textContainer, TextType.FLAVOR);
     }
 
     fitCardText();
@@ -204,9 +248,31 @@ const setActionCardView = async(card: Card) => {
     fitCardCategories();
 }
 
+const setTalentCardView = async(card: Card) => {
+    if (card.Type !== "Talent") {
+        return;
+    }
+
+    setText(".card-title", card.Name);
+    setText(".card-category", "Talent");
+    setBackgroundImage(".card", Assets.FRAME_TALENT);
+    setCardTier(card.Type, card.Tier);
+    setVisible(".card-title-overlay", true);
+    const textContainer = query(".card-text");
+    if (!textContainer) {
+        throw new Error("Unable to find text container");
+    }
+    applySimpleText(card.Effect, textContainer);
+}
+
 export const setCardView = async (card: Card) => {
     clearCardView();
+    setCardStyleType(card.Type);
     if (card.Type === "Action") {
         await setActionCardView(card);
+    } else if (card.Type === "Talent") {
+        await setTalentCardView(card);
+    } else {
+        consola.error(`Unknown card type: ${card.Type}`);
     }
 };

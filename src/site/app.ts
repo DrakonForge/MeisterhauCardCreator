@@ -2,7 +2,7 @@
 import { toPng } from '@jpinsonneau/html-to-image';
 import { onClick, query } from './dom';
 import { Assets, clearCardView, setCardView } from './renderCard';
-import { validateActionCard } from '../validation/validation';
+import { validateCard } from '../validation/validation';
 import { consola } from 'consola';
 import { delay } from "../util/delay";
 import type { Card } from '../types/card';
@@ -65,7 +65,7 @@ const displayImage = async () => {
 
 const updateCard = (jsonStr: string): void => {
     const rawData = JSON.parse(jsonStr);
-    const card: Card = validateActionCard(rawData) as Card; // Not sure why this is failing?
+    const card: Card = validateCard(rawData);
     setCardView(card);
 };
 

@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { open, readdir } from "fs/promises";
 import * as path from "path";
 import type { Card } from "../types/card";
-import { validateActionCard } from "./validation";
+import { validateCard } from "./validation";
 import { consola } from "consola";
 import { checkInputPathExists } from "../util/cliUtil";
 
@@ -106,7 +106,7 @@ export const readAndValidateFiles = async (inputDir: string, recursive = false):
 
         consola.debug(JSON.stringify(rawData));
         try {
-            const card = validateActionCard(rawData);
+            const card = validateCard(rawData);
             cardMap[cardId] = card;
         } catch (e) {
             consola.warn(`Zod validation error for ${cardId}: ${e}`);

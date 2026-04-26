@@ -45,6 +45,15 @@ export const setImageUrl = (selector: string, path: string): boolean => {
     return false;
 }
 
+export const setBackgroundImage = (selector: string, path: string): boolean => {
+    const element = query(selector);
+    if (element) {
+        element.style.backgroundImage = `url("${path}")`;
+        return true;
+    }
+    return false;
+}
+
 export const setBackgroundColor = (selector: string, value: string): void => {
     const element = query(selector);
     if (element) {

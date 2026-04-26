@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="img/ParryIcon_Small.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/talent.css">
     <title>Meisterhau Card Creator</title>
 </head>
 
@@ -25,10 +26,18 @@
         </div>
         <div class="card-view">
             <div class="card">
-                <img class="img-overlay card-arch-left-overlay" src="img/Arch_Left.svg"></img>
-                <img class="img-overlay card-arch-right-overlay" src="img/Arch_Right.svg"></img>
-                <img class="img-overlay card-border-overlay"></img>
-                <img class="img-overlay card-tier-overlay"></img>
+                <div class="image-layers background">
+                    <img class="card-border-overlay"></img>
+                </div>
+                <div class="card-art-container">
+                    <!-- <img class="card-art" src="img/Art.png" /> -->
+                </div>
+                <div class="image-layers foreground">
+                    <img class="card-arch-left-overlay" src="img/Arch_Left.svg"></img>
+                    <img class="card-arch-right-overlay" src="img/Arch_Right.svg"></img>
+                    <img class="card-title-overlay" src="img/Title_Talent.svg"></img>
+                    <img class="card-tier-overlay"></img>
+                </div>
                 <div class="card-overlay">
                     <div class="stat-speed stat-speed-text"></div>
                     <div class="stat-speed stat-speed-instant">
@@ -46,9 +55,6 @@
                             <div class="card-title"></div>
                         </div>
                         <div class="card-subtitle"></div>
-                    </div>
-                    <div class="card-art-container">
-                        <!-- <img class="card-art" src="img/Art.png" /> -->
                     </div>
                     <div class="divider">
                         <div class="card-type">
@@ -69,6 +75,7 @@
                         <!-- <img class="token-icon icon" src="img/TokenIcon.svg" /> -->
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>

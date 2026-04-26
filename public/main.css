@@ -68,11 +68,16 @@ img.hidden.hidden {
 .card {
     width: 744px;
     height: 1038px;
-    background-image: url("img/CardFrame.svg");
+    background-image: url("img/CardFrame_Action.svg");
     position: relative;
 }
 
-.img-overlay {
+.image-layers {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.image-layers img {
     position: absolute;
     width: 744px;
     height: 1038px;
@@ -185,6 +190,7 @@ img.hidden.hidden {
 }
 
 .card-art-container {
+    position: absolute;
     top: 180px;
     left: 125px;
     right: 125px;

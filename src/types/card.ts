@@ -55,7 +55,7 @@ const SpecialActionCardSchema = ActionBaseCardSchema.extend({
     id: "SpecialActionCard"
 });
 
-const TalentCardSchema = BaseCardSchema.extend({
+export const TalentCardSchema = BaseCardSchema.extend({
     Type: z.literal("Talent"),
     Effect: CardTextSchema,
     Tier: TierSchema,
@@ -79,15 +79,13 @@ export const CardSchema = z.discriminatedUnion("Type", [
     ActionCardSchema,
     TalentCardSchema,
     TrainingCardSchema
-]).meta({
-    id: "Card"
-});
+]);
 
 export type Card = z.infer<typeof CardSchema>;
 export type BaseCard = z.infer<typeof BaseCardSchema>;
 export type TalentCard = z.infer<typeof TalentCardSchema>;
 export type TrainingCard = z.infer<typeof TrainingCardSchema>;
-export type ActionCard = z.infer<typeof ActionBaseCardSchema>;
+export type ActionCard = z.infer<typeof ActionCardSchema>;
 export type ArmActionCard = z.infer<typeof ArmActionCardSchema>;
 export type LegActionCard = z.infer<typeof LegActionCardSchema>;
 export type SpecialActionCard = z.infer<typeof SpecialActionCardSchema>;
