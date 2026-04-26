@@ -290,6 +290,12 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 renderJsonToHtml(contents, span);
                 // TODO: Still doesn't really work
                 break;
+            case "Emphasis":
+                span.classList.add("emphasis");
+                const emphasisContents: TextComponent[] = convertTextToJson(component.Content);
+                renderJsonToHtml(emphasisContents, span);
+                // TODO: Still doesn't really work
+                break;
             case "Guard":
                 // span.classList.add("definition");
                 const guard = component.Content;

@@ -1,3 +1,3 @@
-export const convertTrainingCards = (trainingCardPath: string, outputDir: string) => {
+export const convertTrainingCards = (trainingCardPath: string, outputDir: string, seenIds: Set<string>) => {
     // TODO: Implement
 }

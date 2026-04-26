@@ -7,17 +7,18 @@ import { convertTrainingCards } from "./convert/convertTrainingCards";
 const convertCsv = (actionCardPath: string, talentCardPath: string, trainingCardPath: string, outputDir: string) => {
     ensureOutputDirExists(outputDir);
 
-    convertActionCards(actionCardPath, outputDir);
-    convertTalentCards(talentCardPath, outputDir);
-    convertTrainingCards(trainingCardPath, outputDir);
+    const seenIds = new Set<string>();
+    convertActionCards(actionCardPath, outputDir, seenIds);
+    convertTalentCards(talentCardPath, outputDir, seenIds);
+    convertTrainingCards(trainingCardPath, outputDir, seenIds);
 
     consola.info(`Results exported to ${outputDir}`);
 };
 
 await main(async args => {
-    const actionCardPath = args['action'] ?? "./MeisterhauCardData/data.csv";
-    const talentCardPath = args['talent'] ?? "./MeisterhauCardData/talents.csv";
-    const trainingCardPath = args['training'] ?? "./MeisterhauCardData/training.csv";
+    const actionCardPath = args['action'] ?? "./MeisterhauCardData/Data/Actions.csv";
+    const talentCardPath = args['talent'] ?? "./MeisterhauCardData/Data/Talents.csv";
+    const trainingCardPath = args['training'] ?? "./MeisterhauCardData/Data/Training.csv";
     const outputDir = args['output'] ?? "./generated/card_data";
     convertCsv(actionCardPath, talentCardPath, trainingCardPath, outputDir);
 });

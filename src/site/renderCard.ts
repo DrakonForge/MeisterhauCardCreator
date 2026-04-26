@@ -263,6 +263,12 @@ const setTalentCardView = async(card: Card) => {
         throw new Error("Unable to find text container");
     }
     applySimpleText(card.Effect, textContainer);
+    if (card.Flavor) {
+        applyActionText({ Text: card.Flavor }, textContainer, TextType.FLAVOR);
+    }
+
+    fitCardText();
+    fitCardTitle();
 }
 
 export const setCardView = async (card: Card) => {

@@ -7,6 +7,7 @@ import stringify from "json-stringify-pretty-compact";
 import { validateActionCard } from '../validation/validation';
 import { checkInputPathExists } from "../util/cliUtil";
 import { consola } from "consola";
+import { parseString, parseText, validateId } from "./convertHelpers";
 
 interface RowData {
     Id: string;
@@ -29,9 +30,6 @@ interface RowData {
     DefendActionText: string;
     ChamberActionTitle: string;
     ChamberActionText: string;
-    ActionBehavior: string;
-    DefendActionBehavior: string;
-    ChamberActionBehavior: string;
     Flavor: string;
     Expansion: string;
     Quantity: string;
@@ -60,9 +58,6 @@ const HEADERS: (keyof RowData)[] = [
     "DefendActionText",
     "ChamberActionTitle",
     "ChamberActionText",
-    "ActionBehavior",
-    "DefendActionBehavior",
-    "ChamberActionBehavior",
     "Flavor",
     "Expansion",
     "Art",
@@ -78,7 +73,8 @@ const REQUIRED_BASE_FIELDS: (keyof RowData)[] = [
     "Deck",
     "Tier",
     "ActionText",
-    "Expansion"
+    "Expansion",
+    "Art"
 ];
 
 const REQUIRED_ARM_FIELDS: (keyof RowData)[] = [
@@ -155,26 +151,6 @@ const parseKeywords = (keywordsStr: string): Keyword[] => {
     return result;
 }
 
-const parseText = (textStr: string): string | string[] => {
-    const textLines = parseString(textStr).split('\n').map(str => parseString(str)).filter(str => str);
-    if (!textLines.length) {
-        throw new Error("Text cannot be empty");
-    }
-    if (textLines.length === 1) {
-        return textLines[0] ?? '';
-    }
-    return textLines;
-}
-
-const parseString = (str: string): string => {
-    str = str.trim();
-    if (str.toLowerCase() === "x") {
-        return '';
-    }
-    return str;
-};
-
-
 const addArmActionData = (card: Partial<ArmActionCard>, data: RowData) => {
     const missingFields = checkRequiredFields(data, REQUIRED_ARM_FIELDS);
     if (missingFields.length) {
@@ -203,15 +179,14 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
 }
 
 
-const convertCsvToJson = (data: RowData): ActionCard => {
+const convertCsvToJson = (data: RowData, seenIds: Set<string>): ActionCard => {
     const missingFields = checkRequiredFields(data, REQUIRED_BASE_FIELDS);
     if (missingFields.length) {
         throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
-    validateId(data.Id);
+    validateId(data.Id, seenIds);
 
-    // TODO: Handle other card types
     // Required stuff first
     const baseCard: Partial<ActionCard> = {
         Name: parseString(data.Name),
@@ -226,7 +201,6 @@ const convertCsvToJson = (data: RowData): ActionCard => {
         Expansion: parseString(data.Expansion)
     };
 
-    // TODO: Hard error on this later
     if (!baseCard.Expansion?.length) {
         consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
     }
@@ -293,11 +267,11 @@ const convertCsvToJson = (data: RowData): ActionCard => {
     return cardData;
 }
 
-const handleRecord = (record: RowData, outputDir: string): boolean => {
+const handleRecord = (record: RowData, outputDir: string, seenIds: Set<string>): boolean => {
     const id = parseString(record.Id);
     consola.debug(`Processing ${id}`);
     try {
-        const jsonData = convertCsvToJson(record);
+        const jsonData = convertCsvToJson(record, seenIds);
         const filePath = path.join(outputDir, id + ".json");
         fs.writeFileSync(filePath, stringify(jsonData, {
             indent: 4,
@@ -311,22 +285,11 @@ const handleRecord = (record: RowData, outputDir: string): boolean => {
     }
 };
 
-const seenIds = new Set();
-const validateId = (id: string): void => {
-    if (id.includes(' ')) {
-        throw new Error(`ID cannot include spaces: ${id}`)
-    }
-    if (seenIds.has(id)) {
-        throw new Error(`Duplicate ID found: ${id}`)
-    }
-    seenIds.add(id);
-}
-
 const shouldHandleRecord = (record: RowData): boolean => {
     return !record.Notes.includes("IDEA");
 }
 
-export const convertActionCards = (actionCardPath: string, outputDir: string) => {
+export const convertActionCards = (actionCardPath: string, outputDir: string, seenIds: Set<string>) => {
     checkInputPathExists(actionCardPath);
 
     consola.log(`Processing action card data at ${actionCardPath}`);
@@ -348,7 +311,7 @@ export const convertActionCards = (actionCardPath: string, outputDir: string) =>
             continue;
         }
         numTotal++;
-        const success = handleRecord(record, outputDir);
+        const success = handleRecord(record, outputDir, seenIds);
         if (!success) {
             numFail++;
         }

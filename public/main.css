@@ -514,6 +514,10 @@ span.definition {
     font-weight: bold;
 }
 
+span.emphasis {
+    font-style: italic;
+}
+
 span.reminder {
     font-style: italic;
 }

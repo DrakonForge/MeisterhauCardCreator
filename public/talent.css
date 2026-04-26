@@ -4,7 +4,13 @@
 }
 
 .card.talent .header {
-    top: 35px;
+    top: 36px;
+    height: 72px;
+    justify-content: center;
+}
+
+.card.talent .card-subtitle {
+    display: none;
 }
 
 .card.talent .divider {
