@@ -1,7 +1,8 @@
 import { consola } from "consola";
 import { type TextComponent, convertKeywordsToJson, convertTextToJson } from "../../text/converters";
 import type { CardAction, Keywords } from "../../types/card";
-import { TextType, Assets } from "../renderCard";
+import { TextType } from "../renderCard";
+import { Assets } from "../assets";
 import { rangeStrToFontSizeText } from "./rangeUtils";
 
 interface KeywordEntry {
@@ -55,19 +56,32 @@ const TextKeywordMap: Record<string, KeywordEntry> = {
         Decorator: "structure",
     },
     "Token": {
-        // Icon: "img/TokenIcon.svg", // Can't use Assets constant for some reason, probably circular reference?
         Content: "Token",
         Decorator: "consume",
     },
 };
 
-const TextGuardMap = {
-    "VomTag": "Vom Tag",
-    "Pflug": "Pflug",
-    "Ochs": "Ochs",
-    "Alber": "Alber",
-    "Langort": "Langort",
-    "HighTag": "High Tag",
+interface DeckEntry {
+    Decorator: string;
+    Icon: string;
+}
+const TextDeckMap: Record<string, DeckEntry> = {
+    "Audacity": {
+        Decorator: "deck-audacity",
+        Icon: Assets.ICON_AUDACITY
+    },
+    "Celerity": {
+        Decorator: "deck-celerity",
+        Icon: Assets.ICON_CELERITY
+    },
+    "Insight": {
+        Decorator: "deck-insight",
+        Icon: Assets.ICON_INSIGHT
+    },
+    "Fortitude": {
+        Decorator: "deck-fortitude",
+        Icon: Assets.ICON_FORTITUDE
+    }
 };
 
 const PLACEHOLDER_NUMBER = "X";
@@ -296,20 +310,31 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 renderJsonToHtml(emphasisContents, span);
                 // TODO: Still doesn't really work
                 break;
-            case "Guard":
-                // span.classList.add("definition");
-                const guard = component.Content;
-                const guardEntry = TextGuardMap[guard as keyof typeof TextGuardMap];
-                if (guardEntry) {
-                    span.textContent = guardEntry;
+            case "Deck":
+                const deckArgs = component.Content.split(' ');
+                const deckName = deckArgs.shift() ?? '';
+                const deckEntry = TextDeckMap[deckName as keyof typeof TextDeckMap];
+                if (deckEntry) {
+                    const deckIcon = document.createElement("img");
+                    deckIcon.src = deckEntry.Icon;
+                    deckIcon.classList.add("icon", "deck-icon", deckEntry.Decorator);
+                    span.appendChild(deckIcon);
+                    if (deckArgs.length) {
+                        const deckText = document.createElement("span");
+                        deckText.textContent = deckArgs.join(' ');
+                        deckText.classList.add("deck-text", deckEntry.Decorator);
+                        span.appendChild(deckText);
+                        span.classList.add("no-wrap");
+                    }
                 } else {
-                    consola.warn(`Unknown guard ${guard}`);
-                    span.textContent = guard;
+                    consola.warn(`Unknown deck ${deckName}`);
+                    span.classList.add("generic-highlight", "keyword-item");
+                    span.textContent = deckName;
                 }
                 break;
             case "Keyword":
                 const text = component.Content;
-                const keyword = text!.split(' ')[0] || '';
+                const keyword = text.split(' ')[0] || '';
                 const keywordEntry = TextKeywordMap[keyword as keyof typeof TextKeywordMap];
                 if (keywordEntry) {
                     if (keywordEntry.Icon) {

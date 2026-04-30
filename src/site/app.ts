@@ -1,7 +1,8 @@
 /* Using a custom version of html-to-image to receive this fix: https://github.com/bubkoo/html-to-image/pull/547 */
 import { toPng } from '@jpinsonneau/html-to-image';
 import { onClick, query } from './dom';
-import { Assets, clearCardView, setCardView } from './renderCard';
+import { clearCardView, setCardView } from './renderCard';
+import { Assets } from "./assets";
 import { validateCard } from '../validation/validation';
 import { consola } from 'consola';
 import { delay } from "../util/delay";

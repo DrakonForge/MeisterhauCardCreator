@@ -469,6 +469,15 @@ span.action-title {
     line-height: 1;
 }
 
+/* Can also do img.deck-celerity, etc. for specific overrides */
+img.deck-icon {
+    margin-left: -8px;
+    margin-right: -8px;
+    /* Overall size constrained by width and height */
+    width: 1.75em;
+    height: 1.25em;
+}
+
 span.range {
     color: var(--color-range);
     font-weight: bold;

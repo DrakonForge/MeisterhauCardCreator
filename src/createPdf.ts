@@ -44,9 +44,9 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     if (allCards) {
         consola.info("Setting registered: Printing all cards");
     }
-    checkInputPathExists(inputPath);
+    checkInputPathExists(imageDir);
     if (!allCards) {
-        checkInputPathExists(imageDir);
+        checkInputPathExists(inputPath);
     }
 
     const cardIdToPath = await createCardIdToPath(imageDir, recursive);
