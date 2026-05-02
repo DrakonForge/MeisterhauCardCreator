@@ -35,6 +35,10 @@ const TextKeywordMap: Record<string, KeywordEntry> = {
         Content: "Redirect",
         Decorator: "speed"
     },
+    "Vulnerable": {
+        Content: "Vulnerable",
+        Decorator: "generic-highlight"
+    },
     "HandSnipe": {
         Content: "Hand Snipe",
         Decorator: "generic-highlight",

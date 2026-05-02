@@ -20,6 +20,7 @@ const SimpleKeywordTypeSchema = z.enum([
     "Interrupt",
     "Disengage",
     "HandSnipe",
+    "Vulnerable",
     // Guard
     "Volatile",
     "ProtectsHands",
