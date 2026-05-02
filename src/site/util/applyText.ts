@@ -378,6 +378,11 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                     span.textContent = "Valor";
                 }
                 break;
+            case "PushYourself":
+                // TODO: Eventually move to an icon for valor? Magenta
+                span.classList.add("generic-highlight");
+                span.textContent = `Push Yourself: `;
+                break;
             default:
                 consola.warn(`Unknown text component type ${component.Type}`);
                 span.classList.add("generic-highlight");
