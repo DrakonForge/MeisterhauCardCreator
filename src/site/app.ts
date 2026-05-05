@@ -64,10 +64,10 @@ const displayImage = async () => {
     }
 }
 
-const updateCard = (jsonStr: string): void => {
+const updateCard = async (jsonStr: string): Promise<void> => {
     const rawData = JSON.parse(jsonStr);
     const card: Card = validateCard(rawData);
-    setCardView(card);
+    await setCardView(card);
 };
 
 onClick(".update-button", async () => {
@@ -75,7 +75,7 @@ onClick(".update-button", async () => {
     if (textarea) {
         try {
             (window as any).status = "updating card";
-            updateCard(textarea.value);
+            await updateCard(textarea.value);
         } catch(e) {
             consola.error(e);
             (window as any).status = "fail";

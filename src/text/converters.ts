@@ -56,6 +56,16 @@ const findMatchingEndTag = (text: string, index: number): number => {
     return result;
 }
 
+const ALIAS_DECK_NAMES = ["Audacity", "Celerity", "Insight", "Fortitude", "Footwork", "Talent"];
+const convertAliases = (components: TextComponent[]) => {
+    for (const component of components) {
+        if (ALIAS_DECK_NAMES.includes(component.Type)) {
+            component.Content = component.Type + " " + component.Content;
+            component.Type = "Deck";
+        }
+    }
+}
+
 export const convertTextToJson = (text: string): TextComponent[] => {
     let index = 0;
     const result: TextComponent[] = [];
@@ -98,5 +108,6 @@ export const convertTextToJson = (text: string): TextComponent[] => {
         }
     } while (index < text.length);
 
+    convertAliases(result);
     return result;
 };

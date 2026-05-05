@@ -384,10 +384,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = `Push Yourself: `;
                 break;
             default:
-                consola.warn(`Unknown text component type ${component.Type}`);
-                span.classList.add("generic-highlight");
-                span.textContent = component.Content;
-                break;
+                // consola.warn(`Unknown text component type ${component.Type}`);
+                // span.classList.add("generic-highlight");
+                // span.textContent = component.Content;
+                throw new Error(`Unknown text component type ${component.Type}`);
         }
         parent.appendChild(span);
     }
