@@ -15,6 +15,7 @@
     "image": "npm run build && node ./dist/generateImages.js",
     "upload": "npm run build && node ./dist/upload.js",
     "csv": "npm run build && node ./dist/convertCsv.js",
+    "clean": "npm run build && node ./dist/clean.js",
     "pdf": "npm run build && node ./dist/createPdf.js"
   },
   "dependencies": {

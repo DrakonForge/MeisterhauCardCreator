@@ -1,6 +1,7 @@
 import minimist from "minimist";
 import * as fs from "fs";
 import { consola } from "consola";
+import path from "path";
 
 export const main = async (callback: (args: minimist.ParsedArgs) => Promise<void>) => {
     if (import.meta.main) {
@@ -34,6 +35,35 @@ export const checkInputPathExists = (path: string) => {
         throw new Error(`Unable to find input path: ${path}`);
     }
 };
+
+export const clearFolder = (dirPath: string, recursive: boolean, suffix: string, removeFolder: boolean = false) => {
+    if (!fs.existsSync(dirPath)) {
+        if (removeFolder) {
+            consola.debug(`Folder already removed: ${dirPath}`);
+        } else {
+            consola.warn(`No folder exists to clear: ${dirPath}`);
+        }
+        return;
+    }
+    const contents = fs.readdirSync(dirPath);
+    for (const filePath of contents) {
+        const fullPath = path.join(dirPath, filePath);
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+            if (!recursive) {
+                continue;
+            }
+            // Sub-directory
+            clearFolder(fullPath, recursive, suffix);
+            fs.rmdirSync(fullPath);
+        } else if (filePath.endsWith(suffix)) {
+            fs.unlinkSync(fullPath);
+        }
+    }
+    if (removeFolder) {
+        fs.rmdirSync(dirPath);
+    }
+}
 
 export const createProgressBar = (progress: number, barWidth = 10) => {
     const filledWidth = Math.floor(progress * barWidth);

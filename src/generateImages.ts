@@ -2,10 +2,11 @@ import puppeteer from "puppeteer";
 import { readAndValidateFiles } from "./validation/parseFiles";
 import * as path from "path";
 import * as fs from "fs";
-import { createProgressBar, ensureOutputDirExists, main } from "./util/cliUtil";
+import { clearFolder, createProgressBar, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import type { Card } from "./types/card";
 import { delay } from "./util/delay";
+import { readDeckList, type DeckListEntry } from "./util/decklist";
 
 const CONCURRENT_TASK_LIMIT = 5;
 
@@ -335,9 +336,64 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
     }
 }
 
-const generateImages = async (inputDir: string, outputDir: string, siteUrl: string, recursive: boolean, sync: boolean, chunked: boolean, taskLimit: number) => {
+const removeImages = async (removePath: string, outputDir: string): Promise<void> => {
+    const toRemoveArr: DeckListEntry[] = await readDeckList(removePath);
+    const toRemove: string[] = toRemoveArr.map(entry => entry.cardId);
+
+    let numRemoved = 0;
+    if (toRemove.length) {
+        for (const cardIdToRemove of toRemove) {
+            consola.debug(`Removing ${cardIdToRemove}`);
+            const pathToCard = path.join(outputDir, `${cardIdToRemove}.png`);
+            if (fs.existsSync(pathToCard)) {
+                fs.unlinkSync(pathToCard);
+                numRemoved += 1;
+            }
+        }
+    }
+    consola.log(`Removed ${numRemoved} old images`);
+}
+
+const filterToDeck = (cardList: Record<string, Card>, deckList: DeckListEntry[]) => {
+    const cardsToInclude = new Set(deckList.map(entry => entry.cardId));
+    for (const cardId of Object.keys(cardList)) {
+        if (!cardsToInclude.has(cardId)) {
+            delete cardList[cardId];
+        }
+    }
+}
+
+const DEFAULT_DIFF = "./generated/tracked_changes/AddedOrUpdated.txt";
+const DEFAULT_ALL = "./generated/decklists/Deck_All.txt";
+const generateImages = async (inputDir: string, outputDir: string, deckPath: string, removePath: string, siteUrl: string, recursive: boolean, sync: boolean, chunked: boolean, diff: boolean, all: boolean, taskLimit: number) => {
     ensureOutputDirExists(outputDir);
     const cardList = await readAndValidateFiles(inputDir, recursive);
+    if (diff) {
+        consola.log("Diff mode is enabled. Old images will be removed and only new ones will be updated.")
+        await removeImages(removePath, outputDir);
+        deckPath = deckPath || DEFAULT_DIFF;
+    } else {
+        clearFolder(outputDir, recursive, ".png");
+        deckPath = DEFAULT_ALL;
+    }
+
+    if (!all) {
+        consola.log(`Filtering to deck at ${deckPath}`);
+        if (!fs.existsSync(deckPath)) {
+            consola.warn("No decklist found. Are you sure you ran \"npm run decklist\"?");
+        }
+        const deckList = await readDeckList(deckPath);
+        filterToDeck(cardList, deckList);
+        if (!deckList.length) {
+            consola.warn("No cards in provided decklist. Are you sure the one you're using is correct?")
+        }
+    }
+
+    if (!Object.keys(cardList).length) {
+        // No data to process
+        return;
+    }
+
     if (sync) {
         await processCardsSequential(cardList, outputDir, siteUrl);
     } else if (chunked) {
@@ -350,10 +406,14 @@ const generateImages = async (inputDir: string, outputDir: string, siteUrl: stri
 await main(async args => {
     const inputDir = args['input'] ?? "./generated/card_data";
     const outputDir = args['output'] ?? "./generated/card_images";
+    const deckPath = args['deck'] ?? "";
+    const removePath = args['remove'] ?? "./generated/tracked_changes/Removed.txt";
     const siteUrl = args['site'] ?? "http://localhost:3000/";
-    const recursive = args['r'] ?? true;
+    const recursive = args['r'] ?? false;
     const sync = args['sync'] ?? false;
     const chunked = args['chunked'] ?? false;
     const taskLimit = args['chunk'] ?? CONCURRENT_TASK_LIMIT;
-    await generateImages(inputDir, outputDir, siteUrl, recursive, sync, chunked, taskLimit);
+    const diff = args['diff'] ?? false;
+    const all = args['all'] ?? false;
+    await generateImages(inputDir, outputDir, deckPath, removePath, siteUrl, recursive, sync, chunked, diff, all, taskLimit);
 });

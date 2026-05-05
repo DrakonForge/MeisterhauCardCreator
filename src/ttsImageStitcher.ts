@@ -1,9 +1,10 @@
-import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
+import { checkInputPathExists, clearFolder, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import path from "path";
 import { createCardIdToPath } from "./util/cardIdToPath";
 import sharp from "sharp";
-import { cardIdsToEntries, readDecklist, type DeckListEntry } from "./validation/parseFiles";
+import { cardIdsToEntries } from "./util/decklist";
+import { readDeckList, type DeckListEntry } from "./util/decklist";
 import { readdir } from "fs/promises";
 
 const CARDS_PER_ROW = 10;
@@ -24,6 +25,7 @@ const createTabletopSimulatorDeckImage = async (inputDir: string, deckDir: strin
     }
 
     ensureOutputDirExists(outputDir);
+    clearFolder(outputDir, recursive, ".png");
 
     const cardIds = Object.keys(cardIdToPath);
     if (all) {
@@ -34,7 +36,7 @@ const createTabletopSimulatorDeckImage = async (inputDir: string, deckDir: strin
         const deckListToPath: Record<string, string> = await retrieveDeckLists(deckDir, recursive, ignore, include);
         const tasks = [];
         for (const [deckListId, deckListPath] of Object.entries(deckListToPath)) {
-            const cardEntries = await readDecklist(deckListPath, cardIdToPath);
+            const cardEntries = await readDeckList(deckListPath, cardIdToPath);
             consola.debug(`Creating deck images for ${deckListId}`);
             tasks.push(createImagesForDeck(deckListId, cardEntries, cardIdToPath, cardBackPath, outputDir));
         }
@@ -83,6 +85,9 @@ const retrieveDeckLists = async (deckDir: string, recursive: boolean, ignore: st
     }
 
     consola.info(`Generating images from ${deckLists.length} decklists`);
+    if (!deckLists.length) {
+        consola.warn("Found no decklists, are you sure you generated them properly? Try \"npm run decklist\"");
+    }
     return result;
 }
 

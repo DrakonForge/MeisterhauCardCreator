@@ -4,7 +4,8 @@ import { consola } from "consola";
 import path from "path";
 import { createCardIdToPath } from "./util/cardIdToPath";
 import { PageSizes, PDFDocument, PDFImage, PDFPage, rgb } from "pdf-lib";
-import { cardIdsToEntries, getTotalCardQuantity, getUniqueCardIds, readDecklist, type DeckListEntry } from "./validation/parseFiles";
+import { cardIdsToEntries, getTotalCardQuantity, getUniqueCardIds } from "./util/decklist";
+import { readDeckList, type DeckListEntry } from "./util/decklist";
 
 const MAX_IMAGES_PER_PAGE = 9;
 const OFFSETS: number[][] = [
@@ -65,7 +66,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         entries = cardIdsToEntries(cardIds);
     } else {
         consola.info(`Reading ${inputPath}`);
-        entries = await readDecklist(inputPath, cardIdToPath);
+        entries = await readDeckList(inputPath, cardIdToPath);
     }
     const uniqueCardIds = getUniqueCardIds(entries);
     let numTotalCards = getTotalCardQuantity(entries);

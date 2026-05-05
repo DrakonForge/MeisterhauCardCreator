@@ -1,46 +1,27 @@
-import { ensureOutputDirExists, main } from "./util/cliUtil";
+import { clearFolder, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
-import path from "path";
-import * as fs from "fs";
 import { readAndValidateFiles } from "./validation/parseFiles";
 import type { Card } from "./types/card";
+import { generateDeckList, getTotalCardQuantity, type DeckListEntry } from "./util/decklist";
 
 const DECK_ALL = "All";
 
-interface CardAndQuantity {
-    cardId: string;
-    quantity: number;
-}
-
 const generateDeckLists = async (inputDir: string, outputDir: string, includeExpansions: string[], recursive: boolean): Promise<void> => {
     ensureOutputDirExists(outputDir);
+    clearFolder(outputDir, recursive, ".txt");
     const cardList = await readAndValidateFiles(inputDir, recursive);
     const cardsByDeck = getCardsByDeck(cardList, includeExpansions);
 
     for (const [deckName, deckEntries] of Object.entries(cardsByDeck)) {
-        const fileName = "Deck_" + deckName;
-        const inputPath = path.join(outputDir, fileName + ".txt");
-
-        let deckList = "";
-        let numCardsInDeck = 0;
-        for (const cardAndQuantity of deckEntries) {
-            deckList += toEntry(cardAndQuantity) + "\n";
-            numCardsInDeck += cardAndQuantity.quantity;
-        }
-        fs.writeFileSync(inputPath, deckList)
-        consola.log(`Created ${fileName} with ${numCardsInDeck} cards`);
+        const deckId = "Deck_" + deckName;
+        await generateDeckList(deckId, deckEntries, outputDir);
+        const numCardsInDeck = getTotalCardQuantity(deckEntries);
+        consola.log(`Created ${deckId} with ${numCardsInDeck} cards`);
     }
 }
 
-const toEntry = (cardAndQuantity: CardAndQuantity) => {
-    if (cardAndQuantity.quantity > 1) {
-        return cardAndQuantity.cardId + " " + cardAndQuantity.quantity;
-    }
-    return cardAndQuantity.cardId;
-}
-
-const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: string[]): Record<string, CardAndQuantity[]> => {
-    const cardsByDeck: Record<string, CardAndQuantity[]> = {
+const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: string[]): Record<string, DeckListEntry[]> => {
+    const cardsByDeck: Record<string, DeckListEntry[]> = {
         [DECK_ALL]: []
     };
 
@@ -77,6 +58,7 @@ await main(async args => {
     const inputDir = args['input'] ?? "./generated/card_data";
     const outputDir = args['output'] ?? "./generated/decklists";
     const recursive = args['r'] ?? false;
+    args['expansion'] = args['expansion'] ?? args['exp'] ?? args['e'];
     const includeExpansions = args['expansion'] ? args['expansion'].split(',') : [];
 
     await generateDeckLists(inputDir, outputDir, includeExpansions, recursive);

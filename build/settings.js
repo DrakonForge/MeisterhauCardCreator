@@ -19,6 +19,7 @@ export function createBuildSettings(options) {
             'src/ttsImageStitcher.ts',
             'src/upload.ts',
             'src/createPdf.ts',
+            'src/clean.ts',
         ],
         outdir: OUT_DIR,
         external: ["puppeteer", "sharp"], // Creates a build error if we try to bundle it
