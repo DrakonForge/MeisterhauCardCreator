@@ -80,7 +80,7 @@ const processParallelChunk = async (cardList: Record<string, Card>, cardIds: str
 
     for (const key of cardIds) {
         if (shouldExitEarly) {
-            throw new Error("Exiting early due to errors");
+            break;
         }
         const card = cardList[key];
         consola.debug(`Received ${key} at index ${index++}`);
@@ -340,8 +340,8 @@ const removeImages = async (removePath: string, outputDir: string): Promise<void
     const toRemoveArr: DeckListEntry[] = await readDeckList(removePath);
     const toRemove: string[] = toRemoveArr.map(entry => entry.cardId);
 
-    let numRemoved = 0;
     if (toRemove.length) {
+        let numRemoved = 0;
         for (const cardIdToRemove of toRemove) {
             consola.debug(`Removing ${cardIdToRemove}`);
             const pathToCard = path.join(outputDir, `${cardIdToRemove}.png`);
@@ -350,8 +350,8 @@ const removeImages = async (removePath: string, outputDir: string): Promise<void
                 numRemoved += 1;
             }
         }
+        consola.log(`Removed ${numRemoved} old images`);
     }
-    consola.log(`Removed ${numRemoved} old images`);
 }
 
 const filterToDeck = (cardList: Record<string, Card>, deckList: DeckListEntry[]) => {

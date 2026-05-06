@@ -35,7 +35,7 @@ const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 
 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
 
-const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, recursive: boolean): Promise<void> => {
+const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
     if (noGaps) {
         consola.info("Setting registered: No gaps");
     }
@@ -45,8 +45,15 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     if (allCards) {
         consola.info("Setting registered: Printing all cards");
     }
+    if (diff && !inputPath) {
+        inputPath = "./generated/tracked_changes/AddedOrUpdated.txt"
+    }
     checkInputPathExists(imageDir);
     if (!allCards) {
+        if (!inputPath) {
+            consola.error("You must specify an input path with --input, or use --diff or --all.");
+            return;
+        }
         checkInputPathExists(inputPath);
     }
 
@@ -162,13 +169,14 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
 await main(async args => {
     const imageDir = args['images'] ?? "./generated/card_images";
-    const inputPath = args['input'] ?? "./MeisterhauCardData/deck.txt";
+    const inputPath = args['input'] ?? "";
     const outputDir = args['output'] ?? "./generated/pdf";
     const outputName = args['name'] ?? "MyDeck";
     const noFillBorders = args['noborder'] ?? false;
     const noGaps = args['nogaps'] ?? false;
     const allCards = args['all'] ?? false;
+    const diff = args['diff'] ?? false;
     const recursive = args['r'] ?? false;
 
-    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, allCards, recursive);
+    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, allCards, diff, recursive);
 });

@@ -66,8 +66,8 @@ Using the new diff functionality in `npm run csv`, we can quickly make changes t
 2) Export spreadsheet as a CSV file. Paste the contents of the csv file into `MeisterhauCardData/data.csv`.
 3) Run `npm run csv`.
    * This will also run validation on the card data and inform you of any errors in the CSV file. Fix these and ensure that it runs successfully before moving on.
-4) Run `npm run image -- --chunked --chunk 10 --diff`
-5) View the cards in `./generated/card_images` or other specified output folder.
+4) Run `npm run image -- --chunked --chunk 10 --diff`, which should regenerate only the modified cards.
+5) Run `npm run pdf -- --nogaps --diff` to view only the modified cards in a PDF.
 
 ## Available Commands
 
@@ -141,13 +141,15 @@ It does NOT upload the back image URL; a default link is provided but can be ove
 
 ### `npm run pdf`
 
-> Usage: `npm run pdf -- [--images <image_directory>][ [--input <deck_text_file>] [--output <output_directory>] [--name <deck_name>] [--noborder] [--nogaps] [-r]`
+> Usage: `npm run pdf -- [--images <image_directory>][ [--input <deck_text_file>] [--output <output_directory>] [--name <deck_name>] [--noborder] [--nogaps] [--diff] [-r]`
 
 Takes in a list of card images produced by `npm run image` and generates a pdf of the provided deck, similar to `npm run deck`. This is useful for printing decks.
 
 * Add `--noborder` to remove the filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
 * Add `--nogaps` to remove the gaps between the cards, so you need fewer cuts (which may require more precision) to cut out the cards.
-* Add `--all` to print 1 copy of all available images, ignoring the `--input` field.
+* Use the `--input` field to control which deck displays, or one of the alternatives:
+  * Use `--all` to print 1 copy of all available images.
+  * Use `--diff` to view only the modified cards from `npm run csv`.
 
 ## `npm run clean`
 
