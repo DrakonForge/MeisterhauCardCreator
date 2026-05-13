@@ -44,4 +44,11 @@ export const Assets = {
     BASE_ACTION_FOOTWORK: "img/Base_Action_Footwork.svg",
     BASE_ACTION_TOKEN: "img/Base_Action_Token.svg",
     BASE_TALENT_DEFAULT: "img/Base_Talent_Default.svg",
+    BASE_TRAINING_DEFAULT: "img/Base_Training_Default.svg",
+    BASE_TRAINING_AUDACITY: "img/Base_Training_Audacity.svg",
+    BASE_TRAINING_CELERITY: "img/Base_Training_Celerity.svg",
+    BASE_TRAINING_FORTITUDE: "img/Base_Training_Fortitude.svg",
+    BASE_TRAINING_INSIGHT: "img/Base_Training_Insight.svg",
+    BASE_TRAINING_FOOTWORK: "img/Base_Training_Footwork.svg",
+    BASE_TRAINING_MIXED: "img/Base_Training_Mixed.svg",
 };

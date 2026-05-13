@@ -229,6 +229,30 @@ const setTalentCardView = async(card: Card) => {
     fitCardTitle();
 }
 
+const getBaseTrainingAsset = (deck: string): string => {
+    if (deck === "Mixed") {
+        return Assets.BASE_TRAINING_MIXED;
+    } else if (deck === "Audacity") {
+        return Assets.BASE_TRAINING_AUDACITY;
+    } else if (deck === "Celerity") {
+        return Assets.BASE_TRAINING_CELERITY;
+    } else if (deck === "Fortitude") {
+        return Assets.BASE_TRAINING_FORTITUDE;
+    } else if (deck === "Insight") {
+        return Assets.BASE_TRAINING_INSIGHT;
+    } else if (deck === "Footwork") {
+        return Assets.BASE_TRAINING_FOOTWORK;
+    }
+    return Assets.BASE_TRAINING_DEFAULT;
+}
+
+const setTrainingCardView = async (card: Card) => {
+    // TODO
+    setText(".card-title", card.Name);
+    setText(".card-category", ""); // TODO: Support card category
+    setBackgroundImage(".card", getBaseTrainingAsset(card.Deck));
+}
+
 export const setCardView = async (card: Card) => {
     clearCardView();
     setCardStyleType(card.Type);
@@ -236,6 +260,8 @@ export const setCardView = async (card: Card) => {
         await setActionCardView(card);
     } else if (card.Type === "Talent") {
         await setTalentCardView(card);
+    } else if (card.Type === "Training") {
+        await setTrainingCardView(card);
     } else {
         consola.error(`Unknown card type: ${card.Type}`);
     }
