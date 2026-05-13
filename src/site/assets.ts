@@ -21,13 +21,6 @@ export const Assets = {
     ICON_INSIGHT: "img/InsightIcon.svg",
     ICON_FORTITUDE: "img/FortitudeIcon.svg",
     // TODO: Talent, Footwork
-    // Borders
-    BORDER_TOKEN: "img/Border_Token.svg",
-    BORDER_AUDACITY: "img/Border_Audacity.svg",
-    BORDER_CELERITY: "img/Border_Celerity.svg",
-    BORDER_INSIGHT: "img/Border_Insight.svg",
-    BORDER_FORTITUDE: "img/Border_Fortitude.svg",
-    BORDER_FOOTWORK: "img/Border_Footwork.svg",
     // Tiers
     TIER_0_ACTION: "img/Tier_0_Action.svg",
     TIER_1_ACTION: "img/Tier_1_Action.svg",
@@ -42,6 +35,13 @@ export const Assets = {
     ARCH_RIGHT: "img/Arch_Right.svg",
     TITLE_TALENT: "img/Title_Talent.svg",
     // Frames
-    FRAME_ACTION: "img/CardFrame_Action.svg",
-    FRAME_TALENT: "img/CardFrame_Talent.svg",
+    // Base
+    BASE_ACTION_DEFAULT: "img/Base_Action_Default.svg",
+    BASE_ACTION_AUDACITY: "img/Base_Action_Audacity.svg",
+    BASE_ACTION_CELERITY: "img/Base_Action_Celerity.svg",
+    BASE_ACTION_FORTITUDE: "img/Base_Action_Fortitude.svg",
+    BASE_ACTION_INSIGHT: "img/Base_Action_Insight.svg",
+    BASE_ACTION_FOOTWORK: "img/Base_Action_Footwork.svg",
+    BASE_ACTION_TOKEN: "img/Base_Action_Token.svg",
+    BASE_TALENT_DEFAULT: "img/Base_Talent_Default.svg",
 };

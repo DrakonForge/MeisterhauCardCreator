@@ -68,7 +68,7 @@ img.hidden.hidden {
 .card {
     width: 744px;
     height: 1038px;
-    background-image: url("img/CardFrame_Action.svg");
+    background-image: url("img/Base_Action_Default.svg");
     position: relative;
 }
 

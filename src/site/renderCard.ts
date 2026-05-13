@@ -64,8 +64,6 @@ export const clearCardView = () => {
     setImageUrl(".action-type-icon", Assets.ICON_ARM_ACTION);
     setImageUrl(".card-tier-overlay", Assets.TIER_0_ACTION);
     setVisible(".card-tier-overlay", false);
-    setImageUrl(".card-border-overlay", Assets.BORDER_AUDACITY);
-    setVisible(".card-border-overlay", false);
     setVisible(".card-body-background-token", false);
     setVisible(".card-title-overlay", false);
     clearLeftArch();
@@ -77,29 +75,6 @@ export const clearCardView = () => {
     getClassList(".range-icon")?.add("hidden");
     getClassList(".stat-speed.stat-speed-instant")?.add("hidden");
 };
-
-const setCardBorderFromDeck = (deck: string) => {
-    if (deck === "Token") {
-        setVisible(".card-body-background-token", true);
-        setImageUrl(".card-border-overlay", Assets.BORDER_TOKEN);
-        setVisible(".card-border-overlay", true);
-    } else if (deck === "Audacity") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_AUDACITY);
-        setVisible(".card-border-overlay", true);
-    } else if (deck === "Celerity") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_CELERITY);
-        setVisible(".card-border-overlay", true);
-    } else if (deck === "Fortitude") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_FORTITUDE);
-        setVisible(".card-border-overlay", true);
-    } else if (deck === "Insight") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_INSIGHT);
-        setVisible(".card-border-overlay", true);
-    } else if (deck === "Footwork") {
-        setImageUrl(".card-border-overlay", Assets.BORDER_FOOTWORK);
-        setVisible(".card-border-overlay", true);
-    }
-}
 
 const ACTION_TIERS = [Assets.TIER_0_ACTION, Assets.TIER_1_ACTION, Assets.TIER_2_ACTION, Assets.TIER_3_ACTION];
 const TALENT_TIERS = [Assets.TIER_0_TALENT, Assets.TIER_1_TALENT, Assets.TIER_2_TALENT, Assets.TIER_3_TALENT];
@@ -129,13 +104,30 @@ const setRangeIcon = (range: ValueRange) => {
     setFontSizePx(".card-range-text", rangeStrToFontSizeMain(rangeStr));
 }
 
+const getBaseActionAsset = (deck: string): string => {
+    if (deck === "Token") {
+        return Assets.BASE_ACTION_TOKEN;
+    } else if (deck === "Audacity") {
+        return Assets.BASE_ACTION_AUDACITY;
+    } else if (deck === "Celerity") {
+        return Assets.BASE_ACTION_CELERITY;
+    } else if (deck === "Fortitude") {
+        return Assets.BASE_ACTION_FORTITUDE;
+    } else if (deck === "Insight") {
+        return Assets.BASE_ACTION_INSIGHT;
+    } else if (deck === "Footwork") {
+        return Assets.BASE_ACTION_FOOTWORK;
+    }
+    return Assets.BASE_ACTION_DEFAULT;
+}
+
 const setActionCardView = async(card: Card) => {
     if (card.Type !== "Action") {
         return;
     }
 
     setText(".card-title", card.Name);
-    setBackgroundImage(".card", Assets.FRAME_ACTION);
+    setBackgroundImage(".card", getBaseActionAsset(card.Deck));
     setCardTier(card.Type, card.Tier);
     showLeftArch();
 
@@ -151,7 +143,9 @@ const setActionCardView = async(card: Card) => {
         setText(".card-category", categoryStrings.join(" - "));
     }
 
-    setCardBorderFromDeck(card.Deck);
+    if (card.Deck === "Token") {
+        setVisible(".card-body-background-token", true);
+    }
 
     const textContainer = query(".card-text");
     if (!textContainer) {
@@ -207,6 +201,11 @@ const setActionCardView = async(card: Card) => {
     fitCardCategories();
 }
 
+const getBaseTalentAsset = (deck: string): string => {
+    // TODO: Can add different borders here based on deck
+    return Assets.BASE_TALENT_DEFAULT;
+}
+
 const setTalentCardView = async(card: Card) => {
     if (card.Type !== "Talent") {
         return;
@@ -214,7 +213,7 @@ const setTalentCardView = async(card: Card) => {
 
     setText(".card-title", card.Name);
     setText(".card-category", "Talent");
-    setBackgroundImage(".card", Assets.FRAME_TALENT);
+    setBackgroundImage(".card", getBaseTalentAsset(card.Deck));
     setCardTier(card.Type, card.Tier);
     setVisible(".card-title-overlay", true);
     const textContainer = query(".card-text");
