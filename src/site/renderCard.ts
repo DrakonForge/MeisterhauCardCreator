@@ -247,9 +247,12 @@ const getBaseTrainingAsset = (deck: string): string => {
 }
 
 const setTrainingCardView = async (card: Card) => {
+    if (card.Type !== "Training") {
+        return;
+    }
     // TODO
     setText(".card-title", card.Name);
-    setText(".card-category", ""); // TODO: Support card category
+    setText(".card-category", card.TrainingType);
     setBackgroundImage(".card", getBaseTrainingAsset(card.Deck));
 }
 
@@ -263,6 +266,6 @@ export const setCardView = async (card: Card) => {
     } else if (card.Type === "Training") {
         await setTrainingCardView(card);
     } else {
-        consola.error(`Unknown card type: ${card.Type}`);
+        consola.error(`Unknown card type: ${(card as Card).Type}`);
     }
 };

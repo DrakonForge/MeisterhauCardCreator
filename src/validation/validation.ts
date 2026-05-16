@@ -1,5 +1,5 @@
 import { convertTextToJson, type TextComponent } from "../text/converters";
-import { type ActionCard, ActionCardSchema, type Card, type TalentCard, TalentCardSchema, type TrainingCard } from "../types/card";
+import { type ActionCard, ActionCardSchema, type Card, type TalentCard, TalentCardSchema, type TrainingCard, TrainingCardSchema } from "../types/card";
 import type { CardText } from "../types/common";
 
 export const validateCard = (data: any): Card => {
@@ -32,7 +32,9 @@ export const validateTalentCard = (data: any): TalentCard => {
 }
 
 export const validateTrainingCard = (data: any): TrainingCard => {
-    return {} as TrainingCard;
+    const cardData = TrainingCardSchema.parse(data);
+    validateCardText(cardData.Text);
+    return cardData;
 }
 
 const validateCardText = (cardText: CardText | undefined, canBeOptional = true): void => {

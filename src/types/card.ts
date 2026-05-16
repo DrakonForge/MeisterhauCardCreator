@@ -61,13 +61,11 @@ export const TalentCardSchema = BaseCardSchema.extend({
     Tier: TierSchema,
 });
 
-const TrainingOptionSchema = z.object({
-    Tier: TierSchema,
-    Effect: CardTextSchema
-})
-const TrainingCardSchema = BaseCardSchema.extend({
+export const TrainingCardSchema = BaseCardSchema.extend({
     Type: z.literal("Training"),
-    Options: TrainingOptionSchema.array().min(1)
+    Primary: z.string(),
+    TrainingType: z.string(),
+    Text: CardTextSchema
 });
 
 export const ActionCardSchema = z.discriminatedUnion("ActionType", [
