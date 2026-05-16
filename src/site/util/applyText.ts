@@ -72,19 +72,23 @@ interface DeckEntry {
 const TextDeckMap: Record<string, DeckEntry> = {
     "Audacity": {
         Decorator: "deck-audacity",
-        Icon: Assets.ICON_AUDACITY
+        Icon: Assets.ICON_AUDACITY,
     },
     "Celerity": {
         Decorator: "deck-celerity",
-        Icon: Assets.ICON_CELERITY
+        Icon: Assets.ICON_CELERITY,
     },
     "Insight": {
         Decorator: "deck-insight",
-        Icon: Assets.ICON_INSIGHT
+        Icon: Assets.ICON_INSIGHT,
     },
     "Fortitude": {
         Decorator: "deck-fortitude",
-        Icon: Assets.ICON_FORTITUDE
+        Icon: Assets.ICON_FORTITUDE,
+    },
+    "Footwork": {
+        Decorator: "deck-footwork",
+        Icon: Assets.ICON_LEG_ACTION, // TODO Fix
     }
 };
 
@@ -314,6 +318,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 renderJsonToHtml(emphasisContents, span);
                 // TODO: Still doesn't really work
                 break;
+            case "Card":
             case "Deck":
                 const deckArgs = component.Content.split(' ');
                 const deckName = deckArgs.shift() ?? '';
@@ -377,6 +382,14 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 } else {
                     span.textContent = "Valor";
                 }
+                break;
+            case "Or":
+                span.textContent = "Or";
+                span.classList.add("training-divider");
+                break;
+            case "Tier":
+                // TODO: Improve visuals
+                span.textContent = `<${component.Content}>`;
                 break;
             case "PushYourself":
                 // TODO: Eventually move to an icon for valor? Magenta
@@ -452,7 +465,7 @@ const applyFlavorText = (parent: HTMLElement, textLines: string[]) => {
         p.classList.add("flavor-text");
         const jsonText = convertTextToJson(textLine);
         renderJsonToHtml(jsonText, p);
-        parent.appendChild(document.createElement("hr"))
+        parent.appendChild(document.createElement("hr"));
         parent.appendChild(p);
     }
 }

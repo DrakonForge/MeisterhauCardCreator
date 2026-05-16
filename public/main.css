@@ -567,3 +567,23 @@ span.counter {
 span.generic-highlight {
     font-weight: bold;
 }
+
+span.deck-footwork {
+    color: #333333;
+}
+
+span.deck-audacity {
+    color: #c4213b;
+}
+
+span.deck-fortitude {
+    color: #198136;
+}
+
+span.deck-celerity {
+    color: #158cc1;
+}
+
+span.deck-insight {
+    color: #ef8f1e;
+}

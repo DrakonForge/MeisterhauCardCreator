@@ -51,6 +51,10 @@ const setCardStyleType = (type: string) => {
     if (type === "Talent") {
         card.classList.add("talent");
     }
+
+    if (type === "Training") {
+        card.classList.add("training");
+    }
 }
 
 export const clearCardView = () => {
@@ -198,7 +202,7 @@ const setActionCardView = async(card: Card) => {
     fitCardText();
     fitCardTitle();
     fitCardSubtitle();
-    fitCardCategories();
+    fitCardCategories(24, 36, 1);
 }
 
 const getBaseTalentAsset = (deck: string): string => {
@@ -253,7 +257,20 @@ const setTrainingCardView = async (card: Card) => {
     // TODO
     setText(".card-title", card.Name);
     setText(".card-category", card.TrainingType);
-    setBackgroundImage(".card", getBaseTrainingAsset(card.Deck));
+    setVisible(".card-title-overlay", true);
+    setBackgroundImage(".card", getBaseTrainingAsset(card.Primary));
+    const textContainer = query(".card-text");
+    if (!textContainer) {
+        throw new Error("Unable to find text container");
+    }
+    applySimpleText(card.Text, textContainer);
+    if (card.Flavor) {
+        applyActionText({ Text: card.Flavor }, textContainer, TextType.FLAVOR);
+    }
+
+    fitCardText();
+    fitCardTitle();
+    fitCardCategories(24, 24, 1); // TODO: Need to improve this, make the divider height larger since 24px -> 6pt font which is yikes
 }
 
 export const setCardView = async (card: Card) => {

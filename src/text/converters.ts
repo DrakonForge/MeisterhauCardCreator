@@ -57,7 +57,7 @@ const findMatchingEndTag = (text: string, index: number): number => {
 }
 
 const ALIAS_DECK_NAMES = ["Audacity", "Celerity", "Insight", "Fortitude", "Footwork", "Talent"];
-const ALIAS_DEFINITIONS = [ "Learn", "Train", "Refine" ];
+const ALIAS_DEFINITIONS: string[] = [];
 const convertAliases = (components: TextComponent[]) => {
     for (const component of components) {
         if (ALIAS_DECK_NAMES.includes(component.Type)) {

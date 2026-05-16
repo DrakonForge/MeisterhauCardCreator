@@ -34,6 +34,7 @@ export const Assets = {
     ARCH_LEFT: "img/Arch_Left.svg",
     ARCH_RIGHT: "img/Arch_Right.svg",
     TITLE_TALENT: "img/Title_Talent.svg",
+    TITLE_TRAINING: "img/Title_Talent.svg", // Same for now
     // Frames
     // Base
     BASE_ACTION_DEFAULT: "img/Base_Action_Default.svg",
