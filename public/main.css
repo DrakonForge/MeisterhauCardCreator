@@ -478,6 +478,10 @@ img.deck-icon {
     height: 1.4em;
 }
 
+.deck-text-pair img.deck-icon {
+    margin-right: -3px;
+}
+
 span.range {
     color: var(--color-range);
     font-weight: bold;
@@ -570,20 +574,25 @@ span.generic-highlight {
 
 span.deck-footwork {
     color: #333333;
+    font-weight: bold;
 }
 
 span.deck-audacity {
-    color: #c4213b;
+    color: #7c0b10;
+    font-weight: bold;
 }
 
 span.deck-fortitude {
-    color: #198136;
+    color: #054d24;
+    font-weight: bold;
 }
 
 span.deck-celerity {
-    color: #158cc1;
+    color: #084d80;
+    font-weight: bold;
 }
 
 span.deck-insight {
-    color: #ef8f1e;
+    color: #60400f;
+    font-weight: bold;
 }

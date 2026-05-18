@@ -169,7 +169,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
 await main(async args => {
     const imageDir = args['images'] ?? "./generated/card_images";
-    const inputPath = args['input'] ?? "";
+    const inputPath = args['input'] ?? args['deck'] ?? "";
     const outputDir = args['output'] ?? "./generated/pdf";
     const outputName = args['name'] ?? "MyDeck";
     const noFillBorders = args['noborder'] ?? false;

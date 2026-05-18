@@ -333,7 +333,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                         deckText.textContent = deckArgs.join(' ');
                         deckText.classList.add("deck-text", deckEntry.Decorator);
                         span.appendChild(deckText);
-                        span.classList.add("no-wrap");
+                        span.classList.add("no-wrap", "deck-text-pair");
                     }
                 } else {
                     consola.warn(`Unknown deck ${deckName}`);

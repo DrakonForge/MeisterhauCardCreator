@@ -374,7 +374,7 @@ const generateImages = async (inputDir: string, outputDir: string, deckPath: str
         deckPath = deckPath || DEFAULT_DIFF;
     } else {
         clearFolder(outputDir, recursive, ".png");
-        deckPath = DEFAULT_ALL;
+        deckPath = deckPath || DEFAULT_ALL;
     }
 
     if (!all) {
