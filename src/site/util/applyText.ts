@@ -149,25 +149,18 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             case "Flow":
-                // Option 1: Flow Text
-                const flowText = document.createElement("span");
-                flowText.textContent = component.Content != "noarrow" ? "Flow:" : "Flow";
-                flowText.classList.add("flow");
-                span.appendChild(flowText);
+                const flowIcon = document.createElement("img");
+                flowIcon.classList.add("icon", "flow-icon")
+                flowIcon.src = Assets.ICON_FLOW;
+                span.appendChild(flowIcon);
 
-                // Option 2: Flow Icon
-                // const flowIcon = document.createElement("img");
-                // flowIcon.classList.add("icon", "flow-icon")
-                // flowIcon.src = Assets.ICON_FLOW;
-                // span.appendChild(flowIcon);
-
-                // if (component.Content != "noarrow") {
-                //     const flowArrow = document.createElement("span");
-                //     flowArrow.classList.add("flow-arrow");
-                //     flowArrow.textContent = "➛";
-                //     span.appendChild(flowArrow);
-                //     span.classList.add("no-wrap"); // Needed whenever there is more than one element
-                // }
+                if (component.Content != "noarrow") {
+                    const flowArrow = document.createElement("span");
+                    flowArrow.classList.add("flow-arrow");
+                    flowArrow.textContent = "➛";
+                    span.appendChild(flowArrow);
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                }
                 break;
             case "Dominate":
                 const dominateIcon = document.createElement("img");
@@ -391,10 +384,24 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 // TODO: Improve visuals
                 span.textContent = `<${component.Content}>`;
                 break;
+            case "Valor":
+                // TODO Implement
+                // TODO Also, show multiple valor if it's a number, otherwise just print it
+                break;
             case "PushYourself":
-                // TODO: Eventually move to an icon for valor? Magenta
-                span.classList.add("generic-highlight");
-                span.textContent = `Push Yourself: `;
+                const pushYourselfIcon = document.createElement("img");
+                pushYourselfIcon.classList.add("icon", "push-yourself-icon")
+                pushYourselfIcon.src = Assets.ICON_VALOR;
+                // TODO show multiple valor if there's a number, to support multiple valor spend
+                span.appendChild(pushYourselfIcon);
+
+                if (component.Content != "noarrow") {
+                    const pushYourselfArrow = document.createElement("span");
+                    pushYourselfArrow.classList.add("push-yourself-arrow");
+                    pushYourselfArrow.textContent = "➛";
+                    span.appendChild(pushYourselfArrow);
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                }
                 break;
             default:
                 // consola.warn(`Unknown text component type ${component.Type}`);

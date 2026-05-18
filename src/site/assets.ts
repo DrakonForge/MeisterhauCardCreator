@@ -20,6 +20,7 @@ export const Assets = {
     ICON_AUDACITY: "img/AudacityIcon.svg",
     ICON_INSIGHT: "img/InsightIcon.svg",
     ICON_FORTITUDE: "img/FortitudeIcon.svg",
+    ICON_VALOR: "img/ValorIcon.svg",
     // TODO: Talent, Footwork
     // Tiers
     TIER_0_ACTION: "img/Tier_0_Action.svg",

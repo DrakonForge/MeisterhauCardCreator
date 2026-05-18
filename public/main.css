@@ -366,6 +366,7 @@ img.icon.flow-icon {
     height: 1.33em;
     margin-top: -12px;
     margin-bottom: -12px;
+    margin-right: -8px;
 }
 
 img.icon.attack-icon {
@@ -501,6 +502,14 @@ span.dominate-arrow {
 }
 
 span.flow-arrow {
+    color: var(--color-token);
+    font-weight: bold;
+    margin-left: 2px;
+    margin-right: -3px;
+    text-shadow: 1px 1px 1px #000;
+}
+
+span.push-yourself-arrow {
     color: var(--color-token);
     font-weight: bold;
     margin-left: 2px;
