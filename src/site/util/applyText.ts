@@ -368,6 +368,8 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 break;
             case "Valor":
                 // TODO: Eventually move to an icon for valor? Magenta
+                // TODO Implement
+                // TODO Also, show multiple valor if it's a number, otherwise just print it
                 span.classList.add("generic-highlight");
                 if (component.Content) {
                     validateNumber(component.Content);
@@ -383,10 +385,6 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "Tier":
                 // TODO: Improve visuals
                 span.textContent = `<${component.Content}>`;
-                break;
-            case "Valor":
-                // TODO Implement
-                // TODO Also, show multiple valor if it's a number, otherwise just print it
                 break;
             case "PushYourself":
                 const pushYourselfIcon = document.createElement("img");

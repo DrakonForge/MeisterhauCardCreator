@@ -47,6 +47,7 @@ const setCardStyleType = (type: string) => {
         throw new Error("Unable to find card class");
     }
     card.classList.remove("talent");
+    card.classList.remove("training");
 
     if (type === "Talent") {
         card.classList.add("talent");

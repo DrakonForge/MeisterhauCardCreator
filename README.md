@@ -26,24 +26,25 @@ We assume you have a Google Sheets/Excel file with the proper formatting for car
 2) Export spreadsheet as a CSV file. Paste the contents of the csv file into `MeisterhauCardData/data.csv`.
 3) Run `npm run csv`.
    * This will also run validation on the card data and inform you of any errors in the CSV file. Fix these and ensure that it runs successfully before moving on.
-4) Run `npm run image -- --chunked --chunk 10`
+4) Run `npm run decklist`
+   * Run `npm run decklist -- --exp Core` to generate only Core set, which will reduce the cards somewhat.
+5) Run `npm run image -- --chunked --chunk 10`
    * Assumes you used the default output for the last command. Adjust this command otherwise.
    * This may take a while to finish. Feel free to adjust parameters to improve performance as necessary.
-5) View the cards in `./generated/card_images` or other specified output folder.
+6) View the cards in `./generated/card_images` or other specified output folder.
 
 ## Workflow 2: Create Deck in Tabletop Simulator
 
 1) Run Workflow 1 to generate the card images.
-2) Run `npm run decklist` to generate the deck lists based on the `Deck` attribute in `./generated/decklists`.
-3) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`. You may need to modify `--include` and `--ignore` parameters to select the right decklists.
-4) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
-5) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
-6) Set the following parameters:
+2) Run `npm run tts` to generate the stitched deck images in `./generated/deck_images`. You may need to modify `--include` and `--ignore` parameters to select the right decklists.
+3) Run `npm run upload` to upload the deck images to Imgur. You should receive a list of links.
+4) In Tabletop Simulator, go to Objects -> Components -> Custom -> Deck. Place one and wait for the menu to pop up.
+5) Set the following parameters:
    * Width: 10
    * Height: 4
    * Number: 40 (if it's the last page, some may be blank)
-7) Paste in the Face link and the Back link (card back should be same for every page).
-8) Press **Import**.
+6) Paste in the Face link and the Back link (card back should be same for every page).
+7) Press **Import**.
 
 ## Workflow 3: Generate PDFs for Printing Cards
 
@@ -113,11 +114,14 @@ Opens the Visual Card Editor as a local site at [http://localhost:3000](http://l
 
 ### `npm run decklist`
 
-> Usage: `npm run decklist -- [--input <input_path>] [--output <output_directory>] [-r]`
+> Usage: `npm run decklist -- [--input <input_path>] [--output <output_directory>] [--exp <expansions> [-r]`
 
 You need to run `npm run csv` first as this uses JSON files.
 
 Generates deck lists based on the `Deck` attribute. This can be found in `generated/decklists`.
+
+* Provide `--exp` (or `--e`, or `--expansion`) to designate a comma-separated list of expansions
+  * For example, `npm run decklist -- --exp Core` will only generate cards from the core set.
 
 ### `npm run tts`
 
