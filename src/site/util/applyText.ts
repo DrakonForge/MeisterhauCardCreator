@@ -367,15 +367,26 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 }
                 break;
             case "Valor":
-                // TODO: Eventually move to an icon for valor? Magenta
-                // TODO Implement
-                // TODO Also, show multiple valor if it's a number, otherwise just print it
-                span.classList.add("generic-highlight");
-                if (component.Content) {
-                    validateNumber(component.Content);
-                    span.textContent = `${component.Content} Valor`;
-                } else {
-                    span.textContent = "Valor";
+                let numValorIcons = 1;
+                if (component.Content.length > 0) {
+                    numValorIcons = parseInt(component.Content) || 1;
+                    if (component.Content == "X") {
+                        // TODO: Formatting if needed
+                        const pushYourselfAmount = document.createElement("span");
+                        pushYourselfAmount.textContent = "X";
+                        span.appendChild(pushYourselfAmount);
+                    }
+                }
+
+                for (let i = 0; i < numValorIcons; ++i) {
+                    const pushYourselfIcon = document.createElement("img");
+                    pushYourselfIcon.classList.add("icon", "valor-icon")
+                    pushYourselfIcon.src = Assets.ICON_VALOR;
+                    span.appendChild(pushYourselfIcon);
+                }
+
+                if (numValorIcons > 1) {
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 }
                 break;
             case "Or":
@@ -396,19 +407,29 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.appendChild(tierIcon);
                 break;
             case "PushYourself":
-                const pushYourselfIcon = document.createElement("img");
-                pushYourselfIcon.classList.add("icon", "push-yourself-icon")
-                pushYourselfIcon.src = Assets.ICON_VALOR;
-                // TODO show multiple valor if there's a number, to support multiple valor spend
-                span.appendChild(pushYourselfIcon);
-
-                if (component.Content != "noarrow") {
-                    const pushYourselfArrow = document.createElement("span");
-                    pushYourselfArrow.classList.add("push-yourself-arrow");
-                    pushYourselfArrow.textContent = "➛";
-                    span.appendChild(pushYourselfArrow);
-                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                let numValor = 1;
+                if (component.Content.length > 0) {
+                    numValor = parseInt(component.Content) || 1;
+                    if (component.Content == "X") {
+                        // TODO: Formatting if needed
+                        const pushYourselfAmount = document.createElement("span");
+                        pushYourselfAmount.textContent = "X";
+                        span.appendChild(pushYourselfAmount);
+                    }
                 }
+
+                for (let i = 0; i < numValor; ++i) {
+                    const pushYourselfIcon = document.createElement("img");
+                    pushYourselfIcon.classList.add("icon", "push-yourself-icon")
+                    pushYourselfIcon.src = Assets.ICON_VALOR;
+                    span.appendChild(pushYourselfIcon);
+                }
+
+                const pushYourselfArrow = document.createElement("span");
+                pushYourselfArrow.classList.add("push-yourself-arrow");
+                pushYourselfArrow.textContent = "➛";
+                span.appendChild(pushYourselfArrow);
+                span.classList.add("no-wrap"); // Needed whenever there is more than one element
                 break;
             default:
                 // consola.warn(`Unknown text component type ${component.Type}`);

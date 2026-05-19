@@ -96,8 +96,9 @@ const processParallelChunk = async (cardList: Record<string, Card>, cardIds: str
         }, text);
         // Need to call it twice due to rendering bugs
         await updateButton?.click();
-        await delay(50);
+        await delay(25);
         await updateButton?.click();
+        await delay(25);
 
         // Wait for process to finish
         try {
@@ -222,8 +223,9 @@ const processCardParallel = async (key: string, card: Card, outputDir: string, s
         }, text);
         // Need to call it twice due to rendering bugs
         await updateButton?.click();
-        await delay(50);
+        await delay(25);
         await updateButton?.click();
+        await delay(25);
 
         // Wait for process to finish
         await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
@@ -291,8 +293,9 @@ const processCardsSequential = async (cardList: Record<string, Card>, outputDir:
         }, text);
         // Need to call it twice due to rendering bugs
         await updateButton?.click();
-        await delay(50);
+        await delay(25);
         await updateButton?.click();
+        await delay(25);
 
         // Wait for process to finish
         await page.waitForFunction('window.status === "ready" || window.status === "fail"', {
@@ -372,7 +375,8 @@ const generateImages = async (inputDir: string, outputDir: string, deckPath: str
         consola.log("Diff mode is enabled. Old images will be removed and only new ones will be updated.")
         await removeImages(removePath, outputDir);
         deckPath = deckPath || DEFAULT_DIFF;
-    } else {
+    }
+    if (!deckPath) {
         clearFolder(outputDir, recursive, ".png");
         deckPath = deckPath || DEFAULT_ALL;
     }

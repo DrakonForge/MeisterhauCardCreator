@@ -4,3 +4,7 @@ export const delay = (time: number) => {
         setTimeout(resolve, time);
     });
 };
+
+export const waitForRender = () => {
+    return new Promise(requestAnimationFrame);
+};

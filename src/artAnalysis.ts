@@ -82,7 +82,7 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
         consola.log(`Found ${needToRetain.size} removed entries`);
     }
 
-    consola.warn(`${todoCounts} TODOs are still pending. Completion: ${artIds.length - todoCounts}/${artIds.length} (${Math.round((artIds.length - todoCounts) / artIds.length * 100) / 100}%)`);
+    consola.warn(`${todoCounts} TODOs are still pending. Completion: ${artIds.length - todoCounts}/${artIds.length} (${Math.round((artIds.length - todoCounts) / artIds.length * 100 * 100) / 100}%)`);
     consola.success(`Writing document to ${outputDocPath}`);
     fs.writeFileSync(outputDocPath, outputDocument.toString());
     const backupDocPath = path.join(outputDir, BACKUP_DIR, `ArtSpec_${dateStr.replaceAll("/", "_")}.md`);

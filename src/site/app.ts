@@ -5,7 +5,7 @@ import { clearCardView, setCardView } from './renderCard';
 import { Assets } from "./assets";
 import { validateCard } from '../validation/validation';
 import { consola } from 'consola';
-import { delay } from "../util/delay";
+import { delay, waitForRender } from "../util/delay";
 import type { Card } from '../types/card';
 
 const SAMPLE_CARD = `{
@@ -84,6 +84,7 @@ onClick(".update-button", async () => {
         }
     }
     await delay(50); // We need to wait for the HTML to finish rendering
+    await waitForRender();
     (window as any).status = "displaying image";
     await displayImage();
     (window as any).status = "ready";
