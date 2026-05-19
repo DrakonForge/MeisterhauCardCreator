@@ -19,6 +19,8 @@ import path from "path";
 const DOC_NAME = "ArtSpec.md";
 const REMOVED_TAG = " (REMOVED)";
 const BACKUP_DIR = "Backup";
+const HEADER = "## ";
+const PLACEHOLDER_DESCRIPTION = "TODO - Missing Entry";
 const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpansions: string[], recursive: boolean): Promise<void> => {
     ensureOutputDirExists(outputDir);
     ensureOutputDirExists(path.join(outputDir, BACKUP_DIR));
@@ -27,9 +29,7 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
     const cardsByArtId = getCardsByArtId(cardList, includeExpansions);
 
     const artIds = Object.keys(cardsByArtId).sort();
-    consola.log(`Found ${Object.keys(cardsByArtId).length} unique card arts`);
 
-    // TODO: Async?
     const outputDocPath = path.join(outputDir, DOC_NAME);
     const existingDocEntries = readExistingDoc(outputDocPath);
     const needToRetain = new Set(Object.keys(existingDocEntries));
@@ -42,6 +42,8 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
         ]);
     let todoCounts = 0;
 
+    consola.log(`Found ${Object.keys(cardsByArtId).length} unique card arts with ${needToRetain.size} existing entries`);
+
     for (const artId of artIds) {
         consola.debug(`Processing ${artId}`);
         const cardIds = cardsByArtId[artId];
@@ -50,7 +52,7 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
             continue;
         }
         const metadata = generateMetadata(cardList, cardIds);
-        let description = `TODO - Missing Entry`;
+        let description = PLACEHOLDER_DESCRIPTION;
         let header = artId;
         if (existingDocEntries[artId] != null && existingDocEntries[artId].length) {
             description = existingDocEntries[artId];
@@ -126,7 +128,6 @@ const generateMetadata = (cardList: Record<string, Card>, cardIds: string[]): an
     return metadata;
 }
 
-const HEADER = "## ";
 const readExistingDoc = (outputDocPath: string): Record<string, string> => {
     const existingDocEntries: Record<string, string> = {};
     const fileContents = fs.readFileSync(outputDocPath, "utf-8");
@@ -150,7 +151,10 @@ const readExistingDoc = (outputDocPath: string): Record<string, string> => {
             end -= 1;
         }
         const entryLines = lines.slice(start, end + 1);
-        existingDocEntries[artId] = entryLines.join("\n");
+        const concatenated = entryLines.join("\n");
+        if (concatenated != PLACEHOLDER_DESCRIPTION) {
+            existingDocEntries[artId] = entryLines.join("\n");
+        }
         lineIndex = nextLineIndex;
     };
 
