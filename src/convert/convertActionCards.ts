@@ -198,7 +198,8 @@ const convertCsvToJson = (data: RowData, seenIds: Set<string>): ActionCard => {
             Text: parseText(data.ActionText)
         },
         Quantity: 1,
-        Expansion: parseString(data.Expansion)
+        Expansion: parseString(data.Expansion),
+        Art: parseString(data.Art),
     };
 
     if (!baseCard.Expansion?.length) {

@@ -95,7 +95,8 @@ const convertCsvToJson = (data: RowData, seenIds: Set<string>): TrainingCard => 
         Primary: parseString(data.Deck),
         Text: parseText(data.Text),
         Quantity: 1,
-        Expansion: parseString(data.Expansion)
+        Expansion: parseString(data.Expansion),
+        Art: parseString(data.Art),
     };
 
     if (!baseCard.Expansion?.length) {

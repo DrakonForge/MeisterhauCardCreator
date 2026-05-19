@@ -13,6 +13,7 @@ const BaseCardSchema = z.object({
     Deck: z.string(),
     Quantity: z.number(),
     Expansion: z.string(),
+    Art: z.string(),
 });
 
 const ActionBaseCardSchema = BaseCardSchema.extend({
