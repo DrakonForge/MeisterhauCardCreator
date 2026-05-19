@@ -383,8 +383,17 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.classList.add("training-divider");
                 break;
             case "Tier":
-                // TODO: Improve visuals
-                span.textContent = `<${component.Content}>`;
+                const tierNumber = parseInt(component.Content);
+                const tierIcon = document.createElement("img");
+                if (tierNumber === 1) {
+                    tierIcon.src = Assets.TIER_1_ICON;
+                } else if (tierNumber === 2) {
+                    tierIcon.src = Assets.TIER_2_ICON;
+                } else if (tierNumber === 3) {
+                    tierIcon.src = Assets.TIER_3_ICON;
+                }
+                tierIcon.classList.add("icon", "tier-icon");
+                span.appendChild(tierIcon);
                 break;
             case "PushYourself":
                 const pushYourselfIcon = document.createElement("img");

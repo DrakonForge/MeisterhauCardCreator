@@ -36,7 +36,10 @@ export const Assets = {
     ARCH_RIGHT: "img/Arch_Right.svg",
     TITLE_TALENT: "img/Title_Talent.svg",
     TITLE_TRAINING: "img/Title_Talent.svg", // Same for now
-    // Frames
+    // Tiers
+    TIER_1_ICON: "img/TierIcon_1.svg",
+    TIER_2_ICON: "img/TierIcon_2.svg",
+    TIER_3_ICON: "img/TierIcon_3.svg",
     // Base
     BASE_ACTION_DEFAULT: "img/Base_Action_Default.svg",
     BASE_ACTION_AUDACITY: "img/Base_Action_Audacity.svg",
@@ -46,6 +49,11 @@ export const Assets = {
     BASE_ACTION_FOOTWORK: "img/Base_Action_Footwork.svg",
     BASE_ACTION_TOKEN: "img/Base_Action_Token.svg",
     BASE_TALENT_DEFAULT: "img/Base_Talent_Default.svg",
+    BASE_TALENT_AUDACITY: "img/Base_Talent_Audacity.svg",
+    BASE_TALENT_CELERITY: "img/Base_Talent_Celerity.svg",
+    BASE_TALENT_FORTITUDE: "img/Base_Talent_Fortitude.svg",
+    BASE_TALENT_INSIGHT: "img/Base_Talent_Insight.svg",
+    BASE_TALENT_FOOTWORK: "img/Base_Talent_Footwork.svg",
     BASE_TRAINING_DEFAULT: "img/Base_Training_Default.svg",
     BASE_TRAINING_AUDACITY: "img/Base_Training_Audacity.svg",
     BASE_TRAINING_CELERITY: "img/Base_Training_Celerity.svg",

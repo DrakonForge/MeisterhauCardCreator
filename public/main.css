@@ -479,6 +479,10 @@ img.deck-icon {
     height: 1.4em;
 }
 
+img.tier-icon {
+    width: 2em;
+}
+
 .deck-text-pair img.deck-icon {
     margin-right: -3px;
 }

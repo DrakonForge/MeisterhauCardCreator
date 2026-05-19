@@ -207,7 +207,17 @@ const setActionCardView = async(card: Card) => {
 }
 
 const getBaseTalentAsset = (deck: string): string => {
-    // TODO: Can add different borders here based on deck
+    if (deck === "Audacity") {
+        return Assets.BASE_TALENT_AUDACITY;
+    } else if (deck === "Celerity") {
+        return Assets.BASE_TALENT_CELERITY;
+    } else if (deck === "Fortitude") {
+        return Assets.BASE_TALENT_FORTITUDE;
+    } else if (deck === "Insight") {
+        return Assets.BASE_TALENT_INSIGHT;
+    } else if (deck === "Footwork") {
+        return Assets.BASE_TALENT_FOOTWORK;
+    }
     return Assets.BASE_TALENT_DEFAULT;
 }
 
