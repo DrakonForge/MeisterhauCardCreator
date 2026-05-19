@@ -16,6 +16,7 @@ export function createBuildSettings(options) {
             'src/generateImages.ts',
             'src/convertCsv.ts',
             'src/deckListBuilder.ts',
+            'src/artAnalysis.ts',
             'src/ttsImageStitcher.ts',
             'src/upload.ts',
             'src/createPdf.ts',
