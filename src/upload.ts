@@ -113,7 +113,7 @@ await main(async args => {
     const inputDir = args['input'] ?? "./generated/deck_images";
     const recursive = args['r'] ?? false;
     const albumId = args['album'] ?? null; // Unused
-    const cardBackUrl = args['back'] ?? "https://i.imgur.com/Spcs4Ut.png";
+    const cardBackUrl = args['back'] ?? "https://i.imgur.com/3XODRiu.png";
 
     await uploadDeckImagesToImgur(inputDir, albumId, cardBackUrl, recursive);
 });
