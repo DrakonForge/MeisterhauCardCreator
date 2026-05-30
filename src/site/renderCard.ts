@@ -265,7 +265,6 @@ const setTrainingCardView = async (card: Card) => {
     if (card.Type !== "Training") {
         return;
     }
-    // TODO
     setText(".card-title", card.Name);
     setText(".card-category", card.TrainingType);
     setVisible(".card-title-overlay", true);
@@ -281,7 +280,7 @@ const setTrainingCardView = async (card: Card) => {
 
     fitCardText();
     fitCardTitle();
-    fitCardCategories(24, 28, 1); // TODO: Need to improve this, make the divider height larger since 24px -> 6pt font which is yikes
+    fitCardCategories(24, 28, 1);
 }
 
 export const setCardView = async (card: Card) => {

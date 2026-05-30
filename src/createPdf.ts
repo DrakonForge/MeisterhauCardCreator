@@ -2,6 +2,7 @@ import { readFile, writeFile } from "fs/promises";
 import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import path from "path";
+import sharp from "sharp";
 import { createCardIdToPath } from "./util/cardIdToPath";
 import { PageSizes, PDFDocument, PDFImage, PDFPage, rgb } from "pdf-lib";
 import { cardIdsToEntries, getTotalCardQuantity, getUniqueCardIds } from "./util/decklist";
@@ -35,6 +36,7 @@ const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 
 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
 
+let cmykMode = false;
 const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
     if (noGaps) {
         consola.info("Setting registered: No gaps");
@@ -83,14 +85,25 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
     // First embed all the images and save the references to them
     const pdfDoc = await PDFDocument.create();
+    pdfDoc.setTitle("Meisterhau Cards");
+    pdfDoc.setAuthor("DrakonForge Studios");
+    const infoDict = pdfDoc.context.obj({
+        GTS_PDFXVersion: 'PDF/X-4',
+        GTS_PDFXConformance: 'PDF/X-4',
+    });
+    pdfDoc.context.register(infoDict);
+    // TODO: PDF/X-4 may require an output intent
     const cardIdToImage: Record<string, PDFImage> = {};
     for (const cardId of uniqueCardIds) {
         const path = cardIdToPath[cardId];
         if (!path) {
             throw new Error(`Image not found for ${cardId}`);
         }
-        const imageBuffer = await readFile(path);
-        const image = await pdfDoc.embedPng(imageBuffer);
+        let imageBuffer = sharp(await readFile(path)).flatten({ background: '#000000' }).jpeg({ quality: 100 });
+        if (cmykMode) {
+            imageBuffer = imageBuffer.toColorspace('cmyk');
+        }
+        const image = await pdfDoc.embedJpg(await imageBuffer.toBuffer());
         cardIdToImage[cardId] = image;
     }
     consola.log(`Embedded ${uniqueCardIds.size} unique images into the PDF`);
@@ -177,6 +190,7 @@ await main(async args => {
     const allCards = args['all'] ?? false;
     const diff = args['diff'] ?? false;
     const recursive = args['r'] ?? false;
+    cmykMode = args['cmyk'] ?? args['print'] ?? false;
 
     await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, allCards, diff, recursive);
 });
