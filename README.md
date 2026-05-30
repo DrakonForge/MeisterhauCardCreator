@@ -68,7 +68,7 @@ Using the new diff functionality in `npm run csv`, we can quickly make changes t
 3) Run `npm run csv`.
    * This will also run validation on the card data and inform you of any errors in the CSV file. Fix these and ensure that it runs successfully before moving on.
 4) Run `npm run image -- --chunked --chunk 10 --diff`, which should regenerate only the modified cards.
-5) Run `npm run pdf -- --nogaps --diff` to view only the modified cards in a PDF.
+5) Run `npm run pdf -- --diff` to view only the modified cards in a PDF.
 
 ## Available Commands
 
@@ -145,12 +145,13 @@ It does NOT upload the back image URL; a default link is provided but can be ove
 
 ### `npm run pdf`
 
-> Usage: `npm run pdf -- [--images <image_directory>][ [--input <deck_text_file>] [--output <output_directory>] [--name <deck_name>] [--noborder] [--nogaps] [--diff] [-r]`
+> Usage: `npm run pdf -- [--images <image_directory>][ [--input <deck_text_file>] [--output <output_directory>] [--name <deck_name>] [--borders] [--gaps] [--diff] [--print] [-r]`
 
 Takes in a list of card images produced by `npm run image` and generates a pdf of the provided deck, similar to `npm run deck`. This is useful for printing decks.
 
-* Add `--noborder` to remove the filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
-* Add `--nogaps` to remove the gaps between the cards, so you need fewer cuts (which may require more precision) to cut out the cards.
+* Add `--borders` to add filled borders between cards, which can help save ink. These borders are usually here to make cutting out cards accept a larger margin of error.
+* Add `--gaps` to add gaps between the cards, evenly spacing them
+* Add `--print` to make the PDF with a CMYK color space, which is ideal for printers. Note this may cause colors to change.
 * Use the `--input` field to control which deck displays, or one of the alternatives:
   * Use `--all` to print 1 copy of all available images.
   * Use `--diff` to view only the modified cards from `npm run csv`.

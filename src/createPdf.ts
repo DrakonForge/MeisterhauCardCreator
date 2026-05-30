@@ -32,12 +32,12 @@ const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
 
 let cmykMode = false;
-const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, noFillBorders: boolean, noGaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
-    if (noGaps) {
-        consola.info("Setting registered: No gaps");
+const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, fillBorders: boolean, gaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
+    if (gaps) {
+        consola.info("Setting registered: Adding gaps");
     }
-    if (noFillBorders) {
-        consola.info("Setting registered: No fill borders");
+    if (fillBorders) {
+        consola.info("Setting registered: Filling borders");
     }
     if (allCards) {
         consola.info("Setting registered: Printing all cards");
@@ -98,8 +98,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
     const targetWidth = CARD_WIDTH_IN * INCH_TO_PDF_UNIT;
     const targetHeight = CARD_HEIGHT_IN * INCH_TO_PDF_UNIT;
-    const backgroundWidth = (CARD_WIDTH_IN * 3 + (noGaps ? 0 : HORIZONTAL_GAP_IN * 2)) * INCH_TO_PDF_UNIT;
-    const backgroundHeight = (CARD_HEIGHT_IN * 3 + (noGaps ? 0 : VERTICAL_GAP_IN * 2)) * INCH_TO_PDF_UNIT;
+    const backgroundWidth = (CARD_WIDTH_IN * 3 + (gaps ? HORIZONTAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT;
+    const backgroundHeight = (CARD_HEIGHT_IN * 3 + (gaps ? VERTICAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT;
     consola.debug(`Card Image Dimensions: ${targetWidth} x ${targetHeight}`);
 
     // Start writing file
@@ -134,7 +134,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
                 pdfDoc.addPage({ size: 'LETTER', margin: 0 });
             }
 
-            if (!noFillBorders) {
+            if (fillBorders) {
                 pdfDoc.rect(
                     pageWidth / 2 - backgroundWidth / 2,
                     pageHeight / 2 - backgroundHeight / 2,
@@ -171,8 +171,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
             if (!offset || offset[0] == null || offset[1] == null) {
                 throw new Error(`Invalid offset for ${imagesOnPage}`);
             }
-            const xOffset = offset[0] * (targetWidth + (noGaps ? 0 : HORIZONTAL_GAP_IN * INCH_TO_PDF_UNIT));
-            const yOffset = offset[1] * (targetHeight + (noGaps ? 0 : VERTICAL_GAP_IN * INCH_TO_PDF_UNIT));
+            const xOffset = offset[0] * (targetWidth + (gaps ? HORIZONTAL_GAP_IN * INCH_TO_PDF_UNIT : 0));
+            const yOffset = offset[1] * (targetHeight + (gaps ? VERTICAL_GAP_IN * INCH_TO_PDF_UNIT : 0));
             pdfDoc.image(
                 imageBuffer,
                 pageWidth / 2 - targetWidth / 2 + xOffset,
@@ -234,7 +234,7 @@ const generateImageBuffers = async (cardIdToPath: Record<string, string>, entrie
                 .flatten({ background: '#000000' })
                 .withMetadata({
                     orientation: 1,
-                    icc: '.USWebCoatedSWOP.icc'
+                    icc: './assets/USWebCoatedSWOP.icc'
                 })
                 .toColorspace('cmyk')
                 .jpeg({
@@ -259,12 +259,12 @@ await main(async args => {
     const inputPath = args['input'] ?? args['deck'] ?? "";
     const outputDir = args['output'] ?? "./generated/pdf";
     const outputName = args['name'] ?? "MyDeck";
-    const noFillBorders = args['noborder'] ?? false;
-    const noGaps = args['nogaps'] ?? false;
+    const fillBorders = args['borders'] ?? false;
+    const gaps = args['gaps'] ?? false;
     const allCards = args['all'] ?? false;
     const diff = args['diff'] ?? false;
     const recursive = args['r'] ?? false;
     cmykMode = args['cmyk'] ?? args['print'] ?? false;
 
-    await generatePdf(imageDir, inputPath, outputDir, outputName, noFillBorders, noGaps, allCards, diff, recursive);
+    await generatePdf(imageDir, inputPath, outputDir, outputName, fillBorders, gaps, allCards, diff, recursive);
 });
