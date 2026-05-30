@@ -23,7 +23,7 @@ export function createBuildSettings(options) {
             'src/clean.ts',
         ],
         outdir: OUT_DIR,
-        external: ["puppeteer", "sharp"], // Creates a build error if we try to bundle it
+        external: ["puppeteer", "sharp", "pdfkit"], // Creates a build error if we try to bundle it
         bundle: true,
         format: "esm",
         plugins: [
