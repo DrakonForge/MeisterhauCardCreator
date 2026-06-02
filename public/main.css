@@ -19,7 +19,7 @@
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
-    --color-range: #c59f4e;
+    --color-range: #dfe1f4;
     --color-strike: #84400a;
     --color-token: #7e00bc;
 }
@@ -392,10 +392,10 @@ img.keyword-icon {
     vertical-align: middle;
     justify-content: center;
     align-items: center;
-    width: 2.15em;
+    width: 2em;
     height: 1.25em;
-    margin-top: -0.125em;
-    margin-bottom: -0.125em;
+    margin-top: -0.15em;
+    margin-bottom: -0.15em;
 }
 
 .card-text .range-icon-container .range-icon {
