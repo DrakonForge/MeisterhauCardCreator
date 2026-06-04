@@ -100,10 +100,10 @@ const validateNumber = (str: string): void => {
     }
 }
 
+const COMPONENT_TITLE_MARKER = "*";
 const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): void => {
     for (const component of components) {
         const span = document.createElement("span");
-        // TODO: Add better type checking later
         switch (component.Type) {
             case "Plain":
                 span.textContent = component.Content;
@@ -154,7 +154,15 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 flowIcon.src = Assets.ICON_FLOW;
                 span.appendChild(flowIcon);
 
-                if (component.Content != "noarrow") {
+                if (component.Content.includes(COMPONENT_TITLE_MARKER)) {
+                    const flowText = document.createElement("span");
+                    flowText.classList.add("flow-text", "component-title-marker");
+                    flowText.textContent = "Flow";
+                    span.appendChild(flowText);
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                }
+
+                if (!component.Content.includes("noarrow")) {
                     const flowArrow = document.createElement("span");
                     flowArrow.classList.add("flow-arrow");
                     flowArrow.textContent = "➛";
@@ -167,8 +175,19 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 dominateIcon.classList.add("icon", "dominate-icon")
                 dominateIcon.src = Assets.ICON_DOMINATE;
                 span.appendChild(dominateIcon);
+                if (!parent.classList.contains("action-text-container")) {
+                    parent.classList.add("dominate-action");
+                }
 
-                if (component.Content != "noarrow") {
+                if (component.Content.includes(COMPONENT_TITLE_MARKER)) {
+                    const dominateText = document.createElement("span");
+                    dominateText.classList.add("dominate-text", "component-title-marker");
+                    dominateText.textContent = "Dominate";
+                    span.appendChild(dominateText);
+                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                }
+
+                if (!component.Content.includes("noarrow")) {
                     const dominateArrow = document.createElement("span");
                     dominateArrow.classList.add("dominate-arrow");
                     dominateArrow.textContent = " ➛";
@@ -324,6 +343,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                     if (deckArgs.length) {
                         const deckText = document.createElement("span");
                         deckText.textContent = deckArgs.join(' ');
+                        if (deckText.textContent === COMPONENT_TITLE_MARKER) {
+                            deckText.textContent = deckName;
+                            deckText.classList.add("component-title-marker");
+                        }
                         deckText.classList.add("deck-text", deckEntry.Decorator);
                         span.appendChild(deckText);
                         span.classList.add("no-wrap", "deck-text-pair");

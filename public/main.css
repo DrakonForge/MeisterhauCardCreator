@@ -323,6 +323,14 @@ img.hidden.hidden {
     flex-flow: row nowrap;
 }
 
+.card-text p.dominate-action {
+    /* background-color: rgba(0, 0, 0, 0.15); */
+    /* border-radius: 10px; */
+    padding: 5px;
+    text-indent: 75px hanging;
+    margin-left: 48px;
+}
+
 .no-wrap {
     white-space: nowrap;
 }
@@ -586,7 +594,7 @@ span.generic-highlight {
 }
 
 span.deck-footwork {
-    color: #333333;
+    color: rgb(83, 75, 75);
     font-weight: bold;
 }
 
@@ -607,5 +615,12 @@ span.deck-celerity {
 
 span.deck-insight {
     color: #60400f;
+    font-weight: bold;
+}
+
+.component-title-marker {
+    font-variant: small-caps;
+    text-transform: uppercase;
+    font-size: 0.85em;
     font-weight: bold;
 }
