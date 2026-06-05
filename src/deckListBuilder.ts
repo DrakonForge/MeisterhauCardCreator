@@ -59,7 +59,7 @@ await main(async args => {
     const outputDir = args['output'] ?? "./generated/decklists";
     const recursive = args['r'] ?? false;
     args['expansion'] = args['expansion'] ?? args['exp'] ?? args['e'];
-    const includeExpansions = args['expansion'] ? args['expansion'].split(',') : [];
+    const includeExpansions = args['all'] ? [] : (args['expansion'] ? args['expansion'].split(',') : ["Core"]);
 
     await generateDeckLists(inputDir, outputDir, includeExpansions, recursive);
 });
