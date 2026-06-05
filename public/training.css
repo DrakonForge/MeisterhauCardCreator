@@ -1,10 +1,10 @@
 .card.training .card-text-container {
-    top: 540px;
-    height: 430px;
+    top: 545px;
+    height: 398px;
 }
 
 .card.training .header {
-    top: 36px;
+    top: 52px;
     height: 72px;
     justify-content: center;
 }
@@ -14,7 +14,7 @@
 }
 
 .card.training .divider {
-    top: 488px;
+    top: 496px;
     justify-content: center;
     padding-left: 45px;
     padding-right: 45px;
@@ -22,7 +22,7 @@
 
 .card.training .divider .card-type {
     flex: unset;
-    width: 130px;
+    width: 180px;
     height: 40px;
     margin-left: auto;
     margin-right: auto;

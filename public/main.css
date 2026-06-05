@@ -12,8 +12,8 @@
 }
 
 :root {
-    --card-text-horizontal-margin: 59px;
-    --card-stat-horizontal-margin: 28px;
+    --card-text-horizontal-margin: 67px;
+    --card-stat-horizontal-margin: 36px;
     /* Loosely based on https: //www.reddit.com/r/RPGdesign/comments/5fyv24/medieval_manuscript_colors/ */
     --color-dark: #130e0a;
     --color-light: #f6f4f1;
@@ -103,7 +103,7 @@ img.hidden.hidden {
     font-weight: bold;
     color: var(--color-light);
     font-size: 65px;
-    top: 38px;
+    top: 46px;
     text-align: center;
     width: 75px;
     height: 85px;
@@ -134,15 +134,15 @@ img.hidden.hidden {
 }
 
 .action-type-container, .parry-height-container {
-    top: 140px;
+    top: 148px;
 }
 
 .action-type-container {
-    left: 31px;
+    left: 39px;
 }
 
 .parry-height-container {
-    right: 31px;
+    right: 39px;
 }
 
 .header-icon {
@@ -152,7 +152,7 @@ img.hidden.hidden {
 
 
 .header {
-    top: 47px;
+    top: 55px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -265,7 +265,7 @@ img.hidden.hidden {
     display: flex;
     flex-flow: column nowrap;
     line-height: 1.1;
-    height: 425px; /* Hardcoded to the end of the text */
+    height: 390px; /* Hardcoded to the end of the text */
 }
 
 .card-body-background-container {
@@ -455,13 +455,25 @@ img.icon.parry-icon {
 }
 
 .card-footer {
-    bottom: 50px;
-    right: 50px;
+    bottom: 35px;
+    right: 35px;
+    left: 35px;
+    font-size: 18px; /* Divide by 3 to get font size, lowest we can go is probably 4.5pt*/
+    color: white;
+    display: flex;
+    flex-flow: row nowrap;
+    line-height: 1;
+    height: 21px;
 }
 
-.card-footer img.icon {
-    width: 40px;
-    height: 40px;
+.card-footer .card-copyright {
+    margin-left: auto;
+    margin-right: 50px;
+}
+
+.card-footer img.artist-icon {
+    width: 18px;
+    height: 18px;
 }
 
 /* Card Text */

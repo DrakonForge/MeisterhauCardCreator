@@ -58,6 +58,20 @@ const setCardStyleType = (type: string) => {
     }
 }
 
+const setCardFooter = (card: Card) => {
+    const artistName = query(".card-artist-name");
+    if (!artistName) {
+        throw new Error("Could not find artist name container");
+    }
+    artistName.textContent = card.Artist;
+
+    const serial = query(".card-serial");
+    if (!serial) {
+        throw new Error("Could not find serial container");
+    }
+    serial.textContent = card.Serial;
+}
+
 export const clearCardView = () => {
     setText(".card-title", "");
     setText(".card-subtitle", "");
@@ -242,6 +256,8 @@ const setTalentCardView = async(card: Card) => {
 
     fitCardText();
     fitCardTitle();
+    query(".card-subtitle")?.removeAttribute('style');
+    query(".card-category")?.removeAttribute('style');
 }
 
 const getBaseTrainingAsset = (deck: string): string => {
@@ -280,12 +296,14 @@ const setTrainingCardView = async (card: Card) => {
 
     fitCardText();
     fitCardTitle();
-    fitCardCategories(24, 28, 1);
+    query(".card-subtitle")?.removeAttribute('style');
+    fitCardCategories(24, 30, 1);
 }
 
 export const setCardView = async (card: Card) => {
     clearCardView();
     setCardStyleType(card.Type);
+    setCardFooter(card);
     if (card.Type === "Action") {
         await setActionCardView(card);
     } else if (card.Type === "Talent") {

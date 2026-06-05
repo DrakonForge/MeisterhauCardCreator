@@ -200,6 +200,8 @@ const convertCsvToJson = (data: RowData, seenIds: Set<string>): ActionCard => {
         Quantity: 1,
         Expansion: parseString(data.Expansion),
         Art: parseString(data.Art),
+        Artist: "Artist Name", // TODO: Pull from Art
+        Serial: "X.5/100" //  TODO: Pull from global serial counts
     };
 
     if (!baseCard.Expansion?.length) {

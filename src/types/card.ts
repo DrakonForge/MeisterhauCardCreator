@@ -14,6 +14,8 @@ const BaseCardSchema = z.object({
     Quantity: z.number(),
     Expansion: z.string(),
     Art: z.string(),
+    Artist: z.string(),
+    Serial: z.string(),
 });
 
 const ActionBaseCardSchema = BaseCardSchema.extend({
