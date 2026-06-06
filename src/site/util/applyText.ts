@@ -171,84 +171,47 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 }
                 break;
             case "Dominate":
+                const dominateCondition = document.createElement("span");
+                dominateCondition.classList.add("dominate-condition");
+
                 const dominateIcon = document.createElement("img");
                 dominateIcon.classList.add("icon", "dominate-icon")
                 dominateIcon.src = Assets.ICON_DOMINATE;
-                span.appendChild(dominateIcon);
-                if (!parent.classList.contains("action-text-container")) {
-                    parent.classList.add("dominate-action");
-                }
+                dominateCondition.appendChild(dominateIcon);
 
                 if (component.Content.includes(COMPONENT_TITLE_MARKER)) {
                     const dominateText = document.createElement("span");
                     dominateText.classList.add("dominate-text", "component-title-marker");
                     dominateText.textContent = "Dominate";
-                    span.appendChild(dominateText);
-                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
+                    dominateCondition.appendChild(dominateText);
+                    dominateCondition.classList.add("no-wrap"); // Needed whenever there is more than one element
+                    span.appendChild(dominateCondition);
+                    break;
                 }
 
-                if (!component.Content.includes("noarrow")) {
-                    const dominateArrow = document.createElement("span");
-                    dominateArrow.classList.add("dominate-arrow");
-                    dominateArrow.textContent = " ➛";
-                    span.appendChild(dominateArrow);
-                    span.classList.add("no-wrap"); // Needed whenever there is more than one element
-                }
-                break;
-            case "GainStructure":
-                span.classList.add("structure");
-                const structureGain = component.Content;
-                validateNumber(structureGain);
-                span.textContent = `+${structureGain} Structure`;
-                break;
-            case "GainSpeed":
-                span.classList.add("speed");
-                const speedGain = component.Content;
-                validateNumber(speedGain);
-                span.textContent = `+${speedGain} All Speed`;
-                break;
-            case "GainArmSpeed":
-                span.classList.add("speed");
-                const armSpeedGain = component.Content;
-                validateNumber(armSpeedGain);
-                span.textContent = `+${armSpeedGain} Arm Speed`;
-                break;
-            case "GainLegSpeed":
-                span.classList.add("speed");
-                const legSpeedGain = component.Content;
-                validateNumber(legSpeedGain);
-                span.textContent = `+${legSpeedGain} Leg Speed`;
-                break;
-            case "LoseStructure":
-                span.classList.add("structure");
-                const structureLoss = component.Content;
-                validateNumber(structureLoss);
-                span.textContent = `-${structureLoss} Structure`;
-                break;
-            case "LoseSpeed":
-                span.classList.add("speed");
-                const speedLoss = component.Content;
-                validateNumber(speedLoss);
-                span.textContent = `-${speedLoss} All Speed`;
-                break;
-            case "LoseArmSpeed":
-                span.classList.add("speed");
-                const armSpeedLoss = component.Content;
-                validateNumber(armSpeedLoss);
-                span.textContent = `-${armSpeedLoss} Arm Speed`;
-                break;
-            case "LoseLegSpeed":
-                span.classList.add("speed");
-                const legSpeedLoss = component.Content;
-                validateNumber(legSpeedLoss);
-                span.textContent = `-${legSpeedLoss} Leg Speed`;
+                const dominateArrow = document.createElement("span");
+                dominateArrow.classList.add("dominate-arrow");
+                dominateArrow.textContent = " ➛ ";
+                dominateCondition.appendChild(dominateArrow);
+                dominateCondition.classList.add("no-wrap"); // Needed whenever there is more than one element
+
+                const dominateSection = document.createElement("div");
+                dominateSection.classList.add("dominate-action");
+                dominateSection.append(dominateCondition);
+                const dominateContents: TextComponent[] = convertTextToJson(component.Content);
+                // const dominateContentContainer = document.createElement("div");
+                // dominateContentContainer.classList.add("dominate-contents")
+                renderJsonToHtml(dominateContents, dominateSection);
+                // dominateSection.append(dominateContentContainer);
+                span.appendChild(dominateSection);
                 break;
             case "Structure":
                 span.classList.add("structure");
                 if (component.Content) {
                     const structure = component.Content;
                     validateNumber(structure);
-                    span.textContent = `Structure ${structure}`;
+                    span.textContent = `${structure} Structure`;
+                    span.classList.add("no-wrap"); // Avoid line breaks
                 } else {
                     span.textContent = "Structure";
                 }
@@ -258,9 +221,43 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 if (component.Content) {
                     const speed = component.Content;
                     validateNumber(speed);
-                    span.textContent = `Speed ${speed}`;
+                    span.textContent = `${speed} Action Speed`;
+                    span.classList.add("no-wrap"); // Avoid line breaks
                 } else {
                     span.textContent = "Speed";
+                }
+                break;
+            case "ActionSpeed":
+                span.classList.add("speed");
+                if (component.Content) {
+                    const speed = component.Content;
+                    validateNumber(speed);
+                    span.textContent = `${speed} Action Speed`;
+                    span.classList.add("no-wrap"); // Avoid line breaks
+                } else {
+                    span.textContent = "Action Speed";
+                }
+                break;
+            case "ArmSpeed":
+                span.classList.add("speed");
+                if (component.Content) {
+                    const speed = component.Content;
+                    validateNumber(speed);
+                    span.textContent = `${speed} Arm Speed`;
+                    span.classList.add("no-wrap"); // Avoid line breaks
+                } else {
+                    span.textContent = "Arm Speed";
+                }
+                break;
+            case "LegSpeed":
+                span.classList.add("speed");
+                if (component.Content) {
+                    const speed = component.Content;
+                    validateNumber(speed);
+                    span.textContent = `${speed} Leg Speed`;
+                    span.classList.add("no-wrap"); // Avoid line breaks
+                } else {
+                    span.textContent = "Leg Speed";
                 }
                 break;
             case "Definition":

@@ -22,6 +22,7 @@
     --color-range: #dfe1f4;
     --color-strike: #84400a;
     --color-token: #7e00bc;
+    --color-dominate: #c0140b;
 }
 
 body {
@@ -323,12 +324,14 @@ img.hidden.hidden {
     flex-flow: row nowrap;
 }
 
-.card-text p.dominate-action {
-    /* background-color: rgba(0, 0, 0, 0.15); */
-    /* border-radius: 10px; */
-    padding: 5px;
-    text-indent: 75px hanging;
-    margin-left: 48px;
+.card-text .dominate-action {
+    margin-left: 3px;
+    border-left: 6px groove var(--color-dominate);
+    padding-left: 8px;
+}
+
+.dominate-text {
+    color: var(--color-dominate);
 }
 
 .no-wrap {
@@ -518,7 +521,7 @@ span.structure {
 }
 
 span.dominate-arrow {
-    color: #c0140b;
+    color: var(--color-dominate);
     font-weight: bold;
     margin-left: -3px;
     margin-right: -3px;
