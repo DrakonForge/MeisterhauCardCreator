@@ -381,16 +381,17 @@ const generateImages = async (inputDir: string, outputDir: string, deckPath: str
         deckPath = deckPath || DEFAULT_ALL;
     }
 
-    if (!all) {
-        consola.log(`Filtering to deck at ${deckPath}`);
-        if (!fs.existsSync(deckPath)) {
-            consola.warn("No decklist found. Are you sure you ran \"npm run decklist\"?");
-        }
-        const deckList = await readDeckList(deckPath);
-        filterToDeck(cardList, deckList);
-        if (!deckList.length) {
-            consola.warn("No cards in provided decklist. Are you sure the one you're using is correct?")
-        }
+    if (all) {
+        deckPath = deckPath || DEFAULT_ALL;
+    }
+    consola.log(`Filtering to deck at ${deckPath}`);
+    if (!fs.existsSync(deckPath)) {
+        consola.warn("No decklist found. Are you sure you ran \"npm run decklist\"?");
+    }
+    const deckList = await readDeckList(deckPath);
+    filterToDeck(cardList, deckList);
+    if (!deckList.length) {
+        consola.warn("No cards in provided decklist. Are you sure the one you're using is correct?")
     }
 
     if (!Object.keys(cardList).length) {

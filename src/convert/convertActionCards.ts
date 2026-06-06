@@ -2,12 +2,14 @@ import { type ActionCard, type ArmActionCard, type Card, type LegActionCard } fr
 import { parse } from "csv-parse/sync";
 import * as fs from "fs";
 import * as path from "path";
-import { ActionTypeSchema, ParryHeightSchema, type Keyword, type ValueRange } from "../types/common";
+import { ActionTypeSchema, DeckSchema, ParryHeightSchema, type Keyword, type ValueRange } from "../types/common";
 import stringify from "json-stringify-pretty-compact";
 import { validateActionCard } from '../validation/validation';
 import { checkInputPathExists } from "../util/cliUtil";
 import { consola } from "consola";
 import { parseString, parseText, validateId } from "./convertHelpers";
+import type { GenerationContext } from "../convertCsv";
+import { generateSerial } from "../site/util/cardSerializer";
 
 interface RowData {
     Id: string;
@@ -179,37 +181,34 @@ const addLegActionData = (card: Partial<LegActionCard>, data: RowData) => {
 }
 
 
-const convertCsvToJson = (data: RowData, seenIds: Set<string>): ActionCard => {
+const convertCsvToJson = (data: RowData, context: GenerationContext): ActionCard => {
+    const { seenIds, serials } = context;
     const missingFields = checkRequiredFields(data, REQUIRED_BASE_FIELDS);
     if (missingFields.length) {
         throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
     validateId(data.Id, seenIds);
+    const deck = DeckSchema.parse(parseString(data.Deck));
 
     // Required stuff first
     const baseCard: Partial<ActionCard> = {
         Name: parseString(data.Name),
         Type: "Action",
-        Deck: parseString(data.Deck),
+        Deck: deck,
         ActionType: ActionTypeSchema.parse(parseString(data.ActionType)),
         Tier: parseInt(data.Tier),
         Action: {
             Text: parseText(data.ActionText)
         },
-        Quantity: 1,
         Expansion: parseString(data.Expansion),
         Art: parseString(data.Art),
         Artist: "Artist Name", // TODO: Pull from Art
-        Serial: "X.5/100" //  TODO: Pull from global serial counts
+        Serial: generateSerial(serials, deck),
     };
 
     if (!baseCard.Expansion?.length) {
         consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
-    }
-
-    if (parseString(data.Quantity)) {
-        baseCard.Quantity = parseInt(data.Quantity);
     }
 
     if (parseString(data.Flavor)) {
@@ -270,29 +269,34 @@ const convertCsvToJson = (data: RowData, seenIds: Set<string>): ActionCard => {
     return cardData;
 }
 
-const handleRecord = (record: RowData, outputDir: string, seenIds: Set<string>): boolean => {
-    const id = parseString(record.Id);
-    consola.debug(`Processing ${id}`);
-    try {
-        const jsonData = convertCsvToJson(record, seenIds);
-        const filePath = path.join(outputDir, id + ".json");
-        fs.writeFileSync(filePath, stringify(jsonData, {
-            indent: 4,
-            maxLength: 50,
-        }));
-        consola.debug(`Generated ${id}.json`);
-        return true;
-    } catch (e) {
-        consola.error(`Failed to validate card ${id}:`, e);
-        return false;
+const handleRecord = (record: RowData, context: GenerationContext): boolean => {
+    const baseId = parseString(record.Id);
+    consola.debug(`Processing ${baseId}`);
+    const quantity = record.Quantity ? parseInt(record.Quantity) || 1 : 1;
+    for (let i = 1; i <= quantity; ++i) {
+        const copyId = quantity > 1 ? (baseId + `_${String(i).padStart(2, '0')}`) : baseId;
+        record.Id = copyId;
+        try {
+            const jsonData = convertCsvToJson(record, context);
+            const filePath = path.join(context.outputDir, copyId + ".json");
+            fs.writeFileSync(filePath, stringify(jsonData, {
+                indent: 4,
+                maxLength: 50,
+            }));
+            consola.debug(`Generated ${baseId}.json`);
+        } catch (e) {
+            consola.error(`Failed to validate card ${baseId}:`, e);
+            return false;
+        }
     }
+    return true;
 };
 
 const shouldHandleRecord = (record: RowData): boolean => {
     return !record.Notes.includes("IDEA");
 }
 
-export const convertActionCards = (actionCardPath: string, outputDir: string, seenIds: Set<string>) => {
+export const convertActionCards = (actionCardPath: string, context: GenerationContext) => {
     checkInputPathExists(actionCardPath);
 
     consola.log(`Processing action card data at ${actionCardPath}`);
@@ -304,6 +308,7 @@ export const convertActionCards = (actionCardPath: string, outputDir: string, se
         skip_empty_lines: true,
         from_line: 2, // Skip initial header
     });
+    records.sort((a, b) => a.Id.localeCompare(b.Id));
 
     consola.log(`Found ${records.length} records`);
 
@@ -314,7 +319,7 @@ export const convertActionCards = (actionCardPath: string, outputDir: string, se
             continue;
         }
         numTotal++;
-        const success = handleRecord(record, outputDir, seenIds);
+        const success = handleRecord(record, context);
         if (!success) {
             numFail++;
         }

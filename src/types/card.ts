@@ -1,5 +1,5 @@
 import z from "zod";
-import { ActionTypeSchema, CardTextSchema, CardTypeSchema, KeywordsSchema, ParryHeightSchema, TierSchema, ValueRangeSchema } from "./common";
+import { ActionTypeSchema, CardTextSchema, CardTypeSchema, DeckSchema, KeywordsSchema, ParryHeightSchema, TierSchema, ValueRangeSchema } from "./common";
 
 const CardActionSchema = z.object({
     Title: z.string().nonempty().optional(),
@@ -11,7 +11,7 @@ const BaseCardSchema = z.object({
     Type: CardTypeSchema,
     Flavor: CardTextSchema.optional(),
     Deck: z.string(),
-    Quantity: z.number(),
+    Quantity: z.number().optional(), // Should not be used, but we leave the code in for now
     Expansion: z.string(),
     Art: z.string(),
     Artist: z.string(),

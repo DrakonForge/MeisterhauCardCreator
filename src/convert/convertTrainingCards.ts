@@ -7,6 +7,9 @@ import { checkInputPathExists } from "../util/cliUtil";
 import { parseString, parseText, validateId } from "./convertHelpers";
 import type { TrainingCard } from "../types/card";
 import { validateTrainingCard } from "../validation/validation";
+import type { GenerationContext } from "../convertCsv";
+import type { Deck } from "../types/common";
+import { generateSerial } from "../site/util/cardSerializer";
 
 interface RowData {
     Id: string;
@@ -59,54 +62,55 @@ const shouldHandleRecord = (record: RowData): boolean => {
     return !record.Notes.includes("IDEA");
 }
 
-const handleRecord = (record: RowData, outputDir: string, seenIds: Set<string>): boolean => {
-    record.Id = "Training_" + record.Id;
-    const id = parseString(record.Id);
-    consola.debug(`Processing ${id}`);
-    try {
-        const jsonData = convertCsvToJson(record, seenIds);
-        const filePath = path.join(outputDir, id + ".json");
-        fs.writeFileSync(filePath, stringify(jsonData, {
-            indent: 4,
-            maxLength: 50,
-        }));
-        consola.debug(`Generated ${id}.json`);
-        return true;
-    } catch (e) {
-        consola.error(`Failed to validate card ${id}:`, e);
-        return false;
+const handleRecord = (record: RowData, context: GenerationContext): boolean => {
+    const baseId = parseString(record.Id);
+    consola.debug(`Processing ${baseId}`);
+    const quantity = record.Quantity ? parseInt(record.Quantity) || 1 : 1;
+    for (let i = 1; i <= quantity; ++i) {
+        const copyId = "Training_" + (quantity > 1 ? (baseId + `_${String(i).padStart(2, '0')}`) : baseId);
+        record.Id = copyId;
+        try {
+            const jsonData = convertCsvToJson(record, context);
+            const filePath = path.join(context.outputDir, copyId + ".json");
+            fs.writeFileSync(filePath, stringify(jsonData, {
+                indent: 4,
+                maxLength: 50,
+            }));
+            consola.debug(`Generated ${baseId}.json`);
+        } catch (e) {
+            consola.error(`Failed to validate card ${baseId}:`, e);
+            return false;
+        }
     }
+    return true;
 };
 
-const convertCsvToJson = (data: RowData, seenIds: Set<string>): TrainingCard => {
+const convertCsvToJson = (data: RowData, context: GenerationContext): TrainingCard => {
+    const { seenIds, serials } = context;
     const missingFields = checkRequiredFields(data, REQUIRED_FIELDS);
     if (missingFields.length) {
         throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
     validateId(data.Id, seenIds);
+    const deck: Deck = "Training";
 
     // Required stuff first
     const baseCard: Partial<TrainingCard> = {
         Name: parseString(data.Name),
         Type: "Training",
         TrainingType: parseString(data.TrainingType),
-        Deck: "Training",
+        Deck: deck,
         Primary: parseString(data.Deck),
         Text: parseText(data.Text),
-        Quantity: 1,
         Expansion: parseString(data.Expansion),
         Art: parseString(data.Art),
         Artist: "Artist Name", // TODO: Pull from Art
-        Serial: "X.5/100" //  TODO: Pull from global serial counts
+        Serial: generateSerial(serials, deck),
     };
 
     if (!baseCard.Expansion?.length) {
         consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
-    }
-
-    if (parseString(data.Quantity)) {
-        baseCard.Quantity = parseInt(data.Quantity);
     }
 
     if (parseString(data.Flavor)) {
@@ -119,7 +123,7 @@ const convertCsvToJson = (data: RowData, seenIds: Set<string>): TrainingCard => 
 }
 
 
-export const convertTrainingCards = (talentCardPath: string, outputDir: string, seenIds: Set<string>) => {
+export const convertTrainingCards = (talentCardPath: string, context: GenerationContext) => {
     checkInputPathExists(talentCardPath);
 
     consola.log(`Processing talent card data at ${talentCardPath}`);
@@ -131,6 +135,7 @@ export const convertTrainingCards = (talentCardPath: string, outputDir: string, 
         skip_empty_lines: true,
         from_line: 2, // Skip initial header
     });
+    records.sort((a, b) => a.Id.localeCompare(b.Id));
 
     consola.log(`Found ${records.length} records`);
 
@@ -141,7 +146,7 @@ export const convertTrainingCards = (talentCardPath: string, outputDir: string, 
             continue;
         }
         numTotal++;
-        const success = handleRecord(record, outputDir, seenIds);
+        const success = handleRecord(record, context);
         if (!success) {
             numFail++;
         }

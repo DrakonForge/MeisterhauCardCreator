@@ -46,6 +46,9 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         inputPath = "./generated/tracked_changes/AddedOrUpdated.txt"
     }
     checkInputPathExists(imageDir);
+    if (allCards) {
+        inputPath = "./generated/decklists/Deck_All.txt";
+    }
     if (!allCards) {
         if (!inputPath) {
             consola.error("You must specify an input path with --input, or use --diff or --all.");
@@ -65,13 +68,13 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
     // Gather the desired entries
     let entries: DeckListEntry[];
-    if (allCards) {
-        consola.info(`Adding all ${cardIds.length} entries`);
-        entries = cardIdsToEntries(cardIds);
-    } else {
+    // if (allCards) {
+        // consola.info(`Adding all ${cardIds.length} entries`);
+        // entries = cardIdsToEntries(cardIds);
+    // } else {
         consola.info(`Reading ${inputPath}`);
         entries = await readDeckList(inputPath, cardIdToPath);
-    }
+    // }
     const cardIdToImageBuffer = await generateImageBuffers(cardIdToPath, entries, cmykMode);
 
     let numTotalCards = getTotalCardQuantity(entries);

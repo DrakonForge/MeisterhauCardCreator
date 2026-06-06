@@ -36,7 +36,7 @@ const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: strin
             }
         }
         const deck = card.Deck;
-        let quantity = card.Quantity;
+        let quantity = card.Quantity || 1;
 
         cardsByDeck[DECK_ALL]?.push({cardId, quantity});
 

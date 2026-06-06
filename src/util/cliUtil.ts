@@ -33,7 +33,7 @@ const timeToDurationStr = (durationMs: number) => {
     if (numMinutes > 0) {
         return `${numMinutes}m ${numRemainingSeconds}s (${durationMs}ms)`;
     }
-    if (numRemainingSeconds > 15) {
+    if (numRemainingSeconds > 10) {
         return `${numRemainingSeconds}s (${durationMs}ms)`;
     }
     return `${durationMs}ms`;

@@ -6,9 +6,15 @@ import { convertTrainingCards } from "./convert/convertTrainingCards";
 import { readAndValidateFiles } from "./validation/parseFiles";
 import { createHash } from "crypto";
 import { generateDeckList, type DeckListEntry } from "./util/decklist";
+import type { Deck } from "./types/common";
 
 const EMPTY_DIFF: Record<string, string> = {};
 
+export interface GenerationContext {
+    outputDir: string;
+    seenIds: Set<string>;
+    serials: Map<Deck, number>;
+}
 const getSnapshot = async (outputDir: string): Promise<Record<string, string>> => {
     const cardIdToHash: Record<string, string> = {};
     const cardList = await readAndValidateFiles(outputDir, false);
@@ -71,9 +77,11 @@ const convertCsv = async (actionCardPath: string, talentCardPath: string, traini
     clearFolder(outputDir, false, ".json");
 
     const seenIds = new Set<string>();
-    convertActionCards(actionCardPath, outputDir, seenIds);
-    convertTalentCards(talentCardPath, outputDir, seenIds);
-    convertTrainingCards(trainingCardPath, outputDir, seenIds);
+    const serials = new Map<Deck, number>();
+    const context: GenerationContext = { outputDir, seenIds, serials };
+    convertActionCards(actionCardPath, context);
+    convertTalentCards(talentCardPath, context);
+    convertTrainingCards(trainingCardPath, context);
 
     consola.info(`Results exported to ${outputDir}`);
 

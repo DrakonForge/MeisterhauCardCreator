@@ -16,7 +16,9 @@ export const parseString = (str: string): string => {
         return '';
     }
     return str;
-};export const validateId = (id: string, seenIds: Set<string>): void => {
+};
+
+export const validateId = (id: string, seenIds: Set<string>): void => {
     if (id.includes(' ')) {
         throw new Error(`ID cannot include spaces: ${id}`);
     }

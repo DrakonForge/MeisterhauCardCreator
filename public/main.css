@@ -277,7 +277,7 @@ img.hidden.hidden {
     width: 100%;
     padding-left: var(--card-text-horizontal-margin);
     padding-right: var(--card-text-horizontal-margin);
-    height: 435px;
+    height: 403px;
 }
 
 .card-body-background-container img {
@@ -326,7 +326,7 @@ img.hidden.hidden {
 
 .card-text .dominate-action {
     margin-left: 3px;
-    border-left: 6px groove var(--color-dominate);
+    border-left: 8px groove var(--color-dominate);
     padding-left: 8px;
 }
 
@@ -350,7 +350,7 @@ img.hidden.hidden {
 }
 
 .card-overlay p.keyword-list {
-    text-align: center;
+    text-align: left;
 }
 
 .card-overlay p.keyword-list .keyword-item {
@@ -569,6 +569,7 @@ span.emphasis {
 
 span.reminder {
     font-style: italic;
+    font-size: 0.9em;
 }
 
 span.reminder::before {
