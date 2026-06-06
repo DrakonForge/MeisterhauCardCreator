@@ -19,9 +19,25 @@ export const main = async (callback: (args: minimist.ParsedArgs) => Promise<void
             consola.error(error)
         }
         const endTime = performance.now();
-        consola.info(`Finished task in ${Math.ceil(endTime - startTime)}ms`);
+        consola.info(`Finished task in ${timeToDurationStr(Math.ceil(endTime - startTime))}`);
     }
 };
+
+const SECOND_TO_MS = 1000;
+const MIN_TO_SECOND = 60;
+const timeToDurationStr = (durationMs: number) => {
+    const durationSec = durationMs / SECOND_TO_MS;
+    const durationMin = durationMs / (SECOND_TO_MS * MIN_TO_SECOND);
+    const numMinutes = Math.floor(durationMin);
+    const numRemainingSeconds = Math.floor(durationSec - numMinutes * MIN_TO_SECOND);
+    if (numMinutes > 0) {
+        return `${numMinutes}m ${numRemainingSeconds}s (${durationMs}ms)`;
+    }
+    if (numRemainingSeconds > 15) {
+        return `${numRemainingSeconds}s (${durationMs}ms)`;
+    }
+    return `${durationMs}ms`;
+}
 
 export const ensureOutputDirExists = (path: string) => {
     if (!fs.existsSync(path)) {
