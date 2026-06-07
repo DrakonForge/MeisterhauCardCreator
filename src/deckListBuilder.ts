@@ -37,12 +37,11 @@ const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: strin
         }
         const deck = card.Deck;
         let quantity = card.Quantity || 1;
-
-        cardsByDeck[DECK_ALL]?.push({cardId, quantity});
-
-        // Special rule to make TTS printing easier -- only print one copy of starter deck
+        // Special rule to make PDF printing easier: Fundamentals is printed twice
         if (deck == "Fundamentals") {
-            quantity /= 2;
+            cardsByDeck[DECK_ALL]?.push({ cardId, quantity: quantity * 2 });
+        } else {
+            cardsByDeck[DECK_ALL]?.push({ cardId, quantity: quantity });
         }
 
         if (!cardsByDeck[deck]) {

@@ -206,59 +206,177 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.appendChild(dominateSection);
                 break;
             case "Structure":
-                span.classList.add("structure");
+                span.classList.add("structure", "no-wrap");
+
+                let numStructureIcons = 1;
                 if (component.Content) {
-                    const structure = component.Content;
-                    validateNumber(structure);
-                    span.textContent = `${structure} Structure`;
-                    span.classList.add("no-wrap"); // Avoid line breaks
+                    const speed = component.Content;
+                    validateNumber(speed);
+                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
+                    const speedValue = parseInt(speed);
+                    if (speedValue <= 3) {
+                        // Can repeat the icon
+                        numStructureIcons = speedValue;
+                    } else {
+                        // Put the text before the icon
+                        const structureNumber = document.createElement("span");
+                        structureNumber.textContent = `${speed} `;
+                        span.append(structureNumber);
+                    }
                 } else {
+                    numStructureIcons = 0;
                     span.textContent = "Structure";
                 }
+
+                for (let i = 0; i < numStructureIcons; ++i) {
+                    const structureIcon = document.createElement("img");
+                    structureIcon.classList.add("icon", "speed-icon")
+                    structureIcon.src = Assets.ICON_STRUCTURE;
+                    span.append(structureIcon);
+                }
+                // span.classList.add("structure");
+                // if (component.Content) {
+                //     const structure = component.Content;
+                //     validateNumber(structure);
+                //     span.textContent = `${structure} Structure`;
+                //     span.classList.add("no-wrap"); // Avoid line breaks
+                // } else {
+                //     span.textContent = "Structure";
+                // }
                 break;
             case "Speed":
-                span.classList.add("speed");
+                span.classList.add("speed", "no-wrap");
+
+                let numSpeedIcons = 1;
                 if (component.Content) {
                     const speed = component.Content;
                     validateNumber(speed);
-                    span.textContent = `${speed} Action Speed`;
-                    span.classList.add("no-wrap"); // Avoid line breaks
+                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
+                    const speedValue = parseInt(speed);
+                    if (speedValue <= 3) {
+                        // Can repeat the icon
+                        numSpeedIcons = speedValue;
+                    } else {
+                        // Put the text before the icon
+                        const speedNumber = document.createElement("span");
+                        speedNumber.textContent = `${speed} `;
+                        span.append(speedNumber);
+                    }
                 } else {
+                    numSpeedIcons = 0;
                     span.textContent = "Speed";
                 }
-                break;
-            case "ActionSpeed":
-                span.classList.add("speed");
-                if (component.Content) {
-                    const speed = component.Content;
-                    validateNumber(speed);
-                    span.textContent = `${speed} Action Speed`;
-                    span.classList.add("no-wrap"); // Avoid line breaks
-                } else {
-                    span.textContent = "Action Speed";
+
+                for (let i = 0; i < numSpeedIcons; ++i) {
+                    const speedIcon = document.createElement("img");
+                    speedIcon.classList.add("icon", "speed-icon")
+                    speedIcon.src = Assets.ICON_SPEED;
+                    span.append(speedIcon);
                 }
+                // span.classList.add("speed");
+                // if (component.Content) {
+                //     const speed = component.Content;
+                //     validateNumber(speed);
+                //     span.textContent = `${speed} Speed`;
+                //     span.classList.add("no-wrap"); // Avoid line breaks
+                // } else {
+                //     span.textContent = "Speed";
+                // }
                 break;
             case "ArmSpeed":
-                span.classList.add("speed");
+                span.classList.add("speed", "no-wrap");
+
+                let numArmSpeedIcons = 1;
                 if (component.Content) {
                     const speed = component.Content;
                     validateNumber(speed);
-                    span.textContent = `${speed} Arm Speed`;
-                    span.classList.add("no-wrap"); // Avoid line breaks
+                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
+                    const speedValue = parseInt(speed);
+                    if (speedValue <= 3) {
+                        // Can repeat the icon
+                        numArmSpeedIcons = speedValue;
+                    } else {
+                        // Put the text before the icon
+                        const speedNumber = document.createElement("span");
+                        speedNumber.textContent = `${speed} `;
+                        span.append(speedNumber);
+                    }
                 } else {
+                    numArmSpeedIcons = 0;
                     span.textContent = "Arm Speed";
                 }
+
+                for (let i = 0; i < numArmSpeedIcons; ++i) {
+                    const speedIcon = document.createElement("img");
+                    speedIcon.classList.add("icon", "arm-speed-icon")
+                    speedIcon.src = Assets.ICON_ARM_SPEED;
+                    span.append(speedIcon);
+                }
+                // span.classList.add("speed", "no-wrap");
+                // if (component.Content) {
+                //     const speed = component.Content;
+                //     validateNumber(speed);
+                //     const armActionNumber = document.createElement("span");
+                //     armActionNumber.textContent = `${speed} `;
+                //     span.append(armActionNumber);
+                // }
+
+                // const armActionIcon = document.createElement("img");
+                // armActionIcon.classList.add("icon", "arm-action-icon")
+                // armActionIcon.src = Assets.ICON_ARM_ACTION;
+                // span.append(armActionIcon);
+
+                // const armActionSpeed = document.createElement("span");
+                // armActionSpeed.textContent = " Speed";
+                // span.append(armActionSpeed);
+
                 break;
             case "LegSpeed":
-                span.classList.add("speed");
+                span.classList.add("speed", "no-wrap");
+
+                let numLegSpeedIcons = 1;
                 if (component.Content) {
                     const speed = component.Content;
                     validateNumber(speed);
-                    span.textContent = `${speed} Leg Speed`;
-                    span.classList.add("no-wrap"); // Avoid line breaks
+                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
+                    const speedValue = parseInt(speed);
+                    if (speedValue <= 3) {
+                        // Can repeat the icon
+                        numLegSpeedIcons = speedValue;
+                    } else {
+                        // Put the text before the icon
+                        const speedNumber = document.createElement("span");
+                        speedNumber.textContent = `${speed} `;
+                        span.append(speedNumber);
+                    }
                 } else {
+                    numLegSpeedIcons = 0;
                     span.textContent = "Leg Speed";
                 }
+
+                for (let i = 0; i < numLegSpeedIcons; ++i) {
+                    const speedIcon = document.createElement("img");
+                    speedIcon.classList.add("icon", "leg-speed-icon")
+                    speedIcon.src = Assets.ICON_LEG_SPEED;
+                    span.append(speedIcon);
+                }
+                // span.classList.add("speed", "no-wrap");
+                // if (component.Content) {
+                //     const speed = component.Content;
+                //     validateNumber(speed);
+                //     const legActionNumber = document.createElement("span");
+                //     legActionNumber.textContent = `${speed} `;
+                //     span.append(legActionNumber);
+                // }
+
+                // const legActionIcon = document.createElement("img");
+                // legActionIcon.classList.add("icon", "leg-action-icon")
+                // legActionIcon.src = Assets.ICON_LEG_ACTION;
+                // span.append(legActionIcon);
+
+                // const legActionSpeed = document.createElement("span");
+                // legActionSpeed.textContent = " Speed";
+                // span.append(legActionSpeed);
                 break;
             case "Definition":
                 span.classList.add("definition");

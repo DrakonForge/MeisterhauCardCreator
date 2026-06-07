@@ -21,7 +21,11 @@ export const Assets = {
     ICON_INSIGHT: "img/InsightIcon.svg",
     ICON_FORTITUDE: "img/FortitudeIcon.svg",
     ICON_VALOR: "img/ValorIcon.svg",
-    // TODO: Talent, Footwork
+    ICON_LEG_SPEED: "img/LegSpeedIcon.svg",
+    ICON_ARM_SPEED: "img/ArmSpeedIcon.svg",
+    ICON_SPEED: "img/SpeedIcon.svg",
+    ICON_STRUCTURE: "img/StructureIcon.svg",
+    // TODO: Footwork
     // Tiers
     TIER_0_ACTION: "img/Tier_0_Action.svg",
     TIER_1_ACTION: "img/Tier_1_Action.svg",
