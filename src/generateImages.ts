@@ -359,10 +359,15 @@ const removeImages = async (removePath: string, outputDir: string): Promise<void
 
 const filterToDeck = (cardList: Record<string, Card>, deckList: DeckListEntry[]) => {
     const cardsToInclude = new Set(deckList.map(entry => entry.cardId));
+    const seenCards = new Set();
     for (const cardId of Object.keys(cardList)) {
         if (!cardsToInclude.has(cardId)) {
             delete cardList[cardId];
         }
+        seenCards.add(cardId);
+    }
+    if (deckList.length > Object.keys(cardList).length) {
+        consola.warn(`Unknown card IDs: ${Array.from(cardsToInclude.difference(seenCards)).join(", ")}`);
     }
 }
 

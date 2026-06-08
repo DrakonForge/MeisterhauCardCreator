@@ -8,10 +8,10 @@ export const rangeStrToFontSizeMain = (rangeStr: string): number => {
 }
 
 export const rangeStrToFontSizeText = (rangeStr: string): number => {
-    // 1 char -> 28
-    // 2 char -> 24
-    // 3 char -> 20
-    return 32 - 4 * rangeStr.length;
+    // 1 char -> 0.86em
+    // 2 char -> 0.73em
+    // 3 char -> 0.6em
+    return 1 - 0.14 * rangeStr.length;
 }
 
 export const rangeToStr = (range: ValueRange): string => {

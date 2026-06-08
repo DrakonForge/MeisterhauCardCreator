@@ -53,7 +53,7 @@ const TextKeywordMap: Record<string, KeywordEntry> = {
     },
     "Disengage": {
         Content: "Disengage",
-        Decorator: "speed",
+        Decorator: "generic-highlight",
     },
     "Winden": {
         Content: "Winden",
@@ -63,6 +63,10 @@ const TextKeywordMap: Record<string, KeywordEntry> = {
         Content: "Token",
         Decorator: "consume",
     },
+    "Guard": {
+        Content: "Guard",
+        Decorator: "generic-highlight",
+    }
 };
 
 interface DeckEntry {
@@ -124,7 +128,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 const rangeText = document.createElement("span");
                 rangeText.classList.add("range");
                 rangeText.textContent = component.Content;
-                rangeText.style.fontSize = rangeStrToFontSizeText(component.Content) + "px";
+                rangeText.style.fontSize = rangeStrToFontSizeText(component.Content) + "em";
                 rangeIconContainer.appendChild(rangeText);
 
                 span.appendChild(rangeIconContainer);
@@ -282,6 +286,24 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 // } else {
                 //     span.textContent = "Speed";
                 // }
+                break;
+            case "ArmAction":
+                const armActionIcon = document.createElement("img");
+                armActionIcon.classList.add("icon", "arm-action-icon")
+                armActionIcon.src = Assets.ICON_ARM_ACTION;
+                span.appendChild(armActionIcon);
+                break;
+            case "LegAction":
+                const legActionIcon = document.createElement("img");
+                legActionIcon.classList.add("icon", "leg-action-icon")
+                legActionIcon.src = Assets.ICON_ARM_ACTION;
+                span.appendChild(legActionIcon);
+                break;
+            case "SpecialAction":
+                const specialActionIcon = document.createElement("img");
+                specialActionIcon.classList.add("icon", "special-action-icon")
+                specialActionIcon.src = Assets.ICON_SPECIAL_ACTION;
+                span.appendChild(specialActionIcon);
                 break;
             case "ArmSpeed":
                 span.classList.add("speed", "no-wrap");
