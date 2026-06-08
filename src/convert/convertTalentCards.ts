@@ -66,7 +66,7 @@ const handleRecord = (record: RowData, context: GenerationContext): boolean => {
     consola.debug(`Processing ${baseId}`);
     const quantity = record.Quantity ? parseInt(record.Quantity) || 1 : 1;
     for (let i = 1; i <= quantity; ++i) {
-        const copyId = quantity > 1 ? (baseId + `_${String(i).padStart(2, '0')}`) : baseId;
+        const copyId = "Talent_" + (quantity > 1 ? (baseId + `_${String(i).padStart(2, '0')}`) : baseId);
         record.Id = copyId;
         try {
             const jsonData = convertCsvToJson(record, context);

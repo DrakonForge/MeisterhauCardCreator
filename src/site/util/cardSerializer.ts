@@ -15,7 +15,7 @@ const deckToSerial: Record<Deck, string> = {
 const getSerialFor = (serials: Map<Deck, number>, deck: Deck): number => {
     let lastSerial = serials.get(deck);
     if (!lastSerial) {
-        lastSerial = 0;
+        lastSerial = 1;
     }
     serials.set(deck, lastSerial + 1);
     return lastSerial;
