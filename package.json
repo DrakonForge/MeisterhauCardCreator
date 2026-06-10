@@ -14,6 +14,7 @@
     "art": "npm run build && node ./dist/artAnalysis.js",
     "tts": "npm run build && node ./dist/ttsImageStitcher.js",
     "image": "npm run build && node ./dist/generateImages.js",
+    "svg": "npm run build && node ./dist/svgToPng.js",
     "upload": "npm run build && node ./dist/upload.js",
     "csv": "npm run build && node ./dist/convertCsv.js",
     "clean": "npm run build && node ./dist/clean.js",
