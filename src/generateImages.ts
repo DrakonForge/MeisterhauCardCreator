@@ -404,7 +404,7 @@ const generateImages = async (inputDir: string, outputDir: string, deckPath: str
         return;
     }
 
-    if (sync) {
+    if (sync && !chunked) {
         await processCardsSequential(cardList, outputDir, siteUrl);
     } else if (chunked) {
         await processCardsParallelChunked(cardList, outputDir, siteUrl, taskLimit);

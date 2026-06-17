@@ -117,6 +117,10 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.textContent = component.Content;
                 break;
             case "Range":
+                if (component.Content.length >= 3) {
+                    component.Content = component.Content.replaceAll("-", "–");
+                }
+
                 const rangeIconContainer = document.createElement("span");
                 rangeIconContainer.classList.add("range-icon-container");
 
@@ -210,82 +214,20 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 span.appendChild(dominateSection);
                 break;
             case "Structure":
-                span.classList.add("structure", "no-wrap");
-
-                let numStructureIcons = 1;
-                if (component.Content) {
-                    const speed = component.Content;
-                    validateNumber(speed);
-                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
-                    const speedValue = parseInt(speed);
-                    if (speedValue <= 3) {
-                        // Can repeat the icon
-                        numStructureIcons = speedValue;
-                    } else {
-                        // Put the text before the icon
-                        const structureNumber = document.createElement("span");
-                        structureNumber.textContent = `${speed} `;
-                        span.append(structureNumber);
-                    }
-                } else {
-                    numStructureIcons = 0;
-                    span.textContent = "Structure";
-                }
-
-                for (let i = 0; i < numStructureIcons; ++i) {
-                    const structureIcon = document.createElement("img");
-                    structureIcon.classList.add("icon", "speed-icon")
-                    structureIcon.src = Assets.ICON_STRUCTURE;
-                    span.append(structureIcon);
-                }
-                // span.classList.add("structure");
-                // if (component.Content) {
-                //     const structure = component.Content;
-                //     validateNumber(structure);
-                //     span.textContent = `${structure} Structure`;
-                //     span.classList.add("no-wrap"); // Avoid line breaks
-                // } else {
-                //     span.textContent = "Structure";
-                // }
+                renderAttribute2("Structure", Assets.ICON_STRUCTURE, span, component);
                 break;
             case "Speed":
-                span.classList.add("speed", "no-wrap");
-
-                let numSpeedIcons = 1;
-                if (component.Content) {
-                    const speed = component.Content;
-                    validateNumber(speed);
-                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
-                    const speedValue = parseInt(speed);
-                    if (speedValue <= 3) {
-                        // Can repeat the icon
-                        numSpeedIcons = speedValue;
-                    } else {
-                        // Put the text before the icon
-                        const speedNumber = document.createElement("span");
-                        speedNumber.textContent = `${speed} `;
-                        span.append(speedNumber);
-                    }
-                } else {
-                    numSpeedIcons = 0;
-                    span.textContent = "Speed";
-                }
-
-                for (let i = 0; i < numSpeedIcons; ++i) {
-                    const speedIcon = document.createElement("img");
-                    speedIcon.classList.add("icon", "speed-icon")
-                    speedIcon.src = Assets.ICON_SPEED;
-                    span.append(speedIcon);
-                }
-                // span.classList.add("speed");
-                // if (component.Content) {
-                //     const speed = component.Content;
-                //     validateNumber(speed);
-                //     span.textContent = `${speed} Speed`;
-                //     span.classList.add("no-wrap"); // Avoid line breaks
-                // } else {
-                //     span.textContent = "Speed";
-                // }
+                renderAttribute2("Speed", Assets.ICON_SPEED, span, component);
+                break;
+            case "ArmSpeed":
+                span.classList.add("no-wrap");
+                renderAttribute2("Speed", Assets.ICON_SPEED, span, component);
+                renderSpeedType(Assets.ICON_ARM_ACTION, span);
+                break;
+            case "LegSpeed":
+                span.classList.add("no-wrap");
+                renderAttribute2("Speed", Assets.ICON_SPEED, span, component);
+                renderSpeedType(Assets.ICON_LEG_ACTION, span);
                 break;
             case "ArmAction":
                 const armActionIcon = document.createElement("img");
@@ -304,101 +246,6 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 specialActionIcon.classList.add("icon", "special-action-icon")
                 specialActionIcon.src = Assets.ICON_SPECIAL_ACTION;
                 span.appendChild(specialActionIcon);
-                break;
-            case "ArmSpeed":
-                span.classList.add("speed", "no-wrap");
-
-                let numArmSpeedIcons = 1;
-                if (component.Content) {
-                    const speed = component.Content;
-                    validateNumber(speed);
-                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
-                    const speedValue = parseInt(speed);
-                    if (speedValue <= 3) {
-                        // Can repeat the icon
-                        numArmSpeedIcons = speedValue;
-                    } else {
-                        // Put the text before the icon
-                        const speedNumber = document.createElement("span");
-                        speedNumber.textContent = `${speed} `;
-                        span.append(speedNumber);
-                    }
-                } else {
-                    numArmSpeedIcons = 0;
-                    span.textContent = "Arm Speed";
-                }
-
-                for (let i = 0; i < numArmSpeedIcons; ++i) {
-                    const speedIcon = document.createElement("img");
-                    speedIcon.classList.add("icon", "arm-speed-icon")
-                    speedIcon.src = Assets.ICON_ARM_SPEED;
-                    span.append(speedIcon);
-                }
-                // span.classList.add("speed", "no-wrap");
-                // if (component.Content) {
-                //     const speed = component.Content;
-                //     validateNumber(speed);
-                //     const armActionNumber = document.createElement("span");
-                //     armActionNumber.textContent = `${speed} `;
-                //     span.append(armActionNumber);
-                // }
-
-                // const armActionIcon = document.createElement("img");
-                // armActionIcon.classList.add("icon", "arm-action-icon")
-                // armActionIcon.src = Assets.ICON_ARM_ACTION;
-                // span.append(armActionIcon);
-
-                // const armActionSpeed = document.createElement("span");
-                // armActionSpeed.textContent = " Speed";
-                // span.append(armActionSpeed);
-
-                break;
-            case "LegSpeed":
-                span.classList.add("speed", "no-wrap");
-
-                let numLegSpeedIcons = 1;
-                if (component.Content) {
-                    const speed = component.Content;
-                    validateNumber(speed);
-                    // Rule of 3: Don't have more than 3 of the same icon repeated on screen
-                    const speedValue = parseInt(speed);
-                    if (speedValue <= 3) {
-                        // Can repeat the icon
-                        numLegSpeedIcons = speedValue;
-                    } else {
-                        // Put the text before the icon
-                        const speedNumber = document.createElement("span");
-                        speedNumber.textContent = `${speed} `;
-                        span.append(speedNumber);
-                    }
-                } else {
-                    numLegSpeedIcons = 0;
-                    span.textContent = "Leg Speed";
-                }
-
-                for (let i = 0; i < numLegSpeedIcons; ++i) {
-                    const speedIcon = document.createElement("img");
-                    speedIcon.classList.add("icon", "leg-speed-icon")
-                    speedIcon.src = Assets.ICON_LEG_SPEED;
-                    span.append(speedIcon);
-                }
-                // span.classList.add("speed", "no-wrap");
-                // if (component.Content) {
-                //     const speed = component.Content;
-                //     validateNumber(speed);
-                //     const legActionNumber = document.createElement("span");
-                //     legActionNumber.textContent = `${speed} `;
-                //     span.append(legActionNumber);
-                // }
-
-                // const legActionIcon = document.createElement("img");
-                // legActionIcon.classList.add("icon", "leg-action-icon")
-                // legActionIcon.src = Assets.ICON_LEG_ACTION;
-                // span.append(legActionIcon);
-
-                // const legActionSpeed = document.createElement("span");
-                // legActionSpeed.textContent = " Speed";
-                // span.append(legActionSpeed);
                 break;
             case "Definition":
                 span.classList.add("definition");
@@ -595,12 +442,95 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
                 // consola.warn(`Unknown text component type ${component.Type}`);
                 // span.classList.add("generic-highlight");
                 // span.textContent = component.Content;
-                throw new Error(`Unknown text component type ${component.Type}`);
+                throw new Error(`Unknown text component type "${component.Type}"`);
         }
         parent.appendChild(span);
     }
 };
 
+const renderAttribute1 = (type: "Speed" | "Structure", iconPath: string, span: HTMLSpanElement, component: TextComponent) => {
+    const container = document.createElement("span");
+    container.classList.add(type.toLowerCase(), "no-wrap");
+
+    let numIcons = 1;
+    if (component.Content) {
+        const value = component.Content;
+        validateNumber(value);
+        // Rule of 3: Don't have more than 3 of the same icon repeated on screen
+        const valueInt = parseInt(value);
+        if (valueInt <= 3) {
+            // Can repeat the icon
+            numIcons = valueInt;
+        } else {
+            // Put the text before the icon
+            const valueElement = document.createElement("span");
+            valueElement.textContent = `${value} `;
+            container.append(valueElement);
+        }
+    } else {
+        numIcons = 0;
+        container.textContent = type;
+    }
+
+    for (let i = 0; i < numIcons; ++i) {
+        const icon = document.createElement("img");
+        icon.classList.add("icon", `${type.toLowerCase()}-icon`)
+        icon.src = iconPath;
+        container.append(icon);
+    }
+
+    span.append(container);
+};
+
+const renderAttribute2 = (type: "Speed" | "Structure", iconPath: string, span: HTMLSpanElement, component: TextComponent) => {
+    const container = document.createElement("span");
+    container.classList.add(type.toLowerCase(), "no-wrap");
+
+    const value = component.Content;
+    if (value) {
+        validateNumber(value);
+        if (value === PLACEHOLDER_NUMBER) {
+            // TODO: Support this
+        } else {
+            const valueInt = parseInt(value);
+            container.classList.add("attribute-icon-container");
+            const icon = document.createElement("img");
+            icon.classList.add("icon", `${type.toLowerCase()}-icon`)
+            icon.src = iconPath;
+            container.append(icon);
+
+            const labelElement = document.createElement("span");
+            labelElement.classList.add("attribute-icon-label");
+            labelElement.textContent = valueInt > 0 ? `+${valueInt}` : `-${Math.abs(valueInt)}`;
+            container.append(labelElement);
+        }
+    } else {
+        container.textContent = type;
+    }
+
+    span.append(container);
+};
+
+const renderAttribute3 = (type: "Speed" | "Structure", iconPath: string, span: HTMLSpanElement, component: TextComponent) => {
+    span.classList.add(type.toLowerCase());
+    if (component.Content) {
+        const value = component.Content;
+        validateNumber(value);
+        span.textContent = `${value} ${type}`;
+        span.classList.add("no-wrap"); // Avoid line breaks
+    } else {
+        span.textContent = type;
+    }
+};
+
+const renderSpeedType = (iconPath: string, span: HTMLSpanElement) => {
+    const text = document.createElement("span");
+    text.textContent = " to ";
+    const icon = document.createElement("img");
+    icon.classList.add("icon");
+    icon.src = iconPath;
+    span.append(text, icon);
+}
 
 export const applyKeywordText = (keywords: Keywords | undefined, parent: HTMLElement) => {
     if (!keywords) {

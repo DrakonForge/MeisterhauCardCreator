@@ -19,10 +19,11 @@
     --color-light: #f6f4f1;
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
-    --color-range: #dfe1f4;
+    --color-icon-text: #dfe1f4;
     --color-strike: #84400a;
     --color-token: #7e00bc;
     --color-dominate: #c0140b;
+    --color-parry: #1b4e30;
 }
 
 body {
@@ -243,7 +244,8 @@ img.hidden.hidden {
 
 .card-range .card-range-text {
     position: absolute;
-    color: var(--color-range);
+    color: var(--color-icon-text);
+    font-family: "Archivo", serif;
     font-weight: bold;
     left: 20px;
     right: 20px;
@@ -392,6 +394,12 @@ img.icon.token-icon.token-icon {
     margin-right: -3px;
 }
 
+img.icon.speed-type-icon {
+    /* margin-left: -0.75em; */
+    /* position: relative; */
+    /* z-index: 2; */
+}
+
 img.keyword-icon {
     width: 1.33em;
     height: 1.33em;
@@ -426,6 +434,30 @@ img.keyword-icon {
     font-size: 22px;
     margin-bottom: 0.1em;
     font-style: normal;
+}
+
+.card-text .attribute-icon-container {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.card-text .attribute-icon-container .icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.card-text .attribute-icon-container .attribute-icon-label {
+    font-weight: bold;
+    font-family: "Archivo", serif;
+    color: var(--color-icon-text);
+    z-index: 2;
+    font-size: 0.7em;
 }
 
 .card-text img.icon.instant-icon {
@@ -511,8 +543,9 @@ img.tier-icon {
 }
 
 span.range {
-    color: var(--color-range);
+    color: var(--color-icon-text);
     font-weight: bold;
+    font-family: "Archivo", serif;
 }
 
 span.structure {
@@ -597,12 +630,12 @@ span.attack {
 
 span.parry {
     font-weight: bold;
-    color: #1b4e30;
+    color: var(--color-parry);
 }
 
 span.counter {
     font-weight: bold;
-    color: rgb(8, 65, 82);
+    color: #084152;
 }
 
 span.generic-highlight {

@@ -1,17 +1,17 @@
 import type { ValueRange } from "../../types/common";
 
 export const rangeStrToFontSizeMain = (rangeStr: string): number => {
-    // 1 char -> 32
-    // 2 char -> 28
-    // 3 char -> 24
-    return 36 - 4 * rangeStr.length;
+    // 1 char -> 30
+    // 2 char -> 26
+    // 3 char -> 22
+    return 34 - 4 * rangeStr.length;
 }
 
 export const rangeStrToFontSizeText = (rangeStr: string): number => {
     // 1 char -> 0.86em
     // 2 char -> 0.73em
     // 3 char -> 0.6em
-    return 1 - 0.14 * rangeStr.length;
+    return 0.9 - 0.14 * rangeStr.length;
 }
 
 export const rangeToStr = (range: ValueRange): string => {
