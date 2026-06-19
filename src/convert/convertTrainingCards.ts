@@ -76,9 +76,9 @@ const handleRecord = (record: RowData, context: GenerationContext): boolean => {
                 indent: 4,
                 maxLength: 50,
             }));
-            consola.debug(`Generated ${baseId}.json`);
+            consola.debug(`Generated ${copyId}.json`);
         } catch (e) {
-            consola.error(`Failed to validate card ${baseId}:`, e);
+            consola.error(`Failed to validate card ${copyId}:`, e);
             return false;
         }
     }
@@ -92,12 +92,14 @@ const convertCsvToJson = (data: RowData, context: GenerationContext): TrainingCa
         throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
-    validateId(data.Id, seenIds);
+    const name = parseString(data.Name);
     const deck: Deck = "Training";
+    const expansion = parseString(data.Expansion);
+    validateId(data.Id, seenIds, name);
 
     // Required stuff first
     const baseCard: Partial<TrainingCard> = {
-        Name: parseString(data.Name),
+        Name: name,
         Type: "Training",
         TrainingType: parseString(data.TrainingType),
         Deck: deck,
@@ -106,11 +108,11 @@ const convertCsvToJson = (data: RowData, context: GenerationContext): TrainingCa
         Expansion: parseString(data.Expansion),
         Art: parseString(data.Art),
         Artist: "Artist Name", // TODO: Pull from Art
-        Serial: generateSerial(serials, deck),
+        Serial: generateSerial(serials, deck, expansion),
     };
 
     if (!baseCard.Expansion?.length) {
-        consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
+        consola.warn(`No Expansion field defined for ${data.Name}`);
     }
 
     if (parseString(data.Flavor)) {

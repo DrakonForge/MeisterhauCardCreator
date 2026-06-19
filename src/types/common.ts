@@ -60,7 +60,7 @@ export const KeywordsSchema = z.array(KeywordSchema).nonempty().meta({
 export const ActionTypeSchema = z.enum(["Arm", "Leg", "Special"]).meta({
     "id": "ActionType"
 });
-export const DeckSchema = z.enum(["Audacity", "Celerity", "Fortitude", "Insight", "Footwork", "Fundamentals", "Training", "Token"]).meta({
+export const DeckSchema = z.enum(["Audacity", "Celerity", "Fortitude", "Insight", "Footwork", "Starter", "Training", "Token"]).meta({
     "id": "Deck"
 });
 export const ActionTypesSchema = z.union([ActionTypeSchema, z.array(ActionTypeSchema).nonempty()]);

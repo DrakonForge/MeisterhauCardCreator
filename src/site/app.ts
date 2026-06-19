@@ -13,7 +13,7 @@ const SAMPLE_CARD = `{
     "Type": "Action",
     "Tier": 0,
     "ActionType": "Arm",
-    "Deck": "Fundamentals",
+    "Deck": "Starter",
     "Categories": ["Descending Cut"],
     "SecondaryName": "Cut From Above",
     "Action": {

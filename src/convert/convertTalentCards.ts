@@ -91,12 +91,14 @@ const convertCsvToJson = (data: RowData, context: GenerationContext): TalentCard
         throw new Error(`Missing required base fields: ${missingFields.join(', ')}`);
     }
 
-    validateId(data.Id, seenIds);
+    const name = parseString(data.Name);
     const deck = DeckSchema.parse(parseString(data.Deck));
+    const expansion = parseString(data.Expansion);
+    validateId(data.Id, seenIds, name);
 
     // Required stuff first
     const baseCard: Partial<TalentCard> = {
-        Name: parseString(data.Name),
+        Name: name,
         Type: "Talent",
         Deck: deck,
         Tier: parseInt(data.Tier),
@@ -104,11 +106,11 @@ const convertCsvToJson = (data: RowData, context: GenerationContext): TalentCard
         Expansion: parseString(data.Expansion),
         Art: parseString(data.Art),
         Artist: "Artist Name", // TODO: Pull from Art
-        Serial: generateSerial(serials, deck),
+        Serial: generateSerial(serials, deck, expansion),
     };
 
     if (!baseCard.Expansion?.length) {
-        consola.warn(`No Expansion field defined for ${data.Name}, assuming Core`);
+        consola.warn(`No Expansion field defined for ${data.Name}`);
     }
 
     if (parseString(data.Flavor)) {

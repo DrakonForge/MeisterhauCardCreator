@@ -197,7 +197,7 @@ await main(async args => {
     const outputDir = args['output'] ?? "./MeisterhauCardData/ArtSpec";
     const recursive = args['r'] ?? false;
     args['expansion'] = args['expansion'] ?? args['exp'] ?? args['e'];
-    const includeExpansions = args['expansion'] ? args['expansion'].split(',') : ["Core"]; // Default to Core
+    const includeExpansions = args['expansion'] ? args['expansion'].split(',') : ["Core", "Starter"]; // Default to Core
 
     await runArtAnalysis(inputDir, outputDir, includeExpansions, recursive);
 });

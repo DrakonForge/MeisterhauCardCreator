@@ -48,14 +48,14 @@ const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: strin
     return cardsByDeck;
 }
 
-const ORDERING = [ "Fundamentals", "Token", "Audacity", "Celerity", "Fortitude", "Insight", "Footwork", "Training"];
+const ORDERING = [ "Starter", "Token", "Audacity", "Celerity", "Fortitude", "Insight", "Footwork", "Training"];
 const createFullDecklist = (cardsByDeck: Record<string, DeckListEntry[]>): DeckListEntry[] => {
     const decksRemaining = Object.keys(cardsByDeck);
     const decklist: DeckListEntry[]= [];
     for (const orderedDeckName of ORDERING) {
         const entriesForDeck = cardsByDeck[orderedDeckName];
         if (entriesForDeck) {
-            if (orderedDeckName === "Fundamentals") {
+            if (orderedDeckName === "Starter") {
                 decklist.push(...entriesForDeck.map(entry => ({
                     cardId: entry.cardId,
                     quantity: entry.quantity * 2
@@ -77,7 +77,7 @@ await main(async args => {
     const outputDir = args['output'] ?? "./generated/decklists";
     const recursive = args['r'] ?? false;
     args['expansion'] = args['expansion'] ?? args['exp'] ?? args['e'];
-    const includeExpansions = args['all'] ? [] : (args['expansion'] ? args['expansion'].split(',') : ["Core"]);
+    const includeExpansions = args['all'] ? [] : (args['expansion'] ? args['expansion'].split(',') : ["Core", "Starter"]);
 
     await generateDeckLists(inputDir, outputDir, includeExpansions, recursive);
 });

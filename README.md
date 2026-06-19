@@ -133,7 +133,7 @@ Each stitched image contains 40 cards. The Tabletop Simulator tool can support u
 
 * Add `-r` to make it recursive, so it will look through subfolders.
 * Add `--ignore` and provide a comma-separated list of decklists (example: `Deck_All,DeckForbidden`) to ignore. These deck lists will not generate any images.
-* Add `--include` to specifically only generate the comma-separated lists of decklists (example: `Deck_Fundamentals,Deck_Token`). If this option is specified, only these will be generated (assuming they are also not ignored).
+* Add `--include` to specifically only generate the comma-separated lists of decklists (example: `Deck_Starter,Deck_Token`). If this option is specified, only these will be generated (assuming they are also not ignored).
 
 ### `npm run upload`
 
