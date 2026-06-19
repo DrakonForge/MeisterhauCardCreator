@@ -20,6 +20,8 @@ interface ImageEntry {
 const processCards = async (cardEntries: ImageEntry[], outputDir: string, siteUrl: string, threadLimit: number, pageSize: number): Promise<ImageEntry[]> => {
     consola.log("Processing cards.");
     totalProcessed = 0;
+    totalSuccess = 0;
+    totalError = 0;
 
     const numCards = cardEntries.length;
 

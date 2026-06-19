@@ -1,4 +1,4 @@
-import { readFile } from "fs/promises";
+import { cp, readFile } from "fs/promises";
 import { checkInputPathExists, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import path from "path";
@@ -32,8 +32,7 @@ const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
 const BLEED_MARGIN = 0.125 * INCH_TO_PDF_UNIT;
 
-let cmykMode = false;
-const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, fillBorders: boolean, gaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
+const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, fillBorders: boolean, gaps: boolean, allCards: boolean, diff: boolean, recursive: boolean, noBackup: boolean, cmykMode: boolean): Promise<void> => {
     if (gaps) {
         consola.info("Setting registered: Adding gaps");
     }
@@ -69,13 +68,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
     // Gather the desired entries
     let entries: DeckListEntry[];
-    // if (allCards) {
-        // consola.info(`Adding all ${cardIds.length} entries`);
-        // entries = cardIdsToEntries(cardIds);
-    // } else {
-        consola.info(`Reading ${inputPath}`);
-        entries = await readDeckList(inputPath, cardIdToPath);
-    // }
+    consola.info(`Reading ${inputPath}`);
+    entries = await readDeckList(inputPath, cardIdToPath);
     const cardIdToImageBuffer = await generateImageBuffers(cardIdToPath, entries, cmykMode);
 
     let numTotalCards = getTotalCardQuantity(entries);
@@ -194,6 +188,13 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     pdfDoc.end();
     await pdfFinished;
     consola.success(`Successfully written PDF with ${numTotalPages} pages`);
+
+    if (!noBackup) {
+        const dateStr = new Date().toLocaleDateString();
+        const backupPath = path.join(outputDir, `${outputName}_${dateStr.replaceAll("/", "_")}.pdf`);
+        await cp(outputPath, backupPath);
+        consola.success(`Saved backup copy to ${backupPath}`);
+    }
 }
 
 const addPrintMetadata = (pdfDoc: typeof PDFDocument, pageWidth: number, pageHeight: number) => {
@@ -268,7 +269,8 @@ await main(async args => {
     const allCards = args['all'] ?? false;
     const diff = args['diff'] ?? false;
     const recursive = args['r'] ?? false;
-    cmykMode = args['cmyk'] ?? args['print'] ?? false;
+    const cmykMode = args['cmyk'] ?? args['print'] ?? false;
+    const noBackup = args['nobackup'] ?? false;
 
-    await generatePdf(imageDir, inputPath, outputDir, outputName, fillBorders, gaps, allCards, diff, recursive);
+    await generatePdf(imageDir, inputPath, outputDir, outputName, fillBorders, gaps, allCards, diff, recursive, noBackup, cmykMode);
 });
