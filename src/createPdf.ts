@@ -77,6 +77,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
     consola.log(`PDF will contain ${numTotalCards} cards total, for a total of ${numTotalPages} pages`);
 
     const pdfDoc = new PDFDocument({
+        bufferPages: true,
         size: 'LETTER',
         margin: 0,
         info: {
@@ -184,6 +185,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         }
     }
 
+    addPrintAndPlayHelpers(pdfDoc);
+
     // Save PDF file
     pdfDoc.end();
     await pdfFinished;
@@ -194,6 +197,27 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
         const backupPath = path.join(outputDir, `${outputName}_${dateStr.replaceAll("/", "_")}.pdf`);
         await cp(outputPath, backupPath);
         consola.success(`Saved backup copy to ${backupPath}`);
+    }
+}
+
+const addPrintAndPlayHelpers = (pdfDoc: typeof PDFDocument) => {
+    const range = pdfDoc.bufferedPageRange();
+
+    for (let i = range.start; i < range.start + range.count; i++) {
+        pdfDoc.switchToPage(i);
+
+        pdfDoc.save();
+        // Set text formatting
+        pdfDoc.fillColor('#777777')
+            .fontSize(10);
+
+        pdfDoc.translate(25, 20)
+            .rotate(90, { origin: [0, 0] })
+            .text(`Sheet ${i + 1} / ${range.count}`, 0, 0);
+        pdfDoc.restore();
+
+        pdfDoc.save();
+        pdfDoc.strokeColor('#999999').lineWidth(0.5).dash(2, { space: 2 });
     }
 }
 
