@@ -6,9 +6,7 @@ import { clearFolder, createProgressBar, ensureOutputDirExists, main } from "./u
 import { consola } from "consola";
 import type { Card } from "./types/card";
 import { delay } from "./util/delay";
-import { readDeckList, type DeckListEntry } from "./util/decklist";
-
-let shouldExitEarly = false; // TODO: Reimplement as an option?
+import { generateDeckList, readDeckList, type DeckListEntry } from "./util/decklist";
 
 let totalProcessed = 0;
 let totalSuccess = 0;
@@ -19,18 +17,19 @@ interface ImageEntry {
     card: Card;
 }
 
-const processCards = async (cardList: Record<string, Card>, outputDir: string, siteUrl: string, threadLimit: number, pageSize: number) => {
+const processCards = async (cardEntries: ImageEntry[], outputDir: string, siteUrl: string, threadLimit: number, pageSize: number): Promise<ImageEntry[]> => {
     consola.log("Processing cards.");
     totalProcessed = 0;
 
-    // Break cardList into pages
-    const numCards = Object.entries(cardList).length;
+    const numCards = cardEntries.length;
 
     if (numCards <= 0) {
         consola.log("No cards to process, exiting.");
-        return;
+        return [];
     }
-    const pages = divideCardsIntoPages(cardList, pageSize);
+
+    // Break cardList into pages
+    const pages = divideCardsIntoPages(cardEntries, pageSize);
     const numPages = pages.length;
     const threadsToUse = Math.min(threadLimit, numPages);
 
@@ -59,8 +58,6 @@ const processCards = async (cardList: Record<string, Card>, outputDir: string, s
         }
     }
 
-    // TODO: If need to retry, either queue the retry if option is enabled OR save all remaining cards to a list that we can specify with a flag
-
     await Promise.all(threadPool);
     clearInterval(progressBarPoll);
 
@@ -70,6 +67,7 @@ const processCards = async (cardList: Record<string, Card>, outputDir: string, s
     } else {
         consola.success(`Processing completed successfully. Generated ${numCards} images (${totalSuccess} successful, ${totalError} failed, ${totalProcessed} processed).`);
     }
+    return needToRetry;
 };
 
 const processPage = async (images: ImageEntry[], outputDir: string, siteUrl: string, needToRetry: ImageEntry[]): Promise<void> => {
@@ -143,9 +141,8 @@ const processPage = async (images: ImageEntry[], outputDir: string, siteUrl: str
     await browser.close();
 }
 
-const divideCardsIntoPages = (cardList: Record<string, Card>, pageSize: number): ImageEntry[][] => {
+const divideCardsIntoPages = (cardEntries: ImageEntry[], pageSize: number): ImageEntry[][] => {
     const pages: ImageEntry[][] = [];
-    const cardEntries: ImageEntry[] = Object.entries(cardList).map(([id, card]) => ({id, card}));
     const numPages = Math.ceil(cardEntries.length / pageSize);
     for (let i = 0; i < numPages; ++i) {
         const startIndex = i * pageSize;
@@ -174,63 +171,102 @@ const removeImages = async (removePath: string, outputDir: string): Promise<void
     }
 }
 
-const filterToDeck = (cardList: Record<string, Card>, deckList: DeckListEntry[]) => {
+const filterToDeck = (cardEntries: ImageEntry[], deckList: DeckListEntry[]) => {
     const cardsToInclude = new Set(deckList.map(entry => entry.cardId));
     const seenCards = new Set();
-    for (const cardId of Object.keys(cardList)) {
-        if (!cardsToInclude.has(cardId)) {
-            delete cardList[cardId];
+    for (let i = cardEntries.length - 1; i >= 0; --i) {
+        const entry = cardEntries[i];
+        if (!entry) {
+            continue;
         }
-        seenCards.add(cardId);
+        const cardId = entry.id;
+        if (!cardsToInclude.has(cardId)) {
+            cardEntries.splice(i, 1);
+        }
+        seenCards.add(cardId)
     }
-    if (deckList.length > Object.keys(cardList).length) {
+    if (deckList.length > cardEntries.length) {
         consola.warn(`Unknown card IDs: ${Array.from(cardsToInclude.difference(seenCards)).join(", ")}`);
     }
 }
 
-const generateImages = async (inputDir: string, outputDir: string, deckPath: string, removePath: string, siteUrl: string, recursive: boolean, taskLimit: number) => {
-    ensureOutputDirExists(outputDir);
-    const cardList = await readAndValidateFiles(inputDir, recursive);
-    // TODO: Set these options
-    if (false) {
-        consola.log("Diff mode is enabled. Old images will be removed and only new ones will be updated.")
-        await removeImages(removePath, outputDir);
-        deckPath = deckPath || DEFAULT_DIFF;
-    } else {
-        clearFolder(outputDir, recursive, ".png");
+const handleRetries = async (needToRetry: ImageEntry[], outputDir: string, siteUrl: string, taskLimit: number, pageSize: number): Promise<ImageEntry[]> => {
+    let numRetries = 0;
+    while (needToRetry.length) {
+        if (numRetries >= MAX_RETRIES) {
+            consola.error(`Ran out of retries (max ${MAX_RETRIES}). Writing results to file.`);
+            return needToRetry;
+        }
+        needToRetry = await processCards(needToRetry, outputDir, siteUrl, taskLimit, pageSize);
+        numRetries++;
     }
+    return needToRetry;
+};
 
-    consola.log(`Filtering to deck at ${deckPath}`);
-    if (!fs.existsSync(deckPath)) {
-        consola.warn("No decklist found. Are you sure you ran \"npm run decklist\"?");
-    }
+const getCardEntries = async (inputDir: string, deckPath: string, recursive: boolean): Promise<ImageEntry[]> => {
+    const cardList = await readAndValidateFiles(inputDir, recursive);
+    const cardEntries: ImageEntry[] = Object.entries(cardList).map(([id, card]) => ({ id, card }));
+
     const deckList = await readDeckList(deckPath);
-    filterToDeck(cardList, deckList);
+    filterToDeck(cardEntries, deckList);
     if (!deckList.length) {
         consola.warn("No cards in provided decklist. Are you sure the one you're using is correct?")
     }
-
-    if (!Object.keys(cardList).length) {
-        // No data to process
-        return;
-    }
-
-    await processCards(cardList, outputDir, siteUrl, taskLimit, 10);
+    return cardEntries;
 };
 
-const DEFAULT_DIFF = "./generated/tracked_changes/AddedOrUpdated.txt";
-const DEFAULT_ALL = "./generated/decklists/Deck_All.txt";
-const DEFAULT_RETRY = "./generated/tracked_changes/NeedToRetry.txt";
+const saveRetries = async (needToRetry: ImageEntry[]) => {
+    ensureOutputDirExists(RETRY_DIR);
+    const deckEntries: DeckListEntry[] = needToRetry.map(item => ({cardId: item.id, quantity: 1}));
+    await generateDeckList("NeedToRetry", deckEntries, RETRY_DIR);
+}
+
+
+const generateImages = async (inputDir: string, outputDir: string, deckPath: string, removePath: string, siteUrl: string, recursive: boolean, taskLimit: number, pageSize: number, oneshot: boolean, diffOnly: boolean) => {
+    ensureOutputDirExists(outputDir);
+
+    if (diffOnly) {
+        consola.log("Diff mode is enabled. Old images will be removed and only new ones will be updated.")
+        await removeImages(removePath, outputDir);
+        deckPath = deckPath || DIFF_PATH;
+    } else {
+        clearFolder(outputDir, recursive, ".png");
+    }
+    consola.log(`Filtering to deck at ${deckPath}`);
+    if (!fs.existsSync(deckPath)) {
+        throw new Error(`No decklist found at ${deckPath}. If you did not specify a custom path, are you sure you ran "npm run decklist"?`);
+    }
+
+    const cardEntries = await getCardEntries(inputDir, deckPath, recursive);
+    let needToRetry = await processCards(cardEntries, outputDir, siteUrl, taskLimit, pageSize);
+
+    // Retry if needed
+    if (needToRetry.length && !oneshot) {
+        consola.log("Ran into some errors with processing. Attempting to retry...");
+        needToRetry = await handleRetries(needToRetry, outputDir, siteUrl, taskLimit, pageSize);
+    }
+
+    if (needToRetry.length) {
+        consola.log(`Ran into some errors with processing. Writing failed card IDs to ${RETRY_PATH}, you can rerun these using "npm run image -- --retry`);
+        await saveRetries(needToRetry);
+    }
+};
+
+const MAX_RETRIES = 1;
+const DIFF_PATH = "./generated/tracked_changes/AddedOrUpdated.txt";
+const ALL_CARDS_PATH = "./generated/decklists/Deck_All.txt";
+const RETRY_PATH = "./generated/tracked_changes/NeedToRetry.txt";
+const RETRY_DIR = "./generated/tracked_changes";
 await main(async args => {
     const inputDir = args['input'] ?? "./generated/card_data";
     const outputDir = args['output'] ?? "./generated/card_images";
     const removePath = args['remove'] ?? "./generated/tracked_changes/Removed.txt";
     const siteUrl = args['site'] ?? "http://localhost:3000/";
     const recursive = args['r'] ?? false;
-    const autoretry = args['autoretry'] ?? false;
-    const exitearly = args['exitearly'] ?? false; // TODO: Can we combine these options?
+    const oneshot = args['oneshot'] ?? false; // Attempt to do it in one run, auto-retrying and exiting early if there are failures
     const taskLimit = args['chunk'] ?? 1;
-    // TODO: Customize page size
-    const deckPath = args['all'] ? DEFAULT_ALL : args['diff'] ? DEFAULT_DIFF : args['retry'] ? DEFAULT_RETRY : args['deck'] ?? DEFAULT_ALL;
-    await generateImages(inputDir, outputDir, deckPath, removePath, siteUrl, recursive, taskLimit);
+    const pageSize = args['pagesize'] ?? 10;
+    const diffOnly = args['diffonly'] ?? args['diff'] ?? false;
+    const deckPath = args['all'] ? ALL_CARDS_PATH : args['diff'] ? DIFF_PATH : args['retry'] ? RETRY_PATH : args['deck'] ?? ALL_CARDS_PATH;
+    await generateImages(inputDir, outputDir, deckPath, removePath, siteUrl, recursive, taskLimit, pageSize, oneshot, diffOnly);
 });
