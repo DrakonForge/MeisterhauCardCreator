@@ -37,20 +37,39 @@ const getCardsByDeck = (cardList: Record<string, Card>, includeExpansions: strin
         }
         const deck = card.Deck;
         let quantity = card.Quantity || 1;
-        // Special rule to make PDF printing easier: Fundamentals is printed twice
-        if (deck == "Fundamentals") {
-            cardsByDeck[DECK_ALL]?.push({ cardId, quantity: quantity * 2 });
-        } else {
-            cardsByDeck[DECK_ALL]?.push({ cardId, quantity: quantity });
-        }
 
         if (!cardsByDeck[deck]) {
             cardsByDeck[deck] = [];
         }
         cardsByDeck[deck].push({cardId, quantity});
     }
+    cardsByDeck[DECK_ALL] = createFullDecklist(cardsByDeck);
 
     return cardsByDeck;
+}
+
+const ORDERING = [ "Fundamentals", "Token", "Audacity", "Celerity", "Fortitude", "Insight", "Footwork", "Training"];
+const createFullDecklist = (cardsByDeck: Record<string, DeckListEntry[]>): DeckListEntry[] => {
+    const decksRemaining = Object.keys(cardsByDeck);
+    const decklist: DeckListEntry[]= [];
+    for (const orderedDeckName of ORDERING) {
+        const entriesForDeck = cardsByDeck[orderedDeckName];
+        if (entriesForDeck) {
+            if (orderedDeckName === "Fundamentals") {
+                decklist.push(...entriesForDeck.map(entry => ({
+                    cardId: entry.cardId,
+                    quantity: entry.quantity * 2
+                })));
+            } else {
+                decklist.push(...entriesForDeck);
+            }
+        }
+        const deckIndex = decksRemaining.indexOf(orderedDeckName);
+        if (deckIndex > -1) {
+            decksRemaining.splice(deckIndex, 1);
+        }
+    }
+    return decklist;
 }
 
 await main(async args => {

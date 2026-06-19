@@ -31,6 +31,7 @@ export const readDeckList = async (inputPath: string, cardIdToPath?: Record<stri
 
     const file = await open(inputPath);
     const entries: DeckListEntry[] = [];
+    const cardsNotFound = [];
     for await (const line of file.readLines()) {
         const lineText = line.trim();
 
@@ -53,10 +54,13 @@ export const readDeckList = async (inputPath: string, cardIdToPath?: Record<stri
         }
 
         if (cardIdToPath != null && !(cardId in cardIdToPath)) {
-            throw new Error(`Unable to find card ID ${cardId} in provided image directory`);
+            cardsNotFound.push(cardId);
+        } else {
+            entries.push({ cardId, quantity });
         }
-
-        entries.push({ cardId, quantity });
+    }
+    if (cardsNotFound.length > 0) {
+        throw new Error(`Unable to find card IDs in provided image directory: ${cardsNotFound.join(", ")}`);
     }
     return entries;
 };

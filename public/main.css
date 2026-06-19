@@ -20,9 +20,9 @@
     --color-structure: #960018; /* More washed out: #89213e */
     --color-speed: #1639b8;; /* More washed out: #3950a3 */
     --color-icon-text: #dfe1f4;
-    --color-strike: #84400a;
+    --color-strike: #7C3502;
     --color-token: #7e00bc;
-    --color-dominate: #c0140b;
+    --color-dominate: #960018;
     --color-parry: #1b4e30;
 }
 
@@ -458,6 +458,7 @@ img.keyword-icon {
     color: var(--color-icon-text);
     z-index: 2;
     font-size: 0.7em;
+    font-style: normal;
 }
 
 .card-text img.icon.instant-icon {

@@ -5,7 +5,7 @@ import path from "path";
 import sharp from "sharp";
 import fs from 'fs';
 import { createCardIdToPath } from "./util/cardIdToPath";
-import { cardIdsToEntries, getTotalCardQuantity, getUniqueCardIds } from "./util/decklist";
+import { getTotalCardQuantity, getUniqueCardIds } from "./util/decklist";
 import { readDeckList, type DeckListEntry } from "./util/decklist";
 import PDFDocument from 'pdfkit';
 
@@ -30,6 +30,7 @@ const HORIZONTAL_GAP_IN = (HORIZONTAL_AVAILABLE_SPACE - 3 * CARD_WIDTH_IN) / 2; 
 const VERTICAL_GAP_IN = (VERTICAL_AVAILABLE_SPACE - 3 * CARD_HEIGHT_IN) / 2; // 2 gaps
 
 const INCH_TO_PDF_UNIT = 72; // Why does this unit even exist
+const BLEED_MARGIN = 0.125 * INCH_TO_PDF_UNIT;
 
 let cmykMode = false;
 const generatePdf = async (imageDir: string, inputPath: string, outputDir: string, outputName: string, fillBorders: boolean, gaps: boolean, allCards: boolean, diff: boolean, recursive: boolean): Promise<void> => {
@@ -101,8 +102,8 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
 
     const targetWidth = CARD_WIDTH_IN * INCH_TO_PDF_UNIT;
     const targetHeight = CARD_HEIGHT_IN * INCH_TO_PDF_UNIT;
-    const backgroundWidth = (CARD_WIDTH_IN * 3 + (gaps ? HORIZONTAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT;
-    const backgroundHeight = (CARD_HEIGHT_IN * 3 + (gaps ? VERTICAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT;
+    const backgroundWidth = (CARD_WIDTH_IN * 3 + (gaps ? HORIZONTAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT + BLEED_MARGIN;
+    const backgroundHeight = (CARD_HEIGHT_IN * 3 + (gaps ? VERTICAL_GAP_IN * 2 : 0)) * INCH_TO_PDF_UNIT + BLEED_MARGIN;
     consola.debug(`Card Image Dimensions: ${targetWidth} x ${targetHeight}`);
 
     // Start writing file
@@ -146,7 +147,7 @@ const generatePdf = async (imageDir: string, inputPath: string, outputDir: strin
                 );
                 if (cmykMode) {
                     // Native DeviceCMYK 100% K ink pass-through array command [C, M, Y, K]
-                    pdfDoc.fillColor([0, 0, 0, 100]).fill();
+                    pdfDoc.fillColor('#141a00').fill();
                 } else {
                     pdfDoc.fillColor('#000000').fill();
                 }
@@ -262,7 +263,7 @@ await main(async args => {
     const inputPath = args['input'] ?? args['deck'] ?? "";
     const outputDir = args['output'] ?? "./generated/pdf";
     const outputName = args['name'] ?? "MyDeck";
-    const fillBorders = args['borders'] ?? false;
+    const fillBorders = args['borders'] ?? true;
     const gaps = args['gaps'] ?? false;
     const allCards = args['all'] ?? false;
     const diff = args['diff'] ?? false;
