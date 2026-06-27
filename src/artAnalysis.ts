@@ -87,7 +87,7 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
     fs.writeFileSync(outputDocPath, outputDocument.toString());
     const backupDocPath = path.join(outputDir, BACKUP_DIR, `ArtSpec_${dateStr.replaceAll("/", "_")}.md`);
     fs.writeFileSync(backupDocPath, outputDocument.toString());
-    consola.success(`Writing backup to ${outputDocPath}`);
+    consola.success(`Writing backup to ${backupDocPath}`);
 }
 
 const generateMetadata = (cardList: Record<string, Card>, cardIds: string[]): any[] => {

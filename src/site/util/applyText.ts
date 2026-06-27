@@ -238,7 +238,7 @@ const renderJsonToHtml = (components: TextComponent[], parent: HTMLElement): voi
             case "LegAction":
                 const legActionIcon = document.createElement("img");
                 legActionIcon.classList.add("icon", "leg-action-icon")
-                legActionIcon.src = Assets.ICON_ARM_ACTION;
+                legActionIcon.src = Assets.ICON_LEG_ACTION;
                 span.appendChild(legActionIcon);
                 break;
             case "SpecialAction":
