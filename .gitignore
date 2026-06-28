@@ -3,6 +3,7 @@ node_modules/
 package-lock.json
 dist/
 generated/
+public/sample/
 
 # Stuff for website maybe
 public/**/*.js

@@ -3,7 +3,7 @@ import { clearFolder, ensureOutputDirExists, main } from "./util/cliUtil";
 import { consola } from "consola";
 import { readAndValidateFiles } from "./validation/parseFiles";
 import type { Card } from "./types/card";
-import { MarkdownDocument, md } from "build-md";
+import { Mark, MarkdownDocument, md } from "build-md";
 import path from "path";
 
 /**
@@ -81,12 +81,14 @@ const runArtAnalysis = async (inputDir: string, outputDir: string, includeExpans
         }
         consola.log(`Found ${needToRetain.size} removed entries`);
     }
+    const outputContent = outputDocument.toString();
+    doIllustrationAnalysis(outputContent);
 
     consola.warn(`${todoCounts} TODOs are still pending. Completion: ${artIds.length - todoCounts}/${artIds.length} (${Math.round((artIds.length - todoCounts) / artIds.length * 100 * 100) / 100}%)`);
     consola.success(`Writing document to ${outputDocPath}`);
-    fs.writeFileSync(outputDocPath, outputDocument.toString());
+    fs.writeFileSync(outputDocPath, outputContent);
     const backupDocPath = path.join(outputDir, BACKUP_DIR, `ArtSpec_${dateStr.replaceAll("/", "_")}.md`);
-    fs.writeFileSync(backupDocPath, outputDocument.toString());
+    fs.writeFileSync(backupDocPath, outputContent);
     consola.success(`Writing backup to ${backupDocPath}`);
 }
 
@@ -126,6 +128,116 @@ const generateMetadata = (cardList: Record<string, Card>, cardIds: string[]): an
         md`${md.bold(`Name`)}: ${cardName}`,
     ];
     return metadata;
+}
+
+const doIllustrationAnalysis = (outputDocument: string) => {
+    const illustrationFrequency: Map<string, string[]> = new Map();
+    const lines = outputDocument.split(/\r?\n/).map(line => line.trim());
+    let lineIndex = findNextEntryIndex(lines, 0);
+    let nextLineIndex = -1;
+    let numMissingIllustrations = 0;
+    let totalArts = 0;
+    while (lineIndex < lines.length) {
+        let artId = lines[lineIndex]?.substring(HEADER.length)?.split(' ')[0];
+        if (artId == null) {
+            consola.warn(`Failed to read header at line ${lineIndex}`);
+            continue;
+        }
+        totalArts += 1;
+        nextLineIndex = findNextEntryIndex(lines, lineIndex + 1);
+        let start = lineIndex + 1;
+        let end = nextLineIndex - 1;
+        while (start < nextLineIndex && lines[start] != null && (!lines[start]?.length || lines[start]?.startsWith("- "))) {
+            start += 1;
+        }
+        while (end >= lineIndex && lines[end] != null && !lines[end]?.length) {
+            end -= 1;
+        }
+        lineIndex = nextLineIndex;
+
+        const entryLines = lines.slice(start, end + 1);
+        const lastSpace = entryLines.lastIndexOf('');
+        if (artId === "Schietelhau") {
+            consola.log(entryLines);
+        }
+        if (entryLines[0] != null && entryLines[0] === PLACEHOLDER_DESCRIPTION) {
+            consola.debug(`Art ID ${artId} is missing a description entirely`);
+            numMissingIllustrations += 1;
+            continue;
+        }
+        if (lastSpace < 0) {
+            consola.debug(`Art ID ${artId} is missing illustration lines (make sure it is separated by a newline)`);
+            numMissingIllustrations += 1;
+            continue;
+        }
+        const illustrationLines = entryLines.slice(lastSpace + 1);
+        const allGood = validateIllustrationLines(artId, illustrationLines);
+        if (!allGood) {
+            numMissingIllustrations += 1;
+            continue;
+        }
+        for (const illustration of illustrationLines) {
+            if (!illustrationFrequency.has(illustration)) {
+                illustrationFrequency.set(illustration, []);
+            }
+            illustrationFrequency.get(illustration)?.push(artId);
+        }
+    };
+    summarizeIllustrationFrequency(illustrationFrequency, numMissingIllustrations, totalArts);
+}
+
+const VALID_ILLUSTRATION_PREFIXES = ["Left,", "Right,", "Single,", "Paired,"];
+const validateIllustrationLines = (artId: string, lines: string[]): boolean => {
+    let allGood = true;
+    for (const line of lines) {
+        let valid = false;
+        for (const prefix of VALID_ILLUSTRATION_PREFIXES) {
+            if (line.startsWith(prefix)) {
+                valid = true;
+                break;
+            }
+        }
+        if (!valid) {
+            allGood = false;
+            consola.debug(`Art ID ${artId} is missing illustration lines`);
+            break;
+        }
+    }
+    return allGood;
+}
+
+const summarizeIllustrationFrequency = (frequency: Map<string, string[]>, numMissingIllustrations: number, totalArts: number) => {
+    let numReused = 0;
+    let numReusedTwice = 0;
+    let numSingle = 0;
+    let numPaired = 0;
+    let numStandard = 0;
+    let numTotal = 0;
+    for (const [key, value] of frequency) {
+        numTotal += value.length;
+        if (value.length > 1) {
+            numReused += 1;
+            if (value.length > 2) {
+                numReusedTwice += 1;
+                consola.log(`${key} is reused ${value.length} times`)
+            } else {
+                consola.debug(`${key} is reused ${value.length} times`)
+            }
+        }
+        if (key.startsWith("Single, ")) {
+            numSingle += 1;
+        } else if (key.startsWith("Paired, ")) {
+            numPaired += 1;
+        } else {
+            numStandard += 1;
+        }
+    }
+    consola.log(`There are ${frequency.size} unique illustrations, with ${numReused} reused more than once and ${numReusedTwice} reused more than twice out of ${numTotal} total.`);
+    consola.log(`- Standard: ${numStandard}, Paired: ${numPaired}, Custom: ${numSingle}`);
+    // Paired will likely cost more, give a buffer of 5-10 standard, and this doesn't include any character card art
+    if (numMissingIllustrations > 0) {
+        consola.warn(`There are ${numMissingIllustrations} entries missing illustrations. Completion: ${totalArts - numMissingIllustrations}/${totalArts} (${Math.round((totalArts - numMissingIllustrations) / totalArts * 100 * 100) / 100}%)`);
+    }
 }
 
 const readExistingDoc = (outputDocPath: string): Record<string, string> => {
